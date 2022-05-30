@@ -1,5 +1,5 @@
 package com.capstoneprojectb12.lms.backendapilms.utilities;
 
-public class ApiValidation {
-    
+public class ApiValidationTest {
+
 }

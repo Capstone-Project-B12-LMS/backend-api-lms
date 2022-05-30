@@ -1,0 +1,8 @@
+# create data type to store anything
+type Query {
+  hello: HelloQuery!
+}
+
+type Mutation {
+  hello: HelloMutation!
+}

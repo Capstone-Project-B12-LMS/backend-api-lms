@@ -1,0 +1,7 @@
+type HelloQuery {
+  sayHello: String!
+}
+
+type HelloMutation {
+  sayHello(to: String!): String!
+}
