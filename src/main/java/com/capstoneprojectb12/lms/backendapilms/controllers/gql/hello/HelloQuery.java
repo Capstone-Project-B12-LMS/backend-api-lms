@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 @SchemaMapping(typeName = "HelloQuery")
 public class HelloQuery {
     @SchemaMapping(field = "sayHello")
-    public String s() {
+    public String sayHello() {
         return "Hi, my name is KELOMPOK B 12";
     }
 }

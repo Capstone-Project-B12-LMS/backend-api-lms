@@ -14,8 +14,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import lombok.AllArgsConstructor;
 
-// @ExtendWith(value = { MockitoExtension.class })
-// @WebMvcTest
 @SpringBootTest
 @AutoConfigureMockMvc
 @Tag(value = "helloQuery")
@@ -34,7 +32,7 @@ public class HelloQueryTest {
     }
 
     @Test
-    public void sayHello() throws Exception {
+    public void sayHelloQuery() throws Exception {
 
         // success
         var response = this.mockMvc.perform(
