@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.hello.HelloMutation;
+import com.capstoneprojectb12.lms.backendapilms.entities.responses.SayHelloResponse;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -23,15 +24,21 @@ public class HelloMutationTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+
     @MockBean
     private HelloMutation helloMutation;
 
     @Test
     public void sayHelloMutation() throws Exception {
-        when(this.helloMutation.sayHello(anyString())).thenReturn("test");
+        when(this.helloMutation.sayHello(any()))
+                .thenReturn(SayHelloResponse.builder()
+                        .message("oioi")
+                        .errors(null)
+                        .build());
 
         // success
-        String query = "{ \"query\": \"mutation { hello { sayHello(to: \\\"irda\\\") } }\" }";
+        String query = "{ \"query\": \"mutation { hello { sayHello(to: { \\\"name\\\": \\\"irda islakhu afa\\\"} { message errors} } }\" }";
         this.mockMvc.perform(post("/graphql")
                 .contentType(MediaType.APPLICATION_GRAPHQL_VALUE)
                 .content(query)
