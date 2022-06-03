@@ -38,11 +38,13 @@ public class RoleQuery implements BaseQuery<Role> {
 
     @Override
     public List<Role> findAllDeleted() {
+        // TODO : implement me
         return null;
     }
 
     @Override
     public PaginationResponse<List<Role>> findAllDeletedWithPageable(int page, int size) {
+        // TODO : implement me
         return null;
     }
 

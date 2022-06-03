@@ -14,10 +14,6 @@ input RoleNew {
   name: String!
   description: String!
 }
-input RoleUpdate {
-  name: String!
-  description: String!
-}
 
 type RoleResponseDelete {
   error: Object!
@@ -40,6 +36,6 @@ type RoleQuery {
 }
 type RoleMutation {
   save(request: RoleNew!): Role
-  update(request: RoleUpdate!): Role
+  update(request: RoleNew!): Role
   deleteById(id: ID!): RoleResponseDelete!
 }
