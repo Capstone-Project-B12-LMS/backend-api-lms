@@ -23,6 +23,8 @@ type RoleResponseDelete {
 
 type RoleQuery {
   findAll: [Role!]!
+  findAllWithPageable(page: Int!, size: Int!): [Role!]!
+  findAllDeleted: [Role!]!
 }
 type RoleMutation {
   save(request: RoleNew!): Role!
