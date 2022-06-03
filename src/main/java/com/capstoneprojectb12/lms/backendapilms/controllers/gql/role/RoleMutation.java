@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.role.RoleNew;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Role;
 import com.capstoneprojectb12.lms.backendapilms.services.RoleService;
+import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.DataAlreadyExistsException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,9 @@ public class RoleMutation {
     @SchemaMapping(field = "save")
     public Role save(@Argument(name = "request") RoleNew request) {
         var savedRole = this.roleService.save(request.toEntity());
-        return savedRole.orElseThrow();
+        if (!savedRole.isPresent()) {
+            throw new DataAlreadyExistsException();
+        }
+        return savedRole.get();
     }
 }
