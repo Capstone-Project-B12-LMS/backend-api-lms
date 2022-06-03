@@ -17,6 +17,8 @@ public interface BaseService<T> {
 
     public List<T> findAll();
 
+    public List<T> findAll(boolean showDeleted);
+
     public Page<T> findAll(int page, int size);
 
     public Page<T> findAll(int page, int size, Sort sort);
