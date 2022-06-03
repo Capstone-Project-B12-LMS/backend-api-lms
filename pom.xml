@@ -95,6 +95,7 @@
 				<configuration>
 					<excludes>
 						<exclude>**/utilities/**</exclude>
+						<exclude>**/controllers/**</exclude>
 						<exclude>**/backendapilms/*.class</exclude>
 					</excludes>
 				</configuration>
