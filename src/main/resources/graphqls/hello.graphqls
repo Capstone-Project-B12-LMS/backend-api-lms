@@ -8,7 +8,7 @@ input SayHelloInput {
 }
 
 type HelloQuery {
-  sayHello: String!
+  sayHello: SayHelloResponse!
 }
 
 type HelloMutation {
