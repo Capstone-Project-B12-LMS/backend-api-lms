@@ -1,5 +1,6 @@
 package com.capstoneprojectb12.lms.backendapilms.entities;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.annotation.PreDestroy;
@@ -19,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @SuperBuilder
 @Slf4j
-public class BaseEntity {
+public class BaseEntity implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
