@@ -1,7 +1,6 @@
 package com.capstoneprojectb12.lms.backendapilms.services;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import javax.transaction.Transactional;
 
@@ -89,6 +88,23 @@ public class RoleService implements BaseService<Role> {
                 .totalSize(page.getTotalElements())
                 .build();
         return result;
+    }
+
+    public List<Role> findByNames(String... names) {
+        var roles = new ArrayList<Role>();
+        for (var name : names) {
+            var role = this.roleRepository.findByNameEqualsIgnoreCase(name);
+            if (!role.isPresent()) {
+                var roleNew = Role.builder()
+                        .name(name)
+                        .description("-")
+                        .isDeleted(false)
+                        .build();
+                role = this.save(roleNew);
+            }
+            roles.add(role.get());
+        }
+        return roles;
     }
 
 }

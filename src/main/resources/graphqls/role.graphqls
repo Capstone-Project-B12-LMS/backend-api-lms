@@ -15,11 +15,6 @@ input RoleNew {
   description: String!
 }
 
-type ResponseDelete {
-  error: Object!
-  status: Boolean!
-}
-
 type RolePagination implements PaginationResponse {
   data: [Role!]!
   page: Int!

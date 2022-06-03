@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserNew;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
@@ -23,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class UserService implements BaseService<User>, UserDetailsService {
     private final UserRepository userRepository;
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -103,4 +105,15 @@ public class UserService implements BaseService<User>, UserDetailsService {
                 .build();
     }
 
+    public User toEntity(UserNew userNew) {
+        return User.builder()
+                .fullName(userNew.getFullName())
+                .email(userNew.getEmail())
+                .password(userNew.getPassword())
+                .roles(this.roleService
+                        .findByNames(userNew
+                                .getRoles()
+                                .toArray(new String[userNew.getRoles().size()])))
+                .build();
+    }
 }

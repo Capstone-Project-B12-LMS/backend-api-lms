@@ -34,7 +34,7 @@ type UserQuery {
 }
 
 type UserMutation {
-  register(request: UserNew!): User!
+  register(request: UserNew!): User
   login(request: UserLogin!): ResponseToken!
   deleteById(id: ID!): ResponseDelete!
 }

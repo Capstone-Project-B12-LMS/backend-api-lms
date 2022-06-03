@@ -33,4 +33,5 @@ public class UserNew {
     @NotBlank(message = "cannot be  blank")
     @NotEmpty(message = "cannot be empty")
     private List<@NotNull(message = "cannot be null") @NotBlank(message = "cannot be  blank") @NotEmpty(message = "cannot be empty") String> roles;
+
 }
