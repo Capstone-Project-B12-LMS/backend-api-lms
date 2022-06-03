@@ -18,11 +18,19 @@ input UserLogin {
   password: String!
 }
 
+type UserPagination implements PaginationResponse {
+  data: [User!]!
+  page: Int!
+  size: Int!
+  totalPage: Int!
+  totalSize: Int!
+}
+
 type UserQuery {
-  findAll: [Role!]!
-  findAllWithPageable(page: Int!, size: Int!): RolePagination!
-  findAllDeleted: [Role!]!
-  findAllDeletedWithPageable(page: Int!, size: Int!): RolePagination!
+  findAll: [User!]!
+  findAllWithPageable(page: Int!, size: Int!): UserPagination!
+  findAllDeleted: [User!]!
+  findAllDeletedWithPageable(page: Int!, size: Int!): UserPagination!
 }
 
 type UserMutation {
