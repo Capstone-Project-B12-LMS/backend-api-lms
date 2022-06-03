@@ -116,4 +116,8 @@ public class UserService implements BaseService<User>, UserDetailsService {
                                 .toArray(new String[userNew.getRoles().size()])))
                 .build();
     }
+
+    public Optional<User> findByEmail(String email) {
+        return this.userRepository.findByEmailEqualsIgnoreCase(email);
+    }
 }
