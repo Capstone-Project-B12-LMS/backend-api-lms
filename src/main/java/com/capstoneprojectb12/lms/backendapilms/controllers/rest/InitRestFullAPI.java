@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import com.capstoneprojectb12.lms.backendapilms.models.dtos.responses.SayHelloInput;
-import com.capstoneprojectb12.lms.backendapilms.models.dtos.responses.SayHelloResponse;
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.hello.SayHelloInput;
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.hello.SayHelloResponse;
 import com.capstoneprojectb12.lms.backendapilms.utilities.ApiValidation;
 
 @RestController

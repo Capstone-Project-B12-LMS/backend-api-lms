@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.hello.HelloMutation;
-import com.capstoneprojectb12.lms.backendapilms.models.dtos.responses.SayHelloResponse;
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.hello.SayHelloResponse;
 
 @SpringBootTest
 @AutoConfigureMockMvc

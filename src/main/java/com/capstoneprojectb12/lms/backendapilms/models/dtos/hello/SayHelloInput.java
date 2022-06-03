@@ -1,4 +1,4 @@
-package com.capstoneprojectb12.lms.backendapilms.models.dtos.responses;
+package com.capstoneprojectb12.lms.backendapilms.models.dtos.hello;
 
 import javax.validation.constraints.*;
 

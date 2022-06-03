@@ -38,7 +38,8 @@ public class BaseEntity implements Serializable {
     private String updatedBy;
 
     @Column(nullable = false)
-    private boolean isDeleted;
+    @Builder.Default
+    private Boolean isDeleted = false;
 
     @PrePersist
     public void onInsert() {

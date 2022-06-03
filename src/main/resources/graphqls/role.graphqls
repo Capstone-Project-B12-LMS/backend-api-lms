@@ -1,19 +1,22 @@
 type Role {
   id: ID!
   name: String!
+  description: String!
 
   createdBy: String!
   createdAt: Object!
   updatedBy: String
   updatedAt: Object
-  isDeleted: Boolean!
+  isDeleted: Boolean
 }
 
 input RoleNew {
   name: String!
+  description: String!
 }
 input RoleUpdate {
   name: String!
+  description: String!
 }
 
 type RoleResponseDelete {
@@ -27,7 +30,7 @@ type RoleQuery {
   findAllDeleted: [Role!]!
 }
 type RoleMutation {
-  save(request: RoleNew!): Role!
-  update(request: RoleUpdate!): Role!
+  save(request: RoleNew!): Role
+  update(request: RoleUpdate!): Role
   deleteById(id: ID!): RoleResponseDelete!
 }
