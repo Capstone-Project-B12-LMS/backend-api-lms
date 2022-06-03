@@ -24,16 +24,16 @@ jobs:
          java-version: "11"
          distribution: "temurin"
      
-    #  - name: Restore Maven Cache Dependency
-    #    uses: skjolber/maven-cache-github-action@v1
-    #    with:
-    #      step: restore
+     - name: Restore Maven Cache Dependency
+       uses: skjolber/maven-cache-github-action@v1
+       with:
+         step: restore
 
      - name: Running Testing
        run: mvn clean test verify
 
      - name: Preparing Code Coverage Reports
-       run: rm -rfv env/cc/html && mv -v target/site/jacoco env/cc/html
+       run: rm -rfv env/cc/html/* && mv -v target/site/jacoco/* env/cc/html/
 
      - name: Login to DockerHub
        uses: docker/login-action@v1
