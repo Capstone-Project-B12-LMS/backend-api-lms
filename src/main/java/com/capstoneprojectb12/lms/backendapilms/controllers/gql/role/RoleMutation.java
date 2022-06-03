@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @SchemaMapping(typeName = "RoleMutation")
 @RequiredArgsConstructor
-public class RoleMutation implements BaseMutation<Role> {
+public class RoleMutation implements BaseMutation<Role, RoleNew> {
     private final RoleService roleService;
 
     @SchemaMapping(field = "save")

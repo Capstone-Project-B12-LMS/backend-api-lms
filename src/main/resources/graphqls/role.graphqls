@@ -15,7 +15,7 @@ input RoleNew {
   description: String!
 }
 
-type RoleResponseDelete {
+type ResponseDelete {
   error: Object!
   status: Boolean!
 }
@@ -37,5 +37,5 @@ type RoleQuery {
 type RoleMutation {
   save(request: RoleNew!): Role
   update(request: RoleNew!): Role
-  deleteById(id: ID!): RoleResponseDelete!
+  deleteById(id: ID!): ResponseDelete!
 }
