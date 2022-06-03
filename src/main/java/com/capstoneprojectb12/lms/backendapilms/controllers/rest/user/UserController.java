@@ -12,7 +12,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserLogin;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserNew;
 import com.capstoneprojectb12.lms.backendapilms.services.UserService;
 import com.capstoneprojectb12.lms.backendapilms.utilities.*;
-import com.capstoneprojectb12.lms.backendapilms.utilities.jwt.Jwtutils;
+import com.capstoneprojectb12.lms.backendapilms.utilities.jwt.JwtUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
-    private final Jwtutils jwtutils;
+    private final JwtUtils jwtUtils;
 
     @PostMapping(value = { "/login" })
     public ResponseEntity<?> login(@RequestBody @Valid UserLogin request, Errors errors) {
@@ -46,7 +46,7 @@ public class UserController {
             authenticationManager.authenticate(authUser);
             log.info("Success authenticate user");
 
-            var tokenString = jwtutils.generateTokenString(user.get());
+            var tokenString = jwtUtils.generateTokenString(user.get());
             var response = ResponseToken.builder()
                     .error(null)
                     .token(tokenString)

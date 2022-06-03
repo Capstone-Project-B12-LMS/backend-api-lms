@@ -12,7 +12,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserNew;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
 import com.capstoneprojectb12.lms.backendapilms.services.UserService;
 import com.capstoneprojectb12.lms.backendapilms.utilities.ResponseToken;
-import com.capstoneprojectb12.lms.backendapilms.utilities.jwt.Jwtutils;
+import com.capstoneprojectb12.lms.backendapilms.utilities.jwt.JwtUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserMutation {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
-    private final Jwtutils jwtutils;
+    private final JwtUtils jwtUtils;
 
     @SchemaMapping(field = "register")
     public User register(@Argument(name = "request") UserNew request) {
@@ -53,7 +53,7 @@ public class UserMutation {
             log.info("Authenticate user");
             authenticationManager.authenticate(authUser);
 
-            var tokenString = jwtutils.generateTokenString(user.get());
+            var tokenString = jwtUtils.generateTokenString(user.get());
             var response = ResponseToken.builder()
                     .error(null)
                     .token(tokenString)
