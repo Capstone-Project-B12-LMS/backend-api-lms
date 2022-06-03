@@ -13,7 +13,9 @@ public interface BaseService<T> {
 
     public boolean deleteById(String id);
 
-    public Optional<T> findById();
+    public boolean existsById(String id);
+
+    public Optional<T> findById(String id);
 
     public List<T> findAll();
 

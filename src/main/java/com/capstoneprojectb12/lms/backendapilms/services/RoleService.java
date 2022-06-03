@@ -5,41 +5,49 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Role;
+import com.capstoneprojectb12.lms.backendapilms.models.repositories.RoleRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class RoleService implements BaseService<Role> {
+    private final RoleRepository roleRepository;
+
     @Override
     public Optional<Role> save(Role entity) {
-        throw new RuntimeException("Method not implemented");
+        return Optional.of(Optional.of(this.roleRepository.save(entity))).orElse(Optional.empty());
     }
 
     @Override
     public Optional<Role> update(Role entity) {
-        throw new RuntimeException("Method not implemented");
+        return this.save(entity);
     }
 
     @Override
     public boolean deleteById(String id) {
-        throw new RuntimeException("Method not implemented");
+        var isExists = this.existsById(id);
+        if (isExists) {
+            this.roleRepository.deleteById(id);
+        }
+        return isExists;
     }
 
     @Override
-    public Optional<Role> findById() {
-        throw new RuntimeException("Method not implemented");
+    public Optional<Role> findById(String id) {
+        return this.roleRepository.findById(id);
     }
 
     @Override
     public List<Role> findAll() {
-        throw new RuntimeException("Method not implemented");
+        return this.roleRepository.findAll();
     }
 
     @Override
@@ -49,12 +57,21 @@ public class RoleService implements BaseService<Role> {
 
     @Override
     public Page<Role> findAll(int page, int size) {
-        throw new RuntimeException("Method not implemented");
+        Pageable pageable = PageRequest.of(page, size);
+        var roles = this.roleRepository.findAll(pageable);
+        return roles;
     }
 
     @Override
     public Page<Role> findAll(int page, int size, Sort sort) {
-        throw new RuntimeException("Method not implemented");
+        Pageable pageable = PageRequest.of(page, size, sort);
+        var roles = this.roleRepository.findAll(pageable);
+        return roles;
+    }
+
+    @Override
+    public boolean existsById(String id) {
+        return this.roleRepository.existsById(id);
     }
 
 }
