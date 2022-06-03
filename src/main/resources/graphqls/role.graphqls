@@ -1,0 +1,31 @@
+type Role {
+  id: ID!
+  name: String!
+
+  createdBy: String!
+  createdAt: Object!
+  updatedBy: String
+  updatedAt: Object
+  isDeleted: Boolean!
+}
+
+input RoleNew {
+  name: String!
+}
+input RoleUpdate {
+  name: String!
+}
+
+type RoleResponseDelete {
+  error: Object!
+  status: Boolean!
+}
+
+type RoleQuery {
+  findAll: [Role!]!
+}
+type RoleMutation {
+  save(request: RoleNew!): Role!
+  update(request: RoleUpdate!): Role!
+  deleteById(id: ID!): RoleResponseDelete!
+}
