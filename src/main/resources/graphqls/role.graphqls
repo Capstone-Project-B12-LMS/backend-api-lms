@@ -36,6 +36,7 @@ type RoleQuery {
   findAll: [Role!]!
   findAllWithPageable(page: Int!, size: Int!): RolePagination!
   findAllDeleted: [Role!]!
+  findAllDeletedWithPageable(page: Int!, size: Int!): RolePagination!
 }
 type RoleMutation {
   save(request: RoleNew!): Role
