@@ -33,7 +33,7 @@ jobs:
        run: mvn clean test verify
 
      - name: Preparing Code Coverage Reports
-       run: rm -rfv env/cc/html/* && mv -v target/site/jacoco/* env/cc/html/
+       run: rm -rfv env/cc/html && mv -v target/site/jacoco env/cc/html/
 
      - name: Login to DockerHub
        uses: docker/login-action@v1
