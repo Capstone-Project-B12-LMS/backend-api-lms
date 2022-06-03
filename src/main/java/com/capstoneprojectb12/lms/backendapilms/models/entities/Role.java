@@ -1,4 +1,4 @@
-package com.capstoneprojectb12.lms.backendapilms.entities;
+package com.capstoneprojectb12.lms.backendapilms.models.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
