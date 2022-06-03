@@ -24,9 +24,17 @@ type RoleResponseDelete {
   status: Boolean!
 }
 
+type RolePagination implements PaginationResponse {
+  data: [Role!]!
+  page: Int!
+  size: Int!
+  totalPage: Int!
+  totalSize: Int!
+}
+
 type RoleQuery {
   findAll: [Role!]!
-  findAllWithPageable(page: Int!, size: Int!): [Role!]!
+  findAllWithPageable(page: Int!, size: Int!): RolePagination!
   findAllDeleted: [Role!]!
 }
 type RoleMutation {

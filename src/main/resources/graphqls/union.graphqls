@@ -1,0 +1,8 @@
+union Data = Role
+
+interface PaginationResponse {
+  page: Int!
+  size: Int!
+  totalPage: Int!
+  totalSize: Int!
+}
