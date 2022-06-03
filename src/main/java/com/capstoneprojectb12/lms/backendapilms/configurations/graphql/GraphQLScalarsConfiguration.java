@@ -1,4 +1,4 @@
-package com.capstoneprojectb12.lms.backendapilms.configurations;
+package com.capstoneprojectb12.lms.backendapilms.configurations.graphql;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
