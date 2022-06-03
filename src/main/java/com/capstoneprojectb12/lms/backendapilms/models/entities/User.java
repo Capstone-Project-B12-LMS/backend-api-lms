@@ -30,6 +30,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @Column(nullable = false)
+    @Builder.Default
     private List<Role> roles = new ArrayList<>();
 
     @Override

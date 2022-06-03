@@ -13,7 +13,9 @@ import com.capstoneprojectb12.lms.backendapilms.models.repositories.RoleReposito
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -32,11 +34,14 @@ public class RoleService implements BaseService<Role> {
 
     @Override
     public boolean deleteById(String id) {
-        var isExists = this.existsById(id);
-        if (isExists) {
+        var role = this.findById(id);
+        if (role.isPresent() && !role.get().getIsDeleted()) {
             this.roleRepository.deleteById(id);
+            log.info("Success deleted");
+            return true;
         }
-        return isExists;
+        log.error("Data not found");
+        return false;
     }
 
     @Override
@@ -51,6 +56,7 @@ public class RoleService implements BaseService<Role> {
 
     @Override
     public List<Role> findAll(boolean showDeleted) {
+        // TODO Auto-generated method stub
         throw new RuntimeException("Method not implemented");
     }
 
