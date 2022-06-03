@@ -12,13 +12,11 @@ import com.capstoneprojectb12.lms.backendapilms.services.RoleService;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.DataAlreadyExistsException;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Controller
 @SchemaMapping(typeName = "RoleMutation")
 @RequiredArgsConstructor
-public class RoleMutation implements BaseMutation {
+public class RoleMutation implements BaseMutation<Role> {
     private final RoleService roleService;
 
     @SchemaMapping(field = "save")
