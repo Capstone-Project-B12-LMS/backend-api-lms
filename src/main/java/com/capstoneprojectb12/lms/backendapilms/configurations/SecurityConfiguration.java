@@ -26,6 +26,10 @@ public class SecurityConfiguration {
                 // permit GraphQL url
                 .authorizeRequests().antMatchers("**/graphql/**").permitAll()
 
+                // permit rest api url
+                .antMatchers("/restapi/login", "/restapi/register").permitAll()
+                .anyRequest().authenticated()
+
                 // disable session
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
