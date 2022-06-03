@@ -7,7 +7,7 @@ interface PaginationResponse {
 
 type ResponseToken {
   token: String!
-  error: String!
+  error: Object!
 }
 type ResponseDelete {
   error: Object!
