@@ -12,9 +12,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.entities.Role;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.RoleRepository;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
