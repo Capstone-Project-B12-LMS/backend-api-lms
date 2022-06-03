@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Role;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.RoleRepository;
+import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -70,6 +71,18 @@ public class RoleService implements BaseService<Role> {
     @Override
     public boolean existsById(String id) {
         return this.roleRepository.existsById(id);
+    }
+
+    @Override
+    public PaginationResponse<List<Role>> toPaginationResponse(Page<Role> page) {
+        var result = PaginationResponse.<List<Role>>builder()
+                .data(page.getContent())
+                .page(page.getPageable().getPageNumber())
+                .size(page.getPageable().getPageSize())
+                .totalPage(page.getTotalPages())
+                .totalSize(page.getTotalElements())
+                .build();
+        return result;
     }
 
 }

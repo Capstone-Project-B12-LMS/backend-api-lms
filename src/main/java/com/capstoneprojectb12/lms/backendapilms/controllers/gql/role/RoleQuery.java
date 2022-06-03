@@ -29,14 +29,7 @@ public class RoleQuery {
             @Argument(name = "size") int size) {
 
         var pageRoles = this.roleService.findAll(page, size);
-        var response = PaginationResponse.<List<Role>>builder()
-                .data(pageRoles.getContent())
-                .page(pageRoles.getPageable().getPageNumber())
-                .size(pageRoles.getPageable().getPageSize())
-                .totalPage(pageRoles.getTotalPages())
-                .totalSize(pageRoles.getTotalElements())
-                .build();
-
+        var response = this.roleService.toPaginationResponse(pageRoles);
         return response;
     }
 }
