@@ -24,7 +24,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 // permit GraphQL url
-                .authorizeHttpRequests().antMatchers("**/graphql/**").permitAll()
+                .authorizeRequests().antMatchers("**/graphql/**").permitAll()
 
                 // disable session
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -37,7 +37,7 @@ public class SecurityConfiguration {
                                 setUserDetailsService(userService);
                             }
                         })
-                .authorizeRequests()
+                .headers().cacheControl().disable()
 
                 // disable csrf
                 .and().csrf().disable();
