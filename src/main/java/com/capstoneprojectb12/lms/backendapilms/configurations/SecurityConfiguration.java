@@ -34,9 +34,6 @@ public class SecurityConfiguration {
                 // permit rest api url
                 .antMatchers("/restapi/login", "/restapi/register").permitAll()
 
-                // authenticate other
-                .anyRequest().authenticated()
-
                 // use jwt filter
                 .and().addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 
