@@ -16,6 +16,7 @@ import com.capstoneprojectb12.lms.backendapilms.utilities.jwt.JwtUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @RestController
@@ -27,7 +28,7 @@ public class UserController {
     private final JwtUtils jwtUtils;
 
     @PostMapping(value = { "/login" })
-    public ResponseEntity<?> login(@RequestBody @Valid UserLogin request, Errors errors) {
+    public ResponseEntity<?> login(@RequestBody @Valid UserLogin request, @ApiIgnore Errors errors) {
         if (errors.hasErrors()) {
             return ResponseEntity.badRequest().body(ApiValidation.getErrorMessages(errors));
         }
@@ -66,7 +67,7 @@ public class UserController {
     }
 
     @PostMapping(value = { "/register" })
-    public ResponseEntity<?> register(@RequestBody @Valid UserNew request, Errors errors) {
+    public ResponseEntity<?> register(@RequestBody @Valid UserNew request, @ApiIgnore Errors errors) {
         if (errors.hasErrors()) {
             return ResponseEntity.badRequest().body(ApiResponse.failed(ApiValidation.getErrorMessages(errors)));
         }

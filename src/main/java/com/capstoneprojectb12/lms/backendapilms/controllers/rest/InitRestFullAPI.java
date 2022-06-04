@@ -11,6 +11,8 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.hello.SayHelloInput;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.hello.SayHelloResponse;
 import com.capstoneprojectb12.lms.backendapilms.utilities.ApiValidation;
 
+import springfox.documentation.annotations.ApiIgnore;
+
 @RestController
 @RequestMapping(value = { "/restapi" })
 public class InitRestFullAPI {
@@ -24,7 +26,7 @@ public class InitRestFullAPI {
     }
 
     @PostMapping
-    public ResponseEntity<?> init(@RequestBody @Valid SayHelloInput to, Errors errors) {
+    public ResponseEntity<?> init(@RequestBody @Valid SayHelloInput to, @ApiIgnore Errors errors) {
         if (errors.hasErrors()) {
             return ResponseEntity.badRequest().body(ApiValidation.getErrorMessages(errors));
         }
