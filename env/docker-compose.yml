@@ -4,6 +4,7 @@ services:
   backend-api-lms: 
    image: irdaislakhuafa/backend-api-lms:latest
    container_name: backend-api-lms-app
+   restart: of-failure
    ports:
      - 8080:8080
    networks:
@@ -16,6 +17,7 @@ services:
     
   backend-api-db-postgresql:
     image: postgres:latest
+    restart: of-failure
     container_name: backend-api-lms-db-postgresql
     ports:
       - 5432:5432
@@ -23,7 +25,8 @@ services:
       - kelompok-b12
   
   backend-api-db-mongodb:
-    image: mongodb:latest
+    image: bitnami/mongodb:latest
+    restart: of-failure
     container_name: backend-api-lms-db-mongodb
     ports:
       - 27017:20717
