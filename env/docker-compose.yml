@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  backend-api-lms: 
+   image: irdaislakhuafa/backend-api-lms:latest
+   container_name: backend-api-lms-app
+   restart: of-failure
+   ports:
+     - 8080:8080
+   networks:
+    - kelompok-b12
+   env_file:
+     - ./app.env
+   depends_on:
+     - backend-api-db-postgresql
+     - backend-api-db-mongodb
+    
+  backend-api-db-postgresql:
+    image: postgres:latest
+    restart: of-failure
+    container_name: backend-api-lms-db-postgresql
+    ports:
+      - 5432:5432
+    networks:
+      - kelompok-b12
+  
+  backend-api-db-mongodb:
+    image: bitnami/mongodb:latest
+    restart: of-failure
+    container_name: backend-api-lms-db-mongodb
+    ports:
+      - 27017:20717
+    networks:
+      - kelompok-b12
+
+networks:
+  kelompok-b12: {}
