@@ -5,6 +5,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.capstoneprojectb12.lms.backendapilms.controllers.rest.InitRestFullAPI;
+
+import springfox.documentation.builders.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -21,7 +24,14 @@ public class BeansConfiguration {
     public Docket docket() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .build();
+                .apis(RequestHandlerSelectors.basePackage(InitRestFullAPI.class.getPackageName()))
+                .paths(PathSelectors.ant("/restapi/**"))
+                .build()
+                .apiInfo(new ApiInfoBuilder()
+                        .version("1.0")
+                        .description("This is Rest API documentation for Backend API LMS (StudySpace) project")
+                        .title("Backend API StudySpace App")
+                        .build());
     }
 
 }
