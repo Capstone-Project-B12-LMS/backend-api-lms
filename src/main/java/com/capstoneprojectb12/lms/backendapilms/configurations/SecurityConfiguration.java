@@ -2,13 +2,17 @@ package com.capstoneprojectb12.lms.backendapilms.configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.capstoneprojectb12.lms.backendapilms.filters.JwtFilter;
 import com.capstoneprojectb12.lms.backendapilms.services.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -19,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfiguration {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final JwtFilter jwtFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -28,10 +33,15 @@ public class SecurityConfiguration {
 
                 // permit rest api url
                 .antMatchers("/restapi/login", "/restapi/register").permitAll()
+
+                // authenticate other
                 .anyRequest().authenticated()
 
+                // use jwt filter
+                .and().addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+
                 // disable session
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
                 // spill user deatils service and password encoder to spring security
                 .and().authenticationProvider(
@@ -41,11 +51,15 @@ public class SecurityConfiguration {
                                 setUserDetailsService(userService);
                             }
                         })
-                .headers().cacheControl().disable()
 
                 // disable csrf
-                .and().csrf().disable();
+                .csrf().disable();
 
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
     }
 }

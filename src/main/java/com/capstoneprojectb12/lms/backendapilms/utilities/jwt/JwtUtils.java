@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class Jwtutils {
+public class JwtUtils {
     private final UserService userService;
 
     @Value(value = "${jwt.secret.key}")
@@ -53,12 +53,13 @@ public class Jwtutils {
                 .setSigningKey(secretkey)
                 .parseClaimsJws(tokenString)
                 .getBody();
+        log.info("Success get claims");
         return claims;
     }
 
     public boolean isExpired(String tokenString) {
         var expiredAt = this.getClaims(tokenString).getExpiration();
-        return expiredAt.after(new Date(System.currentTimeMillis()));
+        return expiredAt.before(new Date(System.currentTimeMillis()));
     }
 
     public boolean isValid(String tokenString, User user) {
@@ -72,6 +73,7 @@ public class Jwtutils {
                         .getPassword()
                         .equals(user.getPassword())
                 && !this.isExpired(tokenString));
+        log.info("Is token valid : " + isValid);
         return isValid;
     }
 }

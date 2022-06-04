@@ -3,6 +3,7 @@ package com.capstoneprojectb12.lms.backendapilms.controllers.rest;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ import com.capstoneprojectb12.lms.backendapilms.utilities.ApiValidation;
 @RequestMapping(value = { "/restapi" })
 public class InitRestFullAPI {
     @GetMapping
+    @PreAuthorize(value = "hasAnyAuthority('TEACHER')")
     public ResponseEntity<?> init() {
         var response = SayHelloResponse.builder()
                 .message("Hi, my name is KELOMPOK B 12")
