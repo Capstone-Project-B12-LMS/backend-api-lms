@@ -29,12 +29,12 @@ public class BaseEntity implements Serializable {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String createdBy;
 
     private LocalDateTime updatedAt;
 
-    @Column(length = 255)
+
     private String updatedBy;
 
     @Column(nullable = false)
