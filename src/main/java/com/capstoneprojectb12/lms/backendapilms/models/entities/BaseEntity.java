@@ -74,8 +74,8 @@ public class BaseEntity implements Serializable {
 
     private String getCurrentUser() {
         try {
-            var user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            return user.getEmail();
+            var email = SecurityContextHolder.getContext().getAuthentication().getName();
+            return email;
         } catch (Exception e) {
             log.error("Current user is SYSTEM");
             return "SYSTEM";
