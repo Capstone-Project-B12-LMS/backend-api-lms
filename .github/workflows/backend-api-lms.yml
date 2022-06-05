@@ -4,9 +4,11 @@ on:
   push:
    branches:
      - "master"
+     - "dev"
   pull_request:
     branches:
      - "master"
+     - "dev"
 
 jobs:
   tests:
@@ -161,7 +163,7 @@ jobs:
           port: ${{ secrets.SERVER_SSH_PORT }}
           script: |
             cd
-            md="irdaislakhuafa"
+            me="irdaislakhuafa"
             baseDir="Apps/$me"
             appName="backend-api-lms"
 
