@@ -1,23 +1,19 @@
 package com.capstoneprojectb12.lms.backendapilms.models.entities;
 
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
-
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity (name = "assignments")
+import javax.persistence.*;
+
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+
+@Entity(name = "assignments")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class Assignment extends BaseEntity{
-
+public class Assignment extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "class")
@@ -45,7 +41,5 @@ public class Assignment extends BaseEntity{
 
     @ManyToOne
     private Category category;
-
-
 
 }

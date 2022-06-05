@@ -8,15 +8,13 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
-
 @Entity(name = "comments")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class Comment extends BaseEntity{
-
+public class Comment extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "class")
@@ -28,4 +26,4 @@ public class Comment extends BaseEntity{
     @Column(length = 1000, nullable = false)
     private String content;
 
-    }
+}

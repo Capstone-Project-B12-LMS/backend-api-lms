@@ -14,7 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class Topic extends BaseEntity{
+public class Topic extends BaseEntity {
 
     @Column(nullable = false)
     private String name;

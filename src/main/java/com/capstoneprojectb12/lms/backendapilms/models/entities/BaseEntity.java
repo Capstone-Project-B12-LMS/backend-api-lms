@@ -34,7 +34,6 @@ public class BaseEntity implements Serializable {
 
     private LocalDateTime updatedAt;
 
-
     private String updatedBy;
 
     @Column(nullable = false)

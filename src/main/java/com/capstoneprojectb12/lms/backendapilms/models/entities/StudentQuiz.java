@@ -16,7 +16,7 @@ import javax.persistence.ManyToOne;
 @SuperBuilder
 @Getter
 @Setter
-public class StudentQuiz extends BaseEntity{
+public class StudentQuiz extends BaseEntity {
 
     @ManyToOne
     private Quiz quiz;
@@ -29,6 +29,5 @@ public class StudentQuiz extends BaseEntity{
 
     @Column(length = 3, nullable = false)
     private int point;
-
 
 }

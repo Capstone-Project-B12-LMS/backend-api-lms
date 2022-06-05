@@ -10,14 +10,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
-
 @Entity(name = "sudent_assignments")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class StudentAssignment extends BaseEntity{
+public class StudentAssignment extends BaseEntity {
 
     @ManyToOne
     private User user;
@@ -29,6 +28,5 @@ public class StudentAssignment extends BaseEntity{
 
     @Column(length = 1000)
     private String fileUrl;
-
 
 }

@@ -1,13 +1,10 @@
 package com.capstoneprojectb12.lms.backendapilms.models.entities;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import javax.persistence.*;
 
 @Entity(name = "categories")
 @Getter
@@ -15,10 +12,9 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class Category extends BaseEntity{
+public class Category extends BaseEntity {
 
-
-    @Column( unique = true)
+    @Column(unique = true)
     private String name;
 
     @Column(length = 1000)
