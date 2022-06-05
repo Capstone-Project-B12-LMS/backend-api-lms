@@ -48,6 +48,7 @@ services:
     environment:
       - MONGODB_USERNAME=mongo
       - MONGODB_PASSWORD=mongo
+      - ALLOW_EMPTY_PASSWORD=yes
       - MONGODB_DATABASE=study_space_db
 
 networks:
