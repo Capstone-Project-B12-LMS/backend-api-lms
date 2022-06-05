@@ -1,6 +1,6 @@
-package com.capstoneprojectb12.lms.backendapilms.models.entity;
+package com.capstoneprojectb12.lms.backendapilms.models.entities;
 
-import com.capstoneprojectb12.lms.backendapilms.models.entity.utils.ClassStatus;
+import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.ClassStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,15 +16,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class Class {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+public class Class extends BaseEntity{
 
-    @Column(length = 255, nullable = false)
+
+    @Column(nullable = false)
     private String name;
 
-    @Column(length = 255)
     private String room;
 
     @Column(length = 10 ,nullable = false, unique = true)
@@ -33,11 +30,9 @@ public class Class {
     @Enumerated(value = EnumType.STRING)
     private ClassStatus status;
 
-    @ManyToMany
-    private List<User>users;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<User> users;
 
-    @Column(length = 255, nullable = false)
-    private String createdBy;
 
 
 }

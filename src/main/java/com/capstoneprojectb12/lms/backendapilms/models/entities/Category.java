@@ -1,4 +1,4 @@
-package com.capstoneprojectb12.lms.backendapilms.models.entity;
+package com.capstoneprojectb12.lms.backendapilms.models.entities;
 
 
 import lombok.AllArgsConstructor;
@@ -15,14 +15,12 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class Category {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+public class Category extends BaseEntity{
 
-    @Column(length = 255, unique = true)
+
+    @Column( unique = true)
     private String name;
 
-    @Column(length = 255)
+    @Column(length = 1000)
     private String description;
 }

@@ -1,4 +1,4 @@
-package com.capstoneprojectb12.lms.backendapilms.models.entity;
+package com.capstoneprojectb12.lms.backendapilms.models.entities;
 
 
 import lombok.AllArgsConstructor;
@@ -9,7 +9,6 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity (name = "assignments")
 @Getter
@@ -17,29 +16,27 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class Assignment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+public class Assignment extends BaseEntity{
+
 
     @ManyToOne
-    @Column(length = 255)
-    private List<Class> classes;
+    @JoinColumn(name = "class")
+    private Class classes;
 
-    @Column(length = 255, nullable = false)
+    @Column(nullable = false)
     private String title;
 
     @Column(length = 1000, nullable = false)
     private String content;
 
-    @Column(length = 255)
-    private List<Topic> topics;
+    @ManyToOne
+    private Topic topic;
 
     @Column(length = 1000)
     private String videoUri;
 
     @Column(length = 1000)
-    private String fileUri;
+    private String fileUrl;
 
     private LocalDateTime deadline;
 
@@ -47,11 +44,8 @@ public class Assignment {
     private int point;
 
     @ManyToOne
-    @Column(length = 255)
-    private List<Category> categories;
+    private Category category;
 
-    @Column(length = 255)
-    private String createdBy;
 
 
 }
