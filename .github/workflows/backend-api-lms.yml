@@ -167,6 +167,6 @@ jobs:
             baseDir="Apps/$me"
             appName="backend-api-lms"
 
-            cd $baseDir/$appName
+            cd $baseDir/$appName/env
             docker-compose up -d
 
