@@ -30,6 +30,10 @@ services:
     container_name: backend-api-lms-db-postgresql
     ports:
       - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=study_space_db
     networks:
       - kelompok-b12
   
@@ -41,6 +45,10 @@ services:
       - 27017:20717
     networks:
       - kelompok-b12
+    environment:
+      - MONGODB_USERNAME=mongo
+      - MONGODB_PASSWORD=mongo
+      - MONGODB_DATABASE=study_space_db
 
 networks:
   kelompok-b12: {}
