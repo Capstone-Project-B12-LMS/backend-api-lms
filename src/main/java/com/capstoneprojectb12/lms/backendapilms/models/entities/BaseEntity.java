@@ -29,12 +29,11 @@ public class BaseEntity implements Serializable {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String createdBy;
 
     private LocalDateTime updatedAt;
 
-    @Column(length = 255)
     private String updatedBy;
 
     @Column(nullable = false)
@@ -75,8 +74,8 @@ public class BaseEntity implements Serializable {
 
     private String getCurrentUser() {
         try {
-            var user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            return user.getEmail();
+            var email = SecurityContextHolder.getContext().getAuthentication().getName();
+            return email;
         } catch (Exception e) {
             log.error("Current user is SYSTEM");
             return "SYSTEM";
