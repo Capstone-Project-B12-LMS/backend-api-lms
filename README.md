@@ -38,3 +38,18 @@ Here we have 2 mode of API
 - `GraphQL API`
 
   - On GraphQL API you can access `http://localhost:8080/graphiql?path=/graphql` to use `GraphQL` in browser and you can send your `GraphQL Query` in `http://localhost:8080/graphql`
+
+# Using Deployed App
+
+This app already deployed in server enviroment. So, you can use some resource to use this app without install it.
+Use resource bellow to use it.
+
+- `Rest FULL API`
+
+  - API Docs : http://ec2-34-212-169-254.us-west-2.compute.amazonaws.com/restapi/docs/swagger-ui/
+
+- `GraphQL API`
+
+  - GraphiQL to test graphql in browser with simple documentation : http://ec2-34-212-169-254.us-west-2.compute.amazonaws.com/graphiql?path=/graphql
+
+  - GraphQL url : http://ec2-34-212-169-254.us-west-2.compute.amazonaws.com/graphql
