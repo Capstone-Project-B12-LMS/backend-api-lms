@@ -1,0 +1,170 @@
+name: Backend API Project for LMS Kelompok B12
+
+on: 
+  push:
+   branches:
+     - "master"
+  pull_request:
+    branches:
+     - "master"
+
+jobs:
+  tests:
+   name: Testing Backend API LMS 
+   runs-on: ubuntu-latest
+   steps:
+     - name: Clone Repository to Github Testing Enviroment
+       uses: actions/checkout@v1
+
+     - name: Setup Java Enviroment
+       uses: actions/setup-java@v3
+       with:
+         java-version: "11"
+         distribution: "temurin"
+     
+    #  - name: Restore Maven Cache Dependency
+    #    uses: skjolber/maven-cache-github-action@v1.1
+    #    with:
+    #      step: restore
+
+     - name: Running Testing
+       run: mvn clean test verify
+
+     - name: Preparing Code Coverage Reports
+       run: rm -rfv env/cc/html; mv -v target/site/jacoco env/cc/html
+
+     - name: Login to DockerHub
+       uses: docker/login-action@v1
+       with:
+         username: ${{ secrets.DOCKER_USERNAME }}
+         password: ${{ secrets.DOCKER_TOKEN }}
+     
+     - name: Build Docker Image for Code Coverage
+       uses: docker/build-push-action@v2
+       with:
+         context: ./env/cc/
+         tags: irdaislakhuafa/backend-api-lms-cc:latest
+         push: true
+      
+    #  - name: Save Maven Cache Dependency
+    #    uses: skjolber/maven-cache-github-action@v1.1
+    #    with:
+    #      step: save
+
+  build: 
+   name: Build Docker Image with App
+   runs-on: ubuntu-latest
+   needs: tests
+   steps:
+     - name: Clone Repository to Github Build Enviroment
+       uses: actions/checkout@v1
+
+     - name: Setup Java Enviroment
+       uses: actions/setup-java@v3
+       with:
+         java-version: "11"
+         distribution: "temurin"
+      
+    #  - name: Restore Maven Cache Dependency
+    #    uses: skjolber/maven-cache-github-action@v1.1
+    #    with:
+    #      step: restore
+
+     - name: Login to DockerHub
+       uses: docker/login-action@v1
+       with:
+         username: ${{ secrets.DOCKER_USERNAME }}
+         password: ${{ secrets.DOCKER_TOKEN }}
+
+     - name: Build Web Archive App
+       run: mvn clean package && mv -v target/*.war env/app.war
+     
+     - name: Build Docker Image
+       uses: docker/build-push-action@v2
+       with:
+         context: ./env/
+         push: true
+         tags: irdaislakhuafa/backend-api-lms:latest
+     
+    #  - name: Save Maven Cache Dependency
+    #    uses: skjolber/maven-cache-github-action@v1.1
+    #    with:
+    #      step: save
+
+  prepare-server: 
+     name: Preparing App Enviroment in AWS Server
+     runs-on: ubuntu-latest
+     needs: build
+     steps:
+       - name: Clone Repository to Github Enviroment
+         uses: actions/checkout@v1
+       
+       - name: Preparing App Directory
+         uses: appleboy/ssh-action@master
+         with:
+           host: ${{ secrets.SERVER_HOST }}
+           username: ${{ secrets.SERVER_USERNAME }}
+           key: ${{ secrets.SERVER_SECRET_KEY }}
+           port: ${{ secrets.SERVER_SSH_PORT }}
+           script: |
+             cd
+             
+             me="irdaislakhuafa"
+             baseDir="Apps/$me"
+             appName="backend-api-lms"
+
+             appDir="$baseDir/$appName"
+             appDirCondition="$(ls $baseDir/  | grep $appName )"
+
+             if [ "$appDirCondition" = "" ]; then
+                mkdir -pv "$appDir"
+             else 
+                cd $appDir/
+                docker-compose down
+                docker rmi $me/$appName:latest $me/$appName-cc:latest
+                rm -rfv * 
+                cd
+             fi
+
+            #  appCcName="$appName-cc"
+            #  appCcImage="$me/$appCcName:latest"
+            #  appCcCondition="$(docker image ls | grep $appCcName)"
+
+            #  if [ "$appCcCondition" != "" ]; then
+            #     docker rmi $appCcImage
+            #  fi
+
+             
+
+       - name: Copy app file configuration to server
+         uses: appleboy/scp-action@master
+         with:
+           host: ${{ secrets.SERVER_HOST }}
+           username: ${{ secrets.SERVER_USERNAME }}
+           key: ${{ secrets.SERVER_SECRET_KEY }}
+           port: ${{ secrets.SERVER_SSH_PORT }}
+           source: env/*
+           target: ${{ secrets.SERVER_APP_TARGET_DIR }}
+
+
+  deploy:
+    name: Deploy App To AWS Server
+    needs: prepare-server
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run App On Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SECRET_KEY }}
+          port: ${{ secrets.SERVER_SSH_PORT }}
+          script: |
+            cd
+            me="irdaislakhuafa"
+            baseDir="Apps/$me"
+            appName="backend-api-lms"
+
+            cd $baseDir/$appName/env
+            docker-compose up -d
+

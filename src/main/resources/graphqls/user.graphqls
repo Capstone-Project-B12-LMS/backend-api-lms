@@ -1,0 +1,40 @@
+type User {
+  id: ID!
+  fullName: String!
+  email: String!
+  password: String!
+  roles: [Role!]!
+}
+
+input UserNew {
+  fullName: String!
+  email: String!
+  password: String!
+  roles: [String!]!
+}
+
+input UserLogin {
+  email: String!
+  password: String!
+}
+
+type UserPagination implements PaginationResponse {
+  data: [User!]!
+  page: Int!
+  size: Int!
+  totalPage: Int!
+  totalSize: Int!
+}
+
+type UserQuery {
+  findAll: [User!]!
+  findAllWithPageable(page: Int!, size: Int!): UserPagination!
+  findAllDeleted: [User!]!
+  findAllDeletedWithPageable(page: Int!, size: Int!): UserPagination!
+}
+
+type UserMutation {
+  register(request: UserNew!): User
+  login(request: UserLogin!): ResponseToken!
+  deleteById(id: ID!): ResponseDelete!
+}

@@ -1,0 +1,36 @@
+type Role {
+  id: ID!
+  name: String!
+  description: String!
+
+  createdBy: String!
+  createdAt: Object!
+  updatedBy: String
+  updatedAt: Object
+  isDeleted: Boolean
+}
+
+input RoleNew {
+  name: String!
+  description: String!
+}
+
+type RolePagination implements PaginationResponse {
+  data: [Role!]!
+  page: Int!
+  size: Int!
+  totalPage: Int!
+  totalSize: Int!
+}
+
+type RoleQuery {
+  findAll: [Role!]!
+  findAllWithPageable(page: Int!, size: Int!): RolePagination!
+  findAllDeleted: [Role!]!
+  findAllDeletedWithPageable(page: Int!, size: Int!): RolePagination!
+}
+type RoleMutation {
+  save(request: RoleNew!): Role
+  update(request: RoleNew!): Role
+  deleteById(id: ID!): ResponseDelete!
+}
