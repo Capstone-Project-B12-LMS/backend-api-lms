@@ -1,0 +1,13 @@
+# create data type to store anything
+
+type Query {
+  hello: HelloQuery!
+  role: RoleQuery!
+  user: UserQuery!
+}
+
+type Mutation {
+  hello: HelloMutation!
+  role: RoleMutation!
+  user: UserMutation!
+}

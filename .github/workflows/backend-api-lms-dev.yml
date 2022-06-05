@@ -1,0 +1,28 @@
+name: Testing Enviroment Before Development
+
+on: 
+  push:
+    branches:
+      - "dev"
+  pull_request: 
+    branches: 
+      - "dev"
+
+jobs:
+  tests:
+    name: Testing App
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone Repository on Github Testing Enviroment
+        uses: actions/checkout@v1
+
+      - name: Setup Java Enviroment
+        uses: actions/setup-java@v3
+        with:
+          java-version: "11"
+          distribution: "temurin"
+      
+      - name: Run Testing
+        run: mvn clean test verify
+
+  

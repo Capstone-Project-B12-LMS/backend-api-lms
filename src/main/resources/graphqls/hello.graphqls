@@ -1,0 +1,16 @@
+type SayHelloResponse {
+  message: String
+  errors: Object
+}
+
+input SayHelloInput {
+  name: String!
+}
+
+type HelloQuery {
+  sayHello: SayHelloResponse!
+}
+
+type HelloMutation {
+  sayHello(to: SayHelloInput!): SayHelloResponse!
+}
