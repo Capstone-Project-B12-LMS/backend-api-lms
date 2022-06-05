@@ -24,10 +24,10 @@ jobs:
          java-version: "11"
          distribution: "temurin"
      
-     - name: Restore Maven Cache Dependency
-       uses: skjolber/maven-cache-github-action@v1
-       with:
-         step: restore
+    #  - name: Restore Maven Cache Dependency
+    #    uses: skjolber/maven-cache-github-action@v1
+    #    with:
+    #      step: restore
 
      - name: Running Testing
        run: mvn clean test verify
