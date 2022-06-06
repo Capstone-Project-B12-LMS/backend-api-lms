@@ -119,7 +119,7 @@ jobs:
              if [ "$appDirCondition" = "" ]; then
                 mkdir -pv "$appDir"
              else 
-                cd $appDir/
+                cd $appDir/env
                 docker-compose down
                 docker rmi $me/$appName:latest $me/$appName-cc:latest
                 rm -rfv * 
