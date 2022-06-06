@@ -11,8 +11,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 import com.capstoneprojectb12.lms.backendapilms.filters.JwtFilter;
 import com.capstoneprojectb12.lms.backendapilms.services.UserService;
@@ -21,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableWebMvc
 @RequiredArgsConstructor
 public class SecurityConfiguration {
     private final UserService userService;
@@ -64,7 +64,7 @@ public class SecurityConfiguration {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry corsRegistry) {
-                corsRegistry.addMapping("*").allowedOriginPatterns("*").allowedOrigins("*");
+                corsRegistry.addMapping("**").allowedOriginPatterns("**").allowedOrigins("**");
             }
         };
     }
