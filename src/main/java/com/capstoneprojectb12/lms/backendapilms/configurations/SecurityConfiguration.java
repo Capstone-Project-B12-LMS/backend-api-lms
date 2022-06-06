@@ -11,6 +11,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.capstoneprojectb12.lms.backendapilms.filters.JwtFilter;
 import com.capstoneprojectb12.lms.backendapilms.services.UserService;
@@ -28,6 +30,8 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                // enable cors
+                .cors().and()
                 // permit GraphQL url
                 .authorizeRequests().antMatchers("**/graphql/**").permitAll()
 
@@ -53,6 +57,16 @@ public class SecurityConfiguration {
                 .csrf().disable();
 
         return http.build();
+    }
+
+    @Bean
+    public WebMvcConfigurer webMvcConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry corsRegistry) {
+                corsRegistry.addMapping("*").allowedOriginPatterns("*").allowedOrigins("*");
+            }
+        };
     }
 
     @Bean
