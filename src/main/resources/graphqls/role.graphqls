@@ -31,6 +31,6 @@ type RoleQuery {
 }
 type RoleMutation {
   save(request: RoleNew!): Role
-  update(request: RoleNew!): Role
+  update(id: ID!, request: RoleNew!): Role
   deleteById(id: ID!): ResponseDelete!
 }

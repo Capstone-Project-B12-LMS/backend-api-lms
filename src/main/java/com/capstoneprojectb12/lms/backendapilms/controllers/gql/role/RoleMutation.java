@@ -32,7 +32,7 @@ public class RoleMutation implements BaseMutation<Role, RoleNew> {
     }
 
     @Override
-    public Role update(RoleNew request) {
+    public Role update(String id, RoleNew request) {
         // TODO: implement me
         return null;
     }
