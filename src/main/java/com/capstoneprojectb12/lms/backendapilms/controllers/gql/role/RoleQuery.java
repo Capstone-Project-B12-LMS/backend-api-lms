@@ -48,4 +48,10 @@ public class RoleQuery implements BaseQuery<Role> {
         return null;
     }
 
+    @Override
+    public Role findById(String id) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

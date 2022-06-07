@@ -14,5 +14,4 @@ public interface BaseQuery<T> {
     public PaginationResponse<List<T>> findAllDeletedWithPageable(int page, int size);
 
     public T findById(String id);
-
 }

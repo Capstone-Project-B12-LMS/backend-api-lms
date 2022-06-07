@@ -126,13 +126,7 @@ public class UserController {
                 });
             }
 
-            user.get().setEmail(request.getEmail());
-            user.get().setFullName(request.getFullName());
-            user.get().setTelepon(request.getTelepon());
-            // user.get().setPassword(re);
-
-            user = this.userService.update(user.get());
-
+            user = this.userService.update(user.get(), request);
             return ApiResponse.responseOk(user.get());
         } catch (Exception e) {
             log.error("error when update user by id", e);

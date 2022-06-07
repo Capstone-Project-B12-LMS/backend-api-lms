@@ -2,14 +2,15 @@ package com.capstoneprojectb12.lms.backendapilms.controllers.gql.user;
 
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.base.ResponseDelete;
-import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserLogin;
-import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserNew;
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.*;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
 import com.capstoneprojectb12.lms.backendapilms.services.UserService;
 import com.capstoneprojectb12.lms.backendapilms.utilities.ResponseToken;
@@ -72,9 +73,21 @@ public class UserMutation {
         }
     }
 
-    public User update(UserNew request) {
-        // TODO Auto-generated method stub
-        return null;
+    @PreAuthorize(value = "hasAnyAuthority('USER')")
+    @SchemaMapping(field = "updateById")
+    public User updateById(@Argument(name = "id") String id, @Argument(name = "request") UserUpdate request) {
+        try {
+            var user = this.userService.findById(id);
+            if (!user.isPresent()) {
+                throw new UsernameNotFoundException("user not found");
+            }
+
+            user = this.userService.update(user.get(), request);
+            return user.orElse(null);
+        } catch (Exception e) {
+            log.error("error when update user by id", e);
+            return null;
+        }
     }
 
     public ResponseDelete deleteById(String id) {
