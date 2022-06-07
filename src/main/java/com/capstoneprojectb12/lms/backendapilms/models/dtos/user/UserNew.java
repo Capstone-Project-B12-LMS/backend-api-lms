@@ -3,6 +3,7 @@ package com.capstoneprojectb12.lms.backendapilms.models.dtos.user;
 import javax.validation.constraints.*;
 
 import lombok.*;
+import lombok.Builder.Default;
 import lombok.experimental.SuperBuilder;
 
 @Getter
@@ -26,4 +27,10 @@ public class UserNew {
     @NotBlank(message = "cannot be  blank")
     @NotEmpty(message = "cannot be empty")
     private String password;
+
+    // @NotNull(message = "cannot be null")
+    // @NotBlank(message = "cannot be blank")
+    // @NotEmpty(message = "cannot be empty")
+    @Default
+    private String telepon = "";
 }

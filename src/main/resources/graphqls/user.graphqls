@@ -2,13 +2,21 @@ type User {
   id: ID!
   fullName: String!
   email: String!
+  telepon: String!
   password: String!
   roles: [Role!]!
+
+  createdBy: String!
+  createdAt: String!
+  updatedBy: String
+  updatedAt: String
+  isDeleted: Boolean!
 }
 
 input UserNew {
   fullName: String!
   email: String!
+  telepon: String
   password: String!
 }
 

@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.*;
+import lombok.Builder.Default;
 import lombok.experimental.SuperBuilder;
 
 @Entity(name = "users")
@@ -27,6 +28,10 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    @Default
+    private String telepon = "";
 
     @ManyToMany(fetch = FetchType.EAGER)
     @Column(nullable = false)

@@ -117,6 +117,7 @@ public class UserService implements BaseService<User>, UserDetailsService {
         return User.builder()
                 .fullName(userNew.getFullName())
                 .email(userNew.getEmail())
+                .telepon(userNew.getTelepon())
                 .password(userNew.getPassword())
                 .roles(List.of(role.get()))
                 .build();
