@@ -1,5 +1,8 @@
 package com.capstoneprojectb12.lms.backendapilms.utilities;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
+
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -31,5 +34,21 @@ public class ApiResponse<T> {
                 .data(data)
                 .errors(null)
                 .build();
+    }
+
+    public static ResponseEntity<?> errorValidation(Errors errors) {
+        return ResponseEntity.badRequest().body(failed(ApiValidation.getErrorMessages(errors)));
+    }
+
+    public static ResponseEntity<?> responseOk(Object data) {
+        return ResponseEntity.ok(success(data));
+    }
+
+    public static ResponseEntity<?> responseBad(Object message) {
+        return ResponseEntity.badRequest().body(failed(message));
+    }
+
+    public static ResponseEntity<?> responseError(Exception message) {
+        return ResponseEntity.internalServerError().body(error(message.getMessage()));
     }
 }
