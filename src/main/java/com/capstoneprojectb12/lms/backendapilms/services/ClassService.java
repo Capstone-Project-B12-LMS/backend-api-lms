@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassNew;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
@@ -88,4 +89,10 @@ public class ClassService implements BaseService<Class> {
                 .build();
     }
 
+    public Class toEntity(ClassNew classNew) {
+        return Class.builder()
+                .name(classNew.getName())
+                .room(classNew.getRoom())
+                .build();
+    }
 }

@@ -10,7 +10,7 @@ type Class {
   room: String
   code: String!
   status: ClassStatus!
-  users: [User!]!
+  users: [User!]
 
   createdBy: String!
   createdAt: String!
@@ -30,7 +30,6 @@ type ClassPagination implements PaginationResponse {
 input ClassNew {
   name: String!
   room: String
-  status: ClassStatus!
 }
 
 input ClassUpdate {

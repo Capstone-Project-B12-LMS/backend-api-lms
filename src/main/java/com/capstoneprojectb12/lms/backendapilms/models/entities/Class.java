@@ -1,7 +1,6 @@
 package com.capstoneprojectb12.lms.backendapilms.models.entities;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import javax.persistence.*;
 
@@ -34,7 +33,10 @@ public class Class extends BaseEntity {
 
     @PrePersist
     public void onInsertClass() {
-        this.code = UUID.randomUUID().toString().substring(0, 10);
+        this.code = UUID.randomUUID()
+                .toString()
+                .substring(0, 10)
+                .replaceAll("-", String.valueOf(new Random().nextInt(9)));
         this.status = ClassStatus.ACTIVE;
     }
 }

@@ -11,7 +11,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
 
 @Repository
 public interface ClassRepository extends JpaRepository<Class, String> {
-    public List<Class> findByCreateByEqualsIgnoreCase(String createdBy);
+    public List<Class> findByCreatedByEqualsIgnoreCase(String createdBy);
 
     public Page<Class> findAll(Pageable pageable);
 }
