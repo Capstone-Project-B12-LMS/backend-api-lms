@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.base.BaseQuery;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Role;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @SchemaMapping(typeName = "RoleQuery")
 @RequiredArgsConstructor
+@CrossOrigin
 public class RoleQuery implements BaseQuery<Role> {
     private final RoleService roleService;
 
