@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.base.BaseQuery;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @SchemaMapping(typeName = "UserQuery")
+@CrossOrigin
 @RequiredArgsConstructor
 public class UserQuery implements BaseQuery<User> {
     private final UserService userService;
