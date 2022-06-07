@@ -1,6 +1,9 @@
 package com.capstoneprojectb12.lms.backendapilms.controllers.rest.user;
 
+import java.util.HashMap;
+
 import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
@@ -75,9 +78,29 @@ public class UserController {
         try {
             var user = this.userService.toEntity(request);
             var savedUser = this.userService.save(user);
-            return ResponseEntity.ok(ApiResponse.success(savedUser));
+            return ResponseEntity.ok(ApiResponse.success(savedUser.get()));
         } catch (Exception e) {
             log.error("Failed when register user", e);
+            return ResponseEntity.internalServerError().body(ApiResponse.error(e.getMessage()));
+        }
+    }
+
+    @GetMapping(value = { "/users/findByd/id/{id}" })
+    public ResponseEntity<?> findById(@PathVariable(name = "id") String userId) {
+
+        try {
+            var user = this.userService.findById(userId);
+            if (user.isPresent()) {
+                return ResponseEntity.ok(ApiResponse.success(user.get()));
+            }
+
+            return ResponseEntity.badRequest().body(
+                    ApiResponse.failed(new HashMap<>() {
+                        {
+                            put("message", "user not found");
+                        }
+                    }));
+        } catch (Exception e) {
             return ResponseEntity.internalServerError().body(ApiResponse.error(e.getMessage()));
         }
     }
