@@ -1,6 +1,7 @@
 package com.capstoneprojectb12.lms.backendapilms.controllers.gql.classes;
 
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -15,21 +16,25 @@ import lombok.RequiredArgsConstructor;
 @SchemaMapping(typeName = "ClassMutation")
 @RequiredArgsConstructor
 @CrossOrigin
+@PreAuthorize(value = "hasAnyAuthority('USER')")
 public class ClassMutation implements BaseMutation<Class, ClassNew> {
 
     @Override
+    @SchemaMapping(field = "save")
     public Class save(ClassNew request) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
+    @SchemaMapping(field = "update")
     public Class update(String id, ClassNew request) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
+    @SchemaMapping(field = "deleteById")
     public ResponseDelete deleteById(String id) {
         // TODO Auto-generated method stub
         return null;
