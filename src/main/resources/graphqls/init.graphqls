@@ -4,10 +4,12 @@ type Query {
   hello: HelloQuery!
   role: RoleQuery!
   user: UserQuery!
+  class: ClassQuery!
 }
 
 type Mutation {
   hello: HelloMutation!
   role: RoleMutation!
   user: UserMutation!
+  class: ClassMutation!
 }

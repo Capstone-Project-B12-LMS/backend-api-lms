@@ -1,0 +1,49 @@
+enum ClassStatus {
+  ACTIVE
+  INACTIVE
+  WILL_END
+}
+
+type Class {
+  id: ID!
+  name: String!
+  room: String
+  code: String!
+  status: ClassStatus!
+  users: [User!]!
+
+  createdBy: String!
+  createdAt: String!
+  updatedBy: String
+  updatedAt: String
+  isDeleted: Boolean!
+}
+
+type ClassPagination implements PaginationResponse {
+  data: [Class!]!
+  page: Int!
+  size: Int!
+  totalPage: Int!
+  totalSize: Int!
+}
+
+input ClassNew {
+  name: String!
+  room: String
+  code: String!
+  status: ClassStatus!
+  users: [User!]!
+}
+
+type ClassQuery {
+  findAll: [Class!]!
+  findAllWithPageable(page: Int!, size: Int!): ClassPagination!
+  findAllDeleted: [Class!]!
+  findAllDeletedWithPageable(page: Int!, size: Int!): ClassPagination!
+  findById(id: ID!): Class
+}
+type ClassMutation {
+  save(request: ClassNew!): Class
+  deleteById(id: ID!): ResponseDelete!
+  updateById(id: ID!, request: ClassUpdate!): Class
+}
