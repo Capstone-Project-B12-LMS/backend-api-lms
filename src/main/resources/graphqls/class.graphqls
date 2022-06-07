@@ -30,9 +30,14 @@ type ClassPagination implements PaginationResponse {
 input ClassNew {
   name: String!
   room: String
-  code: String!
   status: ClassStatus!
-  users: [User!]!
+}
+
+input ClassUpdate {
+  name: String!
+  room: String
+  status: ClassStatus!
+  userIds: [String!]!
 }
 
 type ClassQuery {
@@ -42,6 +47,7 @@ type ClassQuery {
   findAllDeletedWithPageable(page: Int!, size: Int!): ClassPagination!
   findById(id: ID!): Class
 }
+
 type ClassMutation {
   save(request: ClassNew!): Class
   deleteById(id: ID!): ResponseDelete!
