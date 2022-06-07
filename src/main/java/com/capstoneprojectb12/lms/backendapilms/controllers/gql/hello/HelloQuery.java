@@ -10,7 +10,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.hello.SayHelloRespon
 @SchemaMapping(typeName = "HelloQuery")
 public class HelloQuery {
     @SchemaMapping(field = "sayHello")
-    @PreAuthorize(value = "hasAnyAuthority('TEACHER')")
+    @PreAuthorize(value = "hasAnyAuthority('USER')")
     public SayHelloResponse sayHello() {
         var response = SayHelloResponse.builder()
                 .message("Hi, my name is KELOMPOK B 12")

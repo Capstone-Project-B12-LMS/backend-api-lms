@@ -19,7 +19,7 @@ public class SwaggerDocsTest {
 
     @Test
     public void swaggerEndpointTest() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/restapi/docs/swagger-ui/"))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/restapi/docs/swagger-ui/index.html#/"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();

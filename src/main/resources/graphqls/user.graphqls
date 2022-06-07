@@ -10,7 +10,6 @@ input UserNew {
   fullName: String!
   email: String!
   password: String!
-  roles: [String!]!
 }
 
 input UserLogin {

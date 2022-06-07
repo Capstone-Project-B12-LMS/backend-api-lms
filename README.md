@@ -33,7 +33,7 @@ Here we have 2 mode of API
 
 - `Rest FULL API`
 
-  - On Rest FULL API you can see documentation in `http://localhost:8080/restapi/docs/swagger-ui/` after app running.
+  - On Rest FULL API you can see documentation in `http://localhost:8080/restapi/docs/swagger-ui/index.html#/` after app running.
 
 - `GraphQL API`
 
@@ -46,7 +46,7 @@ Use resource bellow to use it.
 
 - `Rest FULL API`
 
-  - API Docs : http://ec2-34-212-169-254.us-west-2.compute.amazonaws.com/restapi/docs/swagger-ui/
+  - API Docs : http://ec2-34-212-169-254.us-west-2.compute.amazonaws.com/restapi/docs/swagger-ui/index.html#/
 
 - `GraphQL API`
 
