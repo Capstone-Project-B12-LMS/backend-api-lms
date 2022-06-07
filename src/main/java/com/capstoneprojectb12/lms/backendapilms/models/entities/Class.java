@@ -1,6 +1,7 @@
 package com.capstoneprojectb12.lms.backendapilms.models.entities;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.*;
 
@@ -31,4 +32,9 @@ public class Class extends BaseEntity {
     @ManyToMany(fetch = FetchType.EAGER)
     private List<User> users;
 
+    @PrePersist
+    public void onInsertClass() {
+        this.code = UUID.randomUUID().toString().substring(0, 10);
+        this.status = ClassStatus.ACTIVE;
+    }
 }
