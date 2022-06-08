@@ -92,4 +92,17 @@ public class ClassController {
             return ApiResponse.responseError(e);
         }
     }
+
+    @GetMapping(value = { "/{id}" })
+    public ResponseEntity<?> finfById(@PathVariable(name = "id") String id) {
+        try {
+            var classEntity = this.classService.findById(id);
+            if (!classEntity.isPresent()) {
+                return ApiResponse.responseBad("value not present");
+            }
+            return ApiResponse.responseOk(classEntity.get());
+        } catch (Exception e) {
+            return ApiResponse.responseError(e);
+        }
+    }
 }
