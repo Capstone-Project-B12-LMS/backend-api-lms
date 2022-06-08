@@ -2,14 +2,27 @@ type User {
   id: ID!
   fullName: String!
   email: String!
+  telepon: String!
   password: String!
   roles: [Role!]!
+
+  createdBy: String!
+  createdAt: String!
+  updatedBy: String
+  updatedAt: String
+  isDeleted: Boolean!
 }
 
 input UserNew {
   fullName: String!
   email: String!
+  telepon: String
   password: String!
+}
+input UserUpdate {
+  fullName: String!
+  email: String!
+  telepon: String
 }
 
 input UserLogin {
@@ -30,10 +43,12 @@ type UserQuery {
   findAllWithPageable(page: Int!, size: Int!): UserPagination!
   findAllDeleted: [User!]!
   findAllDeletedWithPageable(page: Int!, size: Int!): UserPagination!
+  findById(id: ID!): User
 }
 
 type UserMutation {
   register(request: UserNew!): User
   login(request: UserLogin!): ResponseToken!
   deleteById(id: ID!): ResponseDelete!
+  updateById(id: ID!, request: UserUpdate!): User
 }

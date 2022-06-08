@@ -9,6 +9,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.hello.SayHelloRespon
 
 @Controller
 @SchemaMapping(typeName = "HelloMutation")
+// @CrossOrigin(allowCredentials = "true")
 public class HelloMutation {
     @SchemaMapping(field = "sayHello")
     public SayHelloResponse sayHello(@Argument(name = "to") SayHelloInput to) {

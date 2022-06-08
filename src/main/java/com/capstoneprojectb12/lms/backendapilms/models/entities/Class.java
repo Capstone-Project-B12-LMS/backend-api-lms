@@ -1,19 +1,23 @@
 package com.capstoneprojectb12.lms.backendapilms.models.entities;
 
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.*;
+
+import org.hibernate.annotations.SQLDelete;
 
 import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.ClassStatus;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-@Entity(name = "classes")
+@Entity()
+@Table(name = "classes")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@SQLDelete(sql = "UPDATE classes SET is_deleted = true WHERE id = ?")
 @SuperBuilder
 public class Class extends BaseEntity {
 
@@ -31,4 +35,12 @@ public class Class extends BaseEntity {
     @ManyToMany(fetch = FetchType.EAGER)
     private List<User> users;
 
+    @PrePersist
+    public void onInsertClass() {
+        this.code = UUID.randomUUID()
+                .toString()
+                .substring(0, 10)
+                .replaceAll("-", String.valueOf(new Random().nextInt(9)));
+        this.status = ClassStatus.ACTIVE;
+    }
 }

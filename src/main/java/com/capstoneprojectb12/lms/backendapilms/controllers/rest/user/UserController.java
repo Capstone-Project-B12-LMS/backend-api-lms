@@ -1,15 +1,17 @@
 package com.capstoneprojectb12.lms.backendapilms.controllers.rest.user;
 
+import java.util.HashMap;
+
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserLogin;
-import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserNew;
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.*;
 import com.capstoneprojectb12.lms.backendapilms.services.UserService;
 import com.capstoneprojectb12.lms.backendapilms.utilities.*;
 import com.capstoneprojectb12.lms.backendapilms.utilities.jwt.JwtUtils;
@@ -75,10 +77,60 @@ public class UserController {
         try {
             var user = this.userService.toEntity(request);
             var savedUser = this.userService.save(user);
-            return ResponseEntity.ok(ApiResponse.success(savedUser));
+            return ResponseEntity.ok(ApiResponse.success(savedUser.get()));
         } catch (Exception e) {
             log.error("Failed when register user", e);
             return ResponseEntity.internalServerError().body(ApiResponse.error(e.getMessage()));
+        }
+    }
+
+    @PreAuthorize(value = "hasAnyAuthority('USER')")
+    @GetMapping(value = { "/{id}" })
+    public ResponseEntity<?> findById(@PathVariable(name = "id") String userId) {
+
+        try {
+            var user = this.userService.findById(userId);
+            if (user.isPresent()) {
+                return ResponseEntity.ok(ApiResponse.success(user.get()));
+            }
+
+            return ResponseEntity.badRequest().body(
+                    ApiResponse.failed(new HashMap<>() {
+                        {
+                            put("message", "user not found");
+                        }
+                    }));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(ApiResponse.error(e.getMessage()));
+        }
+    }
+
+    @PreAuthorize(value = "hasAnyAuthority('USER')")
+    @PutMapping(value = { "/{id}" })
+    public ResponseEntity<?> updateById(
+            @PathVariable(name = "id") String userId,
+            @RequestBody @Valid UserUpdate request,
+            Errors errors) {
+
+        if (errors.hasErrors()) {
+            return ApiResponse.errorValidation(errors);
+        }
+
+        try {
+            var user = this.userService.findById(userId);
+            if (!user.isPresent()) {
+                return ApiResponse.responseOk(new HashMap<>() {
+                    {
+                        put("message", "user not found");
+                    }
+                });
+            }
+
+            user = this.userService.update(user.get(), request);
+            return ApiResponse.responseOk(user.get());
+        } catch (Exception e) {
+            log.error("error when update user by id", e);
+            return ApiResponse.responseError(e);
         }
     }
 }

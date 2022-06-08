@@ -4,10 +4,10 @@ type Role {
   description: String!
 
   createdBy: String!
-  createdAt: Object!
+  createdAt: String!
   updatedBy: String
-  updatedAt: Object
-  isDeleted: Boolean
+  updatedAt: String
+  isDeleted: Boolean!
 }
 
 input RoleNew {
