@@ -52,6 +52,7 @@ public class UserController {
             var tokenString = jwtUtils.generateTokenString(user.get());
             var response = ResponseToken.builder()
                     .error(null)
+                    .status(true)
                     .token(tokenString)
                     .build();
 
@@ -60,6 +61,7 @@ public class UserController {
             var response = ResponseToken.builder()
                     .error(e.getMessage())
                     .token(null)
+                    .status(false)
                     .build();
             return ResponseEntity.badRequest().body(response);
         } catch (Exception e) {

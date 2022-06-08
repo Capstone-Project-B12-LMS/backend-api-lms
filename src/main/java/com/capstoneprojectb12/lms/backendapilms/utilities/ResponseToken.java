@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 public class ResponseToken {
+    private boolean status;
     private String token;
     private Object error;
 }
