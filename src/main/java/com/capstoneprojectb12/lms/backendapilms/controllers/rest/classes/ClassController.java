@@ -105,4 +105,13 @@ public class ClassController {
             return ApiResponse.responseError(e);
         }
     }
+
+    @GetMapping
+    public ResponseEntity<?> findAll() {
+        try {
+            return ApiResponse.responseOk(this.classService.findAll());
+        } catch (Exception e) {
+            return ApiResponse.responseError(e);
+        }
+    }
 }
