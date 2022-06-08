@@ -9,6 +9,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassNew;
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
@@ -30,6 +31,13 @@ public class ClassService implements BaseService<Class> {
 
     @Override
     public Optional<Class> update(Class entity) {
+        return this.save(entity);
+    }
+
+    public Optional<Class> update(Class entity, ClassUpdate classUpdate) {
+        entity.setName(classUpdate.getName());
+        entity.setRoom(classUpdate.getRoom());
+        entity.setStatus(classUpdate.getStatus());
         return this.save(entity);
     }
 

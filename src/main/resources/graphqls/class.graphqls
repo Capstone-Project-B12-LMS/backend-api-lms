@@ -36,8 +36,14 @@ input ClassUpdate {
   name: String!
   room: String
   status: ClassStatus!
-  userIds: [String!]!
 }
+
+# input ClassUpdateUser {
+#   name: String!
+#   room: String
+#   status: ClassStatus!
+#   userIds: [String!]!
+# }
 
 type ClassQuery {
   findAll: [Class!]!
