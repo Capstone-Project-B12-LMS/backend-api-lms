@@ -2,7 +2,6 @@ package com.capstoneprojectb12.lms.backendapilms.controllers.gql;
 
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.classes.ClassMutation;
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.hello.HelloMutation;
@@ -13,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @SchemaMapping(typeName = "Mutation")
-@CrossOrigin(allowedHeaders = { "*" }, allowCredentials = "*")
+// @CrossOrigin(allowCredentials = "true")
 @RequiredArgsConstructor
 public class GraphQLMutation {
     private final HelloMutation helloMutation;

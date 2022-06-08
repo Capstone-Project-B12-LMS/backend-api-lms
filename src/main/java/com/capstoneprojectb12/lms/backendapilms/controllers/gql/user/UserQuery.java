@@ -6,7 +6,6 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.base.BaseQuery;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
@@ -17,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @SchemaMapping(typeName = "UserQuery")
-@CrossOrigin(allowedHeaders = { "*" }, allowCredentials = "*")
+// @CrossOrigin(allowCredentials = "true")
 @PreAuthorize(value = "hasAnyAuthority('USER')")
 @RequiredArgsConstructor
 public class UserQuery implements BaseQuery<User> {

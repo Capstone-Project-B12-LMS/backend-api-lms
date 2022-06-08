@@ -3,7 +3,6 @@ package com.capstoneprojectb12.lms.backendapilms.controllers.gql.classes;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.base.BaseMutation;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.base.ResponseDelete;
@@ -19,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @SchemaMapping(typeName = "ClassMutation")
 @RequiredArgsConstructor
-@CrossOrigin
+// @CrossOrigin(allowCredentials = "true")
 // @PreAuthorize(value = "hasAnyAuthority('USER')")
 public class ClassMutation implements BaseMutation<Class, ClassNew> {
     private final ClassService classService;

@@ -21,38 +21,37 @@ import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
 import com.capstoneprojectb12.lms.backendapilms.services.UserService;
 
 @SpringBootTest
-@GraphQlTest
 @AutoConfigureMockMvc
 @Tag(value = "userMutationTest")
 public class UserMutationTest {
-    @Autowired
-    private MockMvc mockMvc;
+        @Autowired
+        private MockMvc mockMvc;
 
-    @MockBean
-    private UserService userService;
+        @MockBean
+        private UserService userService;
 
-    private final String newUser = "{\"data\": { \"user\": { \"register\": { \"fullName\": \"irda islakhu afa\", \"email\": \"myemail@gmail.com\" } } } }";
-    private final User user = User.builder()
-            .id("id")
-            .fullName("irda islakhu afa")
-            .email("myemail@gmail.com")
-            .build();
+        private final String newUser = "{\"data\": { \"user\": { \"register\": { \"fullName\": \"irda islakhu afa\", \"email\": \"myemail@gmail.com\" } } } }";
+        private final User user = User.builder()
+                        .id("id")
+                        .fullName("irda islakhu afa")
+                        .email("myemail@gmail.com")
+                        .build();
 
-    @Test
-    @Disabled
-    public void testRegister() throws Exception {
-        final var mutationRegister = "{\"query\": \"mutation { user { register ( request: {fullName: \\\"irda    islakhu afa\\\", email: \\\"myemail@gmail.com\\\", password: \\\"mypass\\\",telepon: \\\"1234567890\\\"} ) { fullName email } } } \"}";
-        when(this.userService.save(any())).thenReturn(Optional.of(user));
+        @Test
+        @Disabled
+        public void testRegister() throws Exception {
+                final var mutationRegister = "{\"query\": \"mutation { user { register ( request: {fullName: \\\"irda    islakhu afa\\\", email: \\\"myemail@gmail.com\\\", password: \\\"mypass\\\",telepon: \\\"1234567890\\\"} ) { fullName email } } } \"}";
+                when(this.userService.save(any())).thenReturn(Optional.of(user));
 
-        this.mockMvc.perform(
-                MockMvcRequestBuilders.post("/graphql")
-                        .contentType(MediaType.APPLICATION_GRAPHQL)
-                        .content(mutationRegister)
-        // .accept(MediaType.APPLICATION_JSON)
-        )
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
-        // .andExpect(MockMvcResultMatchers.content().json(newUser))
-        ;
-    }
+                this.mockMvc.perform(
+                                MockMvcRequestBuilders.post("/graphql")
+                                                .contentType(MediaType.APPLICATION_GRAPHQL)
+                                                .content(mutationRegister)
+                // .accept(MediaType.APPLICATION_JSON)
+                )
+                                .andDo(MockMvcResultHandlers.print())
+                                .andExpect(MockMvcResultMatchers.status().isOk())
+                // .andExpect(MockMvcResultMatchers.content().json(newUser))
+                ;
+        }
 }

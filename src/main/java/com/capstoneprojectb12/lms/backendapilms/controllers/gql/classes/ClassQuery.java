@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.base.BaseQuery;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
@@ -19,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @SchemaMapping(typeName = "ClassQuery")
 @RequiredArgsConstructor
-@CrossOrigin
+// @CrossOrigin(allowCredentials = "true")
 // @PreAuthorize(value = "hasAnyAuthority('USER')")
 public class ClassQuery implements BaseQuery<Class> {
     private final ClassService classService;

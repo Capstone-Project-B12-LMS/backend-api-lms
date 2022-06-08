@@ -1,10 +1,10 @@
 package com.capstoneprojectb12.lms.backendapilms.models.dtos.classes;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.ClassStatus;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -15,6 +15,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class ClassUpdate extends ClassNew {
     @NotNull(message = "cannot be null")
-    @NotEmpty(message = "cannot be empty")
+    @ApiModelProperty(allowableValues = "you can use ACTIVE, INACTIVE, or WILL_END")
     private ClassStatus status;
 }
