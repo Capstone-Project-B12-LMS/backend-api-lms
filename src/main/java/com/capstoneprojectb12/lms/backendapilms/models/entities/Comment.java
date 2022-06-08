@@ -1,16 +1,16 @@
 package com.capstoneprojectb12.lms.backendapilms.models.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
-
 import javax.persistence.*;
+
+import org.hibernate.annotations.SQLDelete;
+
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity(name = "comments")
 @Getter
 @Setter
+@SQLDelete(sql = "UPDATE comments SET isDeleted = true WHERE id = ?")
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder

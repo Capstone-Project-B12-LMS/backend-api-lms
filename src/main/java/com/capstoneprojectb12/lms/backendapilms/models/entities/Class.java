@@ -4,6 +4,8 @@ import java.util.*;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.SQLDelete;
+
 import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.ClassStatus;
 
 import lombok.*;
@@ -14,6 +16,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@SQLDelete(sql = "UPDATE classes SET isDeleted = true WHERE id = ?")
 @SuperBuilder
 public class Class extends BaseEntity {
 

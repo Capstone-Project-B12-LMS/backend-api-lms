@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import lombok.experimental.SuperBuilder;
 
 @Entity(name = "users")
 @Getter
+@SQLDelete(sql = "UPDATE users SET isDeleted = true WHERE id = ?")
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor

@@ -36,7 +36,7 @@ public class BaseEntity implements Serializable {
 
     private String updatedBy;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "isDeleted")
     @Builder.Default
     private Boolean isDeleted = false;
 

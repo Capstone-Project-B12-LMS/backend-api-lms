@@ -2,8 +2,6 @@ package com.capstoneprojectb12.lms.backendapilms.models.dtos.classes;
 
 import javax.validation.constraints.*;
 
-import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.ClassStatus;
-
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

@@ -63,8 +63,7 @@ public class ClassMutation implements BaseMutation<Class, ClassNew> {
 
     @Override
     @SchemaMapping(field = "deleteById")
-    public ResponseDelete deleteById(String id) {
-        // TODO Auto-generated method stub
+    public ResponseDelete deleteById(@Argument(name = "id") String id) {
         return null;
     }
 

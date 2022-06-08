@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.SQLDelete;
+
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -12,6 +14,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@SQLDelete(sql = "UPDATE assignments SET isDeleted = true WHERE id = ?")
 @SuperBuilder
 public class Assignment extends BaseEntity {
 

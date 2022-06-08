@@ -2,6 +2,8 @@ package com.capstoneprojectb12.lms.backendapilms.models.entities;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.SQLDelete;
+
 import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.GuidanceStatus;
 
 import lombok.*;
@@ -12,6 +14,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@SQLDelete(sql = "UPDATE guidances SET isDeleted = true WHERE id = ?")
 @SuperBuilder
 public class Guidance extends BaseEntity {
 
