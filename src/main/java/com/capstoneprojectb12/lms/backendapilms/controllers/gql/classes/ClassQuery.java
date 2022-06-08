@@ -3,27 +3,35 @@ package com.capstoneprojectb12.lms.backendapilms.controllers.gql.classes;
 import java.util.List;
 
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.base.BaseQuery;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
+import com.capstoneprojectb12.lms.backendapilms.services.ClassService;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller
 @SchemaMapping(typeName = "ClassQuery")
 @RequiredArgsConstructor
 @CrossOrigin
-@PreAuthorize(value = "hasAnyAuthority('USER')")
+// @PreAuthorize(value = "hasAnyAuthority('USER')")
 public class ClassQuery implements BaseQuery<Class> {
+    private final ClassService classService;
+
     @Override
     @SchemaMapping(field = "findAll")
     public List<Class> findAll() {
-        // TODO Auto-generated method stub
-        return null;
+        try {
+            return this.classService.findAll();
+        } catch (Exception e) {
+            log.error("error while find all class", e);
+            return null;
+        }
     }
 
     @Override
