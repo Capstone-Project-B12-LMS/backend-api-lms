@@ -2,6 +2,7 @@ package com.capstoneprojectb12.lms.backendapilms.controllers.gql.classes;
 
 import java.util.List;
 
+import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -57,9 +58,14 @@ public class ClassQuery implements BaseQuery<Class> {
 
     @Override
     @SchemaMapping(field = "findById")
-    public Class findById(String id) {
-        // TODO Auto-generated method stub
-        return null;
+    public Class findById(@Argument(name = "id") String id) {
+        try {
+            var className = this.classService.findById(id);
+            return className.orElse(null);
+        } catch (Exception e) {
+            log.error("error while find class by ud");
+            return null;
+        }
     }
 
 }
