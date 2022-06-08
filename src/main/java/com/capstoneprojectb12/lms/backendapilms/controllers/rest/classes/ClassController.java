@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.base.ResponseDelete;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassNew;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassUpdate;
 import com.capstoneprojectb12.lms.backendapilms.services.ClassService;
@@ -67,4 +68,28 @@ public class ClassController {
 
     }
 
+    @DeleteMapping(value = { "/{id}" })
+    public ResponseEntity<?> deleteById(@PathVariable(name = "id") String classId) {
+
+        try {
+            var isDeleted = this.classService.deleteById(classId);
+            if (isDeleted) {
+
+                return ApiResponse.responseOk(
+                        ResponseDelete.builder()
+                                .error(null)
+                                .status(isDeleted)
+                                .build());
+            } else {
+                return ApiResponse.responseOk(
+                        ResponseDelete.builder()
+                                .error("failed to delete data maybe data doesn't exists")
+                                .status(isDeleted)
+                                .build());
+            }
+        } catch (Exception e) {
+            log.error("error while delete class by id");
+            return ApiResponse.responseError(e);
+        }
+    }
 }
