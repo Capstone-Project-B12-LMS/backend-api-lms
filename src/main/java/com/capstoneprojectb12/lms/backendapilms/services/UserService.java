@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserNew;
+import com.capstoneprojectb12.lms.backendapilms.models.entities.Role;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
@@ -107,14 +108,17 @@ public class UserService implements BaseService<User>, UserDetailsService {
     }
 
     public User toEntity(UserNew userNew) {
+        var role = this.roleService.findByName("user");
+
+        if (!role.isPresent()) {
+            role = this.roleService.save(Role.builder().name("user").description("-").build());
+        }
+
         return User.builder()
                 .fullName(userNew.getFullName())
                 .email(userNew.getEmail())
                 .password(userNew.getPassword())
-                .roles(this.roleService
-                        .findByNames(userNew
-                                .getRoles()
-                                .toArray(new String[userNew.getRoles().size()])))
+                .roles(List.of(role.get()))
                 .build();
     }
 

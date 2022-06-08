@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,5 +38,16 @@ public class RoleServiceTest {
         assertNotNull(savedRole);
         assertTrue(savedRole.isPresent());
         assertEquals("TEACHER", role.getName());
+    }
+
+    @Test
+    public void testFindById() {
+        when(this.roleRepository.findById(anyString())).thenReturn(Optional.empty());
+        var role = this.roleService.deleteById("id");
+        assertFalse(role);
+
+        when(this.roleRepository.findById(anyString())).thenReturn(Optional.of(RoleServiceTest.role));
+        role = this.roleService.deleteById("id");
+        assertTrue(role);
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.capstoneprojectb12.lms.backendapilms.filters.JwtFilter;
 import com.capstoneprojectb12.lms.backendapilms.services.UserService;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
+@EnableWebMvc
 public class SecurityConfiguration {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
@@ -28,6 +30,8 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                // enable cors
+                .cors().and()
                 // permit GraphQL url
                 .authorizeRequests().antMatchers("**/graphql/**").permitAll()
 

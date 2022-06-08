@@ -20,9 +20,9 @@ import springfox.documentation.annotations.ApiIgnore;
 public class InitRestFullAPI {
     @GetMapping
     @ApiResponses(value = {
-            @ApiResponse(message = "This endpoint currently can be accessed by role TEACHER", code = 200)
+            @ApiResponse(message = "This endpoint currently can be accessed by role USER", code = 200)
     })
-    @PreAuthorize(value = "hasAnyAuthority('TEACHER')")
+    @PreAuthorize(value = "hasAnyAuthority('USER')")
     public ResponseEntity<?> init() {
         var response = SayHelloResponse.builder()
                 .message("Hi, my name is KELOMPOK B 12")
