@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @SchemaMapping(typeName = "UserQuery")
-@CrossOrigin
+@CrossOrigin(allowedHeaders = { "*" }, allowCredentials = "*")
 @PreAuthorize(value = "hasAnyAuthority('USER')")
 @RequiredArgsConstructor
 public class UserQuery implements BaseQuery<User> {

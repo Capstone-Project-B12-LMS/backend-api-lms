@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@SQLDelete(sql = "UPDATE quizzes SET isDeleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE quizzes SET is_deleted = true WHERE id = ?")
 @Setter
 @SuperBuilder
 

@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SQLDelete(sql = "UPDATE categories SET isDeleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE categories SET is_deleted = true WHERE id = ?")
 @SuperBuilder
 public class Category extends BaseEntity {
 

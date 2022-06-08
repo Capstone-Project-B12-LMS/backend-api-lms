@@ -11,12 +11,13 @@ import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.ClassStatu
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-@Entity(name = "classes")
+@Entity()
+@Table(name = "classes")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SQLDelete(sql = "UPDATE classes SET isDeleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE classes SET is_deleted = true WHERE id = ?")
 @SuperBuilder
 public class Class extends BaseEntity {
 

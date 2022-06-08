@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 @SchemaMapping(typeName = "UserMutation")
-@CrossOrigin
+@CrossOrigin(allowedHeaders = { "*" }, allowCredentials = "*")
 @RequiredArgsConstructor
 public class UserMutation {
     private final UserService userService;

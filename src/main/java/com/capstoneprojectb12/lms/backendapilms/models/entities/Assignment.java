@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SQLDelete(sql = "UPDATE assignments SET isDeleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE assignments SET is_deleted = true WHERE id = ?")
 @SuperBuilder
 public class Assignment extends BaseEntity {
 

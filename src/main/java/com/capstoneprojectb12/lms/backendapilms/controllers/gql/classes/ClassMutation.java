@@ -64,7 +64,18 @@ public class ClassMutation implements BaseMutation<Class, ClassNew> {
     @Override
     @SchemaMapping(field = "deleteById")
     public ResponseDelete deleteById(@Argument(name = "id") String id) {
-        return null;
+        try {
+            var isDeleted = this.classService.deleteById(id);
+            var error = new Object();
+            if (isDeleted) {
+                error = null;
+            } else {
+                error = "Failed to delete data or data doesn't exists";
+            }
+            return ResponseDelete.builder().status(isDeleted).error(error).build();
+        } catch (Exception e) {
+            return ResponseDelete.builder().error(e.getMessage()).status(false).build();
+        }
     }
 
 }

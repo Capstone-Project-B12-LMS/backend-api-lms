@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @SchemaMapping(typeName = "RoleQuery")
 @RequiredArgsConstructor
-@CrossOrigin
+@CrossOrigin(allowedHeaders = { "*" }, allowCredentials = "*")
 public class RoleQuery implements BaseQuery<Role> {
     private final RoleService roleService;
 

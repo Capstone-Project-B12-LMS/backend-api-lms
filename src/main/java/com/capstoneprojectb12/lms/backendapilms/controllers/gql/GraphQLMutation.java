@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @SchemaMapping(typeName = "Mutation")
-@CrossOrigin
+@CrossOrigin(allowedHeaders = { "*" }, allowCredentials = "*")
 @RequiredArgsConstructor
 public class GraphQLMutation {
     private final HelloMutation helloMutation;

@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @SchemaMapping(typeName = "Query")
 @RequiredArgsConstructor
-@CrossOrigin
+@CrossOrigin(allowedHeaders = { "*" }, allowCredentials = "*")
 public class GraphQLQuery {
     private final HelloQuery helloQuery;
     private final RoleQuery roleQuery;

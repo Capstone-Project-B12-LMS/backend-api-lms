@@ -9,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 
 @Entity(name = "student_quizzes")
 @AllArgsConstructor
-@SQLDelete(sql = "UPDATE student_quizzes SET isDeleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE student_quizzes SET is_deleted = true WHERE id = ?")
 @NoArgsConstructor
 @SuperBuilder
 @Getter

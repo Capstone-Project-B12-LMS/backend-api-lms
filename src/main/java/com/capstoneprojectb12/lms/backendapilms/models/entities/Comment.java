@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @Entity(name = "comments")
 @Getter
 @Setter
-@SQLDelete(sql = "UPDATE comments SET isDeleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE comments SET is_deleted = true WHERE id = ?")
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder

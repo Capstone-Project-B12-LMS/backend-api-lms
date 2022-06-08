@@ -1,4 +1,4 @@
-package com.capstoneprojectb12.lms.backendapilms.controllers.user;
+package com.capstoneprojectb12.lms.backendapilms.controllers.rest.user;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
