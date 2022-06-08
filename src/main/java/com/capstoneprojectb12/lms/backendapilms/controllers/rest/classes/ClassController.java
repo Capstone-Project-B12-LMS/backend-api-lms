@@ -39,7 +39,7 @@ public class ClassController {
 
     }
 
-    @PutMapping(value = "/updateBy/id/{id}")
+    @PutMapping(value = "/{id}")
     public ResponseEntity<?> updateById(
             @PathVariable(name = "id", required = true) String classId,
             @RequestBody @Valid ClassUpdate request, Errors errors) {
@@ -66,4 +66,5 @@ public class ClassController {
         }
 
     }
+
 }

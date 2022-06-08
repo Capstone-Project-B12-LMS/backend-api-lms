@@ -85,7 +85,7 @@ public class UserController {
     }
 
     @PreAuthorize(value = "hasAnyAuthority('USER')")
-    @GetMapping(value = { "/users/findByd/id/{id}" })
+    @GetMapping(value = { "/{id}" })
     public ResponseEntity<?> findById(@PathVariable(name = "id") String userId) {
 
         try {
@@ -106,7 +106,7 @@ public class UserController {
     }
 
     @PreAuthorize(value = "hasAnyAuthority('USER')")
-    @PutMapping(value = { "/users/updateBy/id/{id}" })
+    @PutMapping(value = { "/{id}" })
     public ResponseEntity<?> updateById(
             @PathVariable(name = "id") String userId,
             @RequestBody @Valid UserUpdate request,
