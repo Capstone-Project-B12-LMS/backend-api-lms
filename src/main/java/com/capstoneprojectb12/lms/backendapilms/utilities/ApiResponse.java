@@ -13,11 +13,13 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class ApiResponse<T> {
     private Object errors;
+    private boolean status = false;
     private T data;
 
     public static ApiResponse<?> failed(Object messages) {
         return ApiResponse.<Object>builder()
                 .data(null)
+                .status(false)
                 .errors(messages)
                 .build();
     }
@@ -25,6 +27,7 @@ public class ApiResponse<T> {
     public static ApiResponse<?> error(Object errorMessage) {
         return ApiResponse.<Object>builder()
                 .data(null)
+                .status(false)
                 .errors(errorMessage)
                 .build();
     }
@@ -32,6 +35,7 @@ public class ApiResponse<T> {
     public static ApiResponse<?> success(Object data) {
         return ApiResponse.<Object>builder()
                 .data(data)
+                .status(true)
                 .errors(null)
                 .build();
     }
