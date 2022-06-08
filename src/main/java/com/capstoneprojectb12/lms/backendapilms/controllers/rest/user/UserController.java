@@ -79,10 +79,10 @@ public class UserController {
         try {
             var user = this.userService.toEntity(request);
             var savedUser = this.userService.save(user);
-            return ResponseEntity.ok(ApiResponse.success(savedUser.get()));
+            return ApiResponse.responseOk(errors);
         } catch (Exception e) {
             log.error("Failed when register user", e);
-            return ResponseEntity.internalServerError().body(ApiResponse.error(e.getMessage()));
+            return ApiResponse.responseError(e);
         }
     }
 
