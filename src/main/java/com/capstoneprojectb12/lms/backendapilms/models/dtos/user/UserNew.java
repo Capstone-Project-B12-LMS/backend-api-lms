@@ -10,20 +10,11 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class UserNew {
-    @NotNull(message = "cannot be null")
-    @NotBlank(message = "cannot be  blank")
-    @NotEmpty(message = "cannot be empty")
-    private String fullName;
-
-    @NotNull(message = "cannot be null")
-    @NotBlank(message = "cannot be  blank")
-    @NotEmpty(message = "cannot be empty")
-    @Email(message = "invalid email format")
-    private String email;
+public class UserNew extends UserUpdate {
 
     @NotNull(message = "cannot be null")
     @NotBlank(message = "cannot be  blank")
     @NotEmpty(message = "cannot be empty")
     private String password;
+
 }

@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserNew;
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Role;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
@@ -45,6 +46,16 @@ public class UserService implements BaseService<User>, UserDetailsService {
 
     @Override
     public Optional<User> update(User entity) {
+        var updatedUser = this.userRepository.save(entity);
+        return Optional.of(Optional.of(updatedUser)).orElse(Optional.empty());
+    }
+
+    public Optional<User> update(User entity, UserUpdate userUpdate) {
+
+        entity.setFullName(userUpdate.getFullName());
+        entity.setEmail(userUpdate.getEmail());
+        entity.setTelepon(userUpdate.getTelepon());
+
         var updatedUser = this.userRepository.save(entity);
         return Optional.of(Optional.of(updatedUser)).orElse(Optional.empty());
     }
@@ -117,6 +128,7 @@ public class UserService implements BaseService<User>, UserDetailsService {
         return User.builder()
                 .fullName(userNew.getFullName())
                 .email(userNew.getEmail())
+                .telepon(userNew.getTelepon())
                 .password(userNew.getPassword())
                 .roles(List.of(role.get()))
                 .build();

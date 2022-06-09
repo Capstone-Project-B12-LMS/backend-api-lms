@@ -2,6 +2,8 @@ package com.capstoneprojectb12.lms.backendapilms.models.entities;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.SQLDelete;
+
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -9,6 +11,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@SQLDelete(sql = "UPDATE quizzes SET is_deleted = true WHERE id = ?")
 @Setter
 @SuperBuilder
 

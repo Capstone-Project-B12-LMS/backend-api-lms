@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@SQLDelete(sql = "UPDATE roles SET isDeleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE roles SET is_deleted = true WHERE id = ?")
 public class Role extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String name;

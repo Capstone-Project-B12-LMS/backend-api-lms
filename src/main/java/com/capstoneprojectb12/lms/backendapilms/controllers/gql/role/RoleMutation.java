@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @SchemaMapping(typeName = "RoleMutation")
 @RequiredArgsConstructor
+// @CrossOrigin(allowCredentials = "true")
 public class RoleMutation implements BaseMutation<Role, RoleNew> {
     private final RoleService roleService;
 

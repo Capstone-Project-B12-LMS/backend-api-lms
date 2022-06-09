@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.hello.SayHelloResponse;
 
 @Controller
+// @CrossOrigin(allowCredentials = "true")
 @SchemaMapping(typeName = "HelloQuery")
 public class HelloQuery {
     @SchemaMapping(field = "sayHello")

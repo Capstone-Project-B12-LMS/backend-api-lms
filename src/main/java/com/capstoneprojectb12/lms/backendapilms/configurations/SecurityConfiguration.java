@@ -11,7 +11,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.servlet.config.annotation.*;
 
 import com.capstoneprojectb12.lms.backendapilms.filters.JwtFilter;
 import com.capstoneprojectb12.lms.backendapilms.services.UserService;
@@ -31,12 +32,13 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 // enable cors
-                .cors().and()
+                // .cors().and()
                 // permit GraphQL url
-                .authorizeRequests().antMatchers("**/graphql/**").permitAll()
+                .authorizeRequests().anyRequest().permitAll()
+                // .authorizeRequests().antMatchers("**/graphql/**").permitAll()
 
                 // permit rest api url
-                .antMatchers("/restapi/login", "/restapi/register").permitAll()
+                // .antMatchers("/restapi/login", "/restapi/register").permitAll()
 
                 // use jwt filter
                 .and().addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
@@ -62,5 +64,18 @@ public class SecurityConfiguration {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
+    }
+
+    @Bean
+    public WebMvcConfigurer webMvcConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry cors) {
+                cors.addMapping("/**")
+                        .allowedOrigins(CorsConfiguration.ALL)
+                        .allowedHeaders(CorsConfiguration.ALL)
+                        .allowedMethods(CorsConfiguration.ALL);
+            }
+        };
     }
 }

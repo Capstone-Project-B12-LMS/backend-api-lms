@@ -5,15 +5,18 @@ import java.util.stream.Collectors;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.*;
+import lombok.Builder.Default;
 import lombok.experimental.SuperBuilder;
 
 @Entity(name = "users")
 @Getter
+@SQLDelete(sql = "UPDATE users SET is_deleted = true WHERE id = ?")
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,6 +30,10 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    @Default
+    private String telepon = "";
 
     @ManyToMany(fetch = FetchType.EAGER)
     @Column(nullable = false)

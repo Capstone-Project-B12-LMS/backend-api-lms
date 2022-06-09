@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @SchemaMapping(typeName = "RoleQuery")
 @RequiredArgsConstructor
+// @CrossOrigin(allowCredentials = "true")
 public class RoleQuery implements BaseQuery<Role> {
     private final RoleService roleService;
 
@@ -45,6 +46,12 @@ public class RoleQuery implements BaseQuery<Role> {
     @Override
     public PaginationResponse<List<Role>> findAllDeletedWithPageable(int page, int size) {
         // TODO : implement me
+        return null;
+    }
+
+    @Override
+    public Role findById(String id) {
+        // TODO Auto-generated method stub
         return null;
     }
 
