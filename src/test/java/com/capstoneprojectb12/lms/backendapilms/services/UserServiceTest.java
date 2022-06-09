@@ -76,4 +76,16 @@ public class UserServiceTest {
         assertTrue(result.isPresent());
         assertEquals(user.getEmail(), result.get().getEmail());
     }
+
+    @Test
+    public void testDeleteById() {
+        when(this.userRepository.findById(anyString())).thenReturn(Optional.of(user));
+        var result = this.userService.deleteById("id");
+        assertTrue(result);
+
+        when(this.userRepository.findById(anyString())).thenReturn(Optional.empty());
+        result = this.userService.deleteById("id");
+        assertFalse(result);
+    }
+
 }
