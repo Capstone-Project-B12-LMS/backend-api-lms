@@ -40,9 +40,6 @@ public class UserControllerTest {
         @MockBean
         private UserService userService;
 
-        // @Autowired
-        // private PasswordEncoder passwordEncoder;
-
         private static final UserNew userNew = UserNew.builder()
                         .fullName("irda islakhu afa")
                         .email("myemail@gmail.com")
