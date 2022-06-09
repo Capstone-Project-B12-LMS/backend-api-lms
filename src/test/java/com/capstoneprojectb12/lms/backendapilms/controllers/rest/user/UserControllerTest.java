@@ -83,4 +83,9 @@ public class UserControllerTest {
                                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
 
         }
+
+        @Test
+        public void testFindByEmail() {
+
+        }
 }

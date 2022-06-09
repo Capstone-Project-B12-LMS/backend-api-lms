@@ -91,11 +91,11 @@ public class UserController {
     }
 
     @PreAuthorize(value = "hasAnyAuthority('USER')")
-    @GetMapping(value = { "/users/{email}" })
-    public ResponseEntity<?> findByEmail(@PathVariable(name = "email") String email) {
+    @GetMapping(value = { "/users/{id}" })
+    public ResponseEntity<?> findById(@PathVariable(name = "id") String id) {
 
         try {
-            var user = this.userService.findByEmail(email);
+            var user = this.userService.findByEmail(id);
             if (user.isPresent()) {
                 return ResponseEntity.ok(ApiResponse.success(user.get()));
             }
