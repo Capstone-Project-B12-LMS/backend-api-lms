@@ -87,7 +87,7 @@ public class UserController {
     }
 
     @PreAuthorize(value = "hasAnyAuthority('USER')")
-    @GetMapping(value = { "/{email}" })
+    @GetMapping(value = { "/users/{email}" })
     public ResponseEntity<?> findByEmail(@PathVariable(name = "email") String email) {
 
         try {
@@ -108,7 +108,7 @@ public class UserController {
     }
 
     @PreAuthorize(value = "hasAnyAuthority('USER')")
-    @PutMapping(value = { "/{id}" })
+    @PutMapping(value = { "/users/{id}" })
     public ResponseEntity<?> updateById(
             @PathVariable(name = "id") String userId,
             @RequestBody @Valid UserUpdate request,
