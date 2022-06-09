@@ -8,16 +8,20 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import com.capstoneprojectb12.Beans;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
 
 @SpringBootTest
 @Tag(value = "userServiceTest")
+@ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
     @MockBean
@@ -26,7 +30,7 @@ public class UserServiceTest {
     @Autowired
     private UserService userService;
 
-    private final static User user = User.builder()
+    private final User user = User.builder()
             .fullName("irda islakhu afa")
             .email("myemail@gmail.com")
             .password("mypass")
@@ -49,5 +53,19 @@ public class UserServiceTest {
         when(this.userRepository.findById(anyString())).thenReturn(Optional.of(user));
         var result = this.userService.findById("id");
         assertTrue(result.isPresent());
+    }
+
+    @Test
+    public void testSaveSuccess() {
+        var realPassword = user.getPassword();
+        var tempUser = user;
+        // tempUser.setPassword(Beans.getPasswordEncoder().encode(tempUser.getPassword()));
+        when(this.userRepository.save(any())).thenReturn(tempUser);
+
+        var result = this.userService.save(this.user);
+        assertTrue(result.isPresent());
+        System.out.println("result : " + result.get().getPassword() + " password: " + realPassword);
+        System.out.println("result : " + result.get().getPassword() + " password: " + realPassword);
+        assertTrue(Beans.getPasswordEncoder().matches(realPassword, result.get().getPassword()));
     }
 }
