@@ -88,4 +88,10 @@ public class UserServiceTest {
         assertFalse(result);
     }
 
+    @Test
+    public void testExistsbyId() {
+        when(this.userRepository.existsById(anyString())).thenReturn(true);
+        assertTrue(this.userService.existsById("id"));
+    }
+
 }
