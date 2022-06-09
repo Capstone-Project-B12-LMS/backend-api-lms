@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestMethodOrder(value = OrderAnnotation.class)
+@Tag(value = "userControllerTest")
 public class UserControllerTest {
         @Autowired
         private MockMvc mockMvc;
@@ -44,6 +45,7 @@ public class UserControllerTest {
         }
 
         @Test
+        @Order(2)
         public void registerBadRequest() throws Exception {
                 var body = UserNew.builder()
                                 .email("teachergmail.com")
@@ -63,6 +65,8 @@ public class UserControllerTest {
         }
 
         @Test
+        @Order(3)
+        @Disabled
         public void registerInternalServerError() throws Exception {
                 var body = UserNew.builder()
                                 .email("teacher@gmail.com")
@@ -70,15 +74,6 @@ public class UserControllerTest {
                                 .password("teacher")
                                 .build();
                 var requestBody = (new ObjectMapper()).valueToTree(body).toString();
-
-                // this.mockMvc.perform(
-                // MockMvcRequestBuilders.post("/restapi/register")
-                // .contentType(MediaType.APPLICATION_JSON)
-                // .accept(MediaType.APPLICATION_JSON)
-                // .content(requestBody))
-                // .andExpect(MockMvcResultMatchers.status().isOk())
-                // .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
-
                 this.mockMvc.perform(
                                 MockMvcRequestBuilders.post("/restapi/register")
                                                 .contentType(MediaType.APPLICATION_JSON)

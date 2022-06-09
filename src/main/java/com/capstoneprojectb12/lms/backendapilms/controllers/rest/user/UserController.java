@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import javax.validation.Valid;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.*;
@@ -79,7 +80,10 @@ public class UserController {
         try {
             var user = this.userService.toEntity(request);
             var savedUser = this.userService.save(user);
-            return ApiResponse.responseOk(errors);
+            return ApiResponse.responseOk(savedUser.get());
+        } catch (DataIntegrityViolationException e) {
+            log.error("data already exists", e);
+            return ApiResponse.responseBad("data already exists");
         } catch (Exception e) {
             log.error("Failed when register user", e);
             return ApiResponse.responseError(e);
