@@ -69,19 +69,32 @@ public class UserControllerTest {
         }
 
         @Test
-        @Order(3)
-        @Disabled
-        public void registerInternalServerError() throws Exception {
-                var body = userNew;
-                body.setEmail("teacher@gmail.com");
+        public void testRegisterErrorValidation() throws Exception {
+                var userRegister = userNew;
+                userRegister.setEmail(null);
 
-                var requestBody = (Constant.getMapper()).valueToTree(body).toString();
+                var request = JSON.create(userRegister);
                 this.mockMvc.perform(post(Constant.BASE_URL + "/register")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
-                                .content(requestBody))
+                                .content(request))
                                 .andDo(print())
-                                .andExpect(status().isInternalServerError())
+                                .andExpect(status().isBadRequest())
+                                .andReturn()
+
+                ;
+        }
+
+        @Test
+        @Order(3)
+        @Disabled
+        public void testRegisterBadRequest() throws Exception {
+                this.mockMvc.perform(post(Constant.BASE_URL + "/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(new byte[1]))
+                                .andDo(print())
+                                .andExpect(status().isBadRequest())
                                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         }
