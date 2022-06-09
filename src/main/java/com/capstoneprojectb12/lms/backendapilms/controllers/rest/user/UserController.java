@@ -79,7 +79,7 @@ public class UserController {
         try {
             var user = this.userService.toEntity(request);
             var savedUser = this.userService.save(user);
-            return ApiResponse.responseOk(savedUser.get());
+            return ApiResponse.responseOk(savedUser);
         } catch (DataIntegrityViolationException e) {
             log.error("data already exists", e);
             return ApiResponse.responseBad("data already exists");
