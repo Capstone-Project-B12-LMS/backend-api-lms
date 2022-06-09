@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
@@ -32,10 +33,15 @@ public class UserServiceTest {
             .build();
 
     @Test
-    public void testLoadByUsernameSuccess() {
+    public void testLoadByUsername() {
+        // success
         when(this.userRepository.findByEmailEqualsIgnoreCase(anyString())).thenReturn(Optional.of(user));
         var result = this.userService.loadUserByUsername("myemail@gmail.com");
         assertTrue(result.getUsername().equalsIgnoreCase(user.getUsername()));
+
+        // exception
+        when(this.userRepository.findByEmailEqualsIgnoreCase(anyString())).thenReturn(Optional.empty());
+        assertThrows(UsernameNotFoundException.class, () -> this.userService.loadUserByUsername("myemail@gmail.com"));
     }
 
     @Test
