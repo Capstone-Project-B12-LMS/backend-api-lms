@@ -58,16 +58,15 @@ public class UserController {
                     .build();
 
             return ResponseEntity.ok(response);
+        } catch (UsernameNotFoundException e) {
+            log.error("user not found", e);
+            return ApiResponse.responseBad(e.getMessage());
         } catch (BadCredentialsException e) {
-            var response = ResponseToken.builder()
-                    .error(e.getMessage())
-                    .token(null)
-                    .status(false)
-                    .build();
-            return ResponseEntity.badRequest().body(response);
+            log.error("password doesn't match", e);
+            return ApiResponse.responseBad(e.getMessage());
         } catch (Exception e) {
             log.error("Login failed", e);
-            return ResponseEntity.internalServerError().body(ResponseToken.builder().error(e.getMessage()).build());
+            return ApiResponse.responseError(e);
         }
     }
 

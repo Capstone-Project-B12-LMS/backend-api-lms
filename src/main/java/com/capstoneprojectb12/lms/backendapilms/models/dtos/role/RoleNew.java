@@ -1,5 +1,7 @@
 package com.capstoneprojectb12.lms.backendapilms.models.dtos.role;
 
+import java.io.Serializable;
+
 import javax.validation.constraints.*;
 
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Role;
@@ -12,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class RoleNew {
+public class RoleNew implements Serializable {
     @NotNull(message = "cannot be null")
     @NotBlank(message = "cannot be  blank")
     @NotEmpty(message = "cannot be empty")
