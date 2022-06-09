@@ -10,6 +10,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import com.capstoneprojectb12.lms.backendapilms.controllers.rest.utils.Constant;
+
 @SpringBootTest
 @Tag(value = "swaggerDocsTest")
 @AutoConfigureMockMvc
@@ -19,7 +21,7 @@ public class SwaggerDocsTest {
 
     @Test
     public void swaggerEndpointTest() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/restapi/docs/swagger-ui/index.html#/"))
+        this.mockMvc.perform(MockMvcRequestBuilders.get(Constant.BASE_URL + "/docs/swagger-ui/index.html#/"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();

@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import com.capstoneprojectb12.lms.backendapilms.controllers.rest.utils.Constant;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassNew;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
@@ -69,7 +70,7 @@ public class ClassControllerTest {
                 var request = this.objectMapper.valueToTree(classNew).toString();
                 var response = this.objectMapper.valueToTree(ApiResponse.success(classEntity)).toString();
                 this.mockMvc.perform(
-                                MockMvcRequestBuilders.post("/restapi/class")
+                                MockMvcRequestBuilders.post(Constant.BASE_URL + "/class")
                                                 .content(request)
                                                 .contentType(MediaType.APPLICATION_JSON)
                                                 .accept(MediaType.APPLICATION_JSON))
@@ -93,7 +94,8 @@ public class ClassControllerTest {
                 var request = this.objectMapper.valueToTree(classUpdate).toString();
                 var response = this.objectMapper.valueToTree(ApiResponse.responseOk(tempClass)).toString();
                 this.mockMvc.perform(
-                                MockMvcRequestBuilders.put("/restapi/class/updateBy/id/" + savedClass.getId())
+                                MockMvcRequestBuilders
+                                                .put(Constant.BASE_URL + "/class/updateBy/id/" + savedClass.getId())
                                                 .contentType(MediaType.APPLICATION_JSON)
                                                 .content(request))
                                 .andExpect(MockMvcResultMatchers.status().isOk())

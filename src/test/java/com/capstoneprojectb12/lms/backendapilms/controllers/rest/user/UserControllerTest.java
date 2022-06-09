@@ -1,5 +1,9 @@
 package com.capstoneprojectb12.lms.backendapilms.controllers.rest.user;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,12 +11,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import com.capstoneprojectb12.lms.backendapilms.controllers.rest.utils.Constant;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserNew;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -31,16 +32,15 @@ public class UserControllerTest {
                                 .password("teacher")
                                 .build();
 
-                var requestBody = (new ObjectMapper()).valueToTree(body).toString();
+                var requestBody = (Constant.getMapper()).valueToTree(body).toString();
 
-                this.mockMvc.perform(
-                                MockMvcRequestBuilders.post("/restapi/register")
-                                                .contentType(MediaType.APPLICATION_JSON)
-                                                .accept(MediaType.APPLICATION_JSON)
-                                                .content(requestBody))
-                                .andExpect(MockMvcResultMatchers.status().isOk())
-                                .andDo(MockMvcResultHandlers.print())
-                                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+                this.mockMvc.perform(post(Constant.BASE_URL + "/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(requestBody))
+                                .andExpect(status().isOk())
+                                .andDo(print())
+                                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         }
 
@@ -52,15 +52,14 @@ public class UserControllerTest {
                                 .fullName("teacher")
                                 .password("teacher")
                                 .build();
-                var requestBody = (new ObjectMapper()).valueToTree(body).toString();
+                var requestBody = (Constant.getMapper()).valueToTree(body).toString();
 
-                this.mockMvc.perform(
-                                MockMvcRequestBuilders.post("/restapi/register")
-                                                .contentType(MediaType.APPLICATION_JSON)
-                                                .accept(MediaType.APPLICATION_JSON)
-                                                .content(requestBody))
-                                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+                this.mockMvc.perform(post(Constant.BASE_URL + "/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(requestBody))
+                                .andExpect(status().isBadRequest())
+                                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         }
 
@@ -73,19 +72,31 @@ public class UserControllerTest {
                                 .fullName("teacher")
                                 .password("teacher")
                                 .build();
-                var requestBody = (new ObjectMapper()).valueToTree(body).toString();
-                this.mockMvc.perform(
-                                MockMvcRequestBuilders.post("/restapi/register")
-                                                .contentType(MediaType.APPLICATION_JSON)
-                                                .accept(MediaType.APPLICATION_JSON)
-                                                .content(requestBody))
-                                .andExpect(MockMvcResultMatchers.status().isInternalServerError())
-                                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+                var requestBody = (Constant.getMapper()).valueToTree(body).toString();
+                this.mockMvc.perform(post(Constant.BASE_URL + "/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(requestBody))
+                                .andExpect(status().isInternalServerError())
+                                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         }
 
         @Test
-        public void testFindByEmail() {
-
+        public void testRegisterSuccess() throws Exception {
+                var user = UserNew.builder()
+                                .fullName("irda islakhu afa")
+                                .email("myemail@gmail.com")
+                                .password("mypass")
+                                .telepon("1234567890")
+                                .build();
+                var request = Constant.getMapper().valueToTree(user).toString();
+                this.mockMvc.perform(post(Constant.BASE_URL + "/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(request))
+                                .andExpect(status().isOk())
+                                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                                .andDo(print());
         }
 }

@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-@RequestMapping(value = { "/restapi/class" })
+@RequestMapping(value = { "/restapi/v1/class" })
 @RequiredArgsConstructor
 public class ClassController {
     private final ClassService classService;

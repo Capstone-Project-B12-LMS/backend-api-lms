@@ -16,7 +16,7 @@ import io.swagger.annotations.ApiResponses;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
-@RequestMapping(value = { "/restapi" })
+@RequestMapping(value = { "/restapi/v1" })
 public class InitRestFullAPI {
     @GetMapping
     @ApiResponses(value = {

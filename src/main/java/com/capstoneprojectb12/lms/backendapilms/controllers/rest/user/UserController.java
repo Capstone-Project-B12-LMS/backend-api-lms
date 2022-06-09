@@ -23,7 +23,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @RestController
-@RequestMapping(value = { "/restapi" })
+@RequestMapping(value = { "/restapi/v1" })
 @RequiredArgsConstructor
 public class UserController {
     private final AuthenticationManager authenticationManager;
