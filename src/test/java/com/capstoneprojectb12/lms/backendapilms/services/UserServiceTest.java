@@ -68,4 +68,12 @@ public class UserServiceTest {
         System.out.println("result : " + result.get().getPassword() + " password: " + realPassword);
         assertTrue(Beans.getPasswordEncoder().matches(realPassword, result.get().getPassword()));
     }
+
+    @Test
+    public void testUpdateSuccess() {
+        when(this.userRepository.save(any(User.class))).thenReturn(user);
+        var result = this.userService.save(user);
+        assertTrue(result.isPresent());
+        assertEquals(user.getEmail(), result.get().getEmail());
+    }
 }
