@@ -32,6 +32,13 @@ public class UserServiceTest {
             .build();
 
     @Test
+    public void testLoadByUsernameSuccess() {
+        when(this.userRepository.findByEmailEqualsIgnoreCase(anyString())).thenReturn(Optional.of(user));
+        var result = this.userService.loadUserByUsername("myemail@gmail.com");
+        assertTrue(result.getUsername().equalsIgnoreCase(user.getUsername()));
+    }
+
+    @Test
     public void testFindById() {
         when(this.userRepository.findById(anyString())).thenReturn(Optional.of(user));
         var result = this.userService.findById("id");
