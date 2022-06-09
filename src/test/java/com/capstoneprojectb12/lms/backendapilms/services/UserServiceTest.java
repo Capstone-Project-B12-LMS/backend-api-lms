@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Tag;
@@ -92,6 +93,14 @@ public class UserServiceTest {
     public void testExistsbyId() {
         when(this.userRepository.existsById(anyString())).thenReturn(true);
         assertTrue(this.userService.existsById("id"));
+    }
+
+    @Test
+    public void testFindAll() {
+        when(this.userService.findAll()).thenReturn(List.of(user));
+        var result = this.userService.findAll();
+        assertEquals(1, result.size());
+        assertEquals(user, result.get(0));
     }
 
 }
