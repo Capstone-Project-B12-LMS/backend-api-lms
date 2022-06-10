@@ -122,7 +122,8 @@
 				<configuration>
 					<excludes>
 						<exclude>**/utilities/**</exclude>
-						<!-- <exclude>**/controllers/**</exclude> -->
+						<exclude>**/controllers/rest/classes/**</exclude>
+						<exclude>**/controllers/gql/**</exclude>
 						<exclude>**/models/**</exclude>
 						<exclude>**/filters/**</exclude>
 						<exclude>**/backendapilms/*.class</exclude>

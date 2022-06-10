@@ -20,6 +20,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -42,13 +43,13 @@ public class UserControllerTest {
         @MockBean
         private UserService userService;
 
-        private static final UserNew userNew = UserNew.builder()
+        public static final UserNew userNew = UserNew.builder()
                         .fullName("irda islakhu afa")
                         .email("myemail@gmail.com")
                         .password("mypass")
                         .telepon("1234567890")
                         .build();
-        private static final User userEntity = User.builder()
+        public static final User userEntity = User.builder()
                         .id("id")
                         .fullName(userNew.getFullName())
                         .email(userNew.getEmail())
@@ -60,7 +61,7 @@ public class UserControllerTest {
                                         .name("USER")
                                         .build()))
                         .build();
-        private static final UserUpdate userUpdate = UserUpdate.builder()
+        public static final UserUpdate userUpdate = UserUpdate.builder()
                         .fullName("updated name")
                         .email("updated@gmail.com")
                         .telepon("0987654321")
