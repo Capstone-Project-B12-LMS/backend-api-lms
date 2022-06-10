@@ -1,22 +1,17 @@
 package com.capstoneprojectb12.lms.backendapilms.services;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
-import com.capstoneprojectb12.lms.backendapilms.models.repositories.MaterialRepository;
+import com.capstoneprojectb12.lms.backendapilms.models.entities.Material;
 
 @SpringBootTest
+@ExtendWith(MockitoExtension.class)
 @Tag(value = "materialServiceTest")
 public class MaterialServiceTest {
-    @MockBean
-    private MaterialRepository materialRepository;
+    private final Material material = Material.builder()
 
-    @Test
-    public void testAssertNotNull() {
-        assertNotNull(materialRepository);
-    }
+            .build();
 }
