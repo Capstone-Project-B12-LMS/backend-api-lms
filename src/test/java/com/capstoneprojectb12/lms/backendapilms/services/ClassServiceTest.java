@@ -92,4 +92,16 @@ public class ClassServiceTest {
 
     }
 
+    @Test
+    public void testDeleteById() {
+        // success
+        when(this.classRepository.existsById(anyString())).thenReturn(true);
+        var result = this.classService.deleteById("id");
+        assertTrue(result);
+
+        // failed
+        when(this.classRepository.existsById(anyString())).thenReturn(false);
+        result = this.classService.deleteById("id");
+        assertFalse(result);
+    }
 }
