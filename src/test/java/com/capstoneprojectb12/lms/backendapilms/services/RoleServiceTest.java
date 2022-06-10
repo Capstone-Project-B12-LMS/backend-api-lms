@@ -4,13 +4,15 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import java.util.Optional;
+import java.util.*;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Role;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.RoleRepository;
@@ -73,4 +75,25 @@ public class RoleServiceTest {
         result = this.roleService.deleteById("id");
         assertFalse(result);
     }
+
+    @Test
+    public void tstFindAllWithPageable() {
+        when(this.roleRepository.findAll(PageRequest.of(0, 2)))
+                .thenReturn(new PageImpl<>(List.of(role), PageRequest.of(0, 2), 1));
+
+        var result = this.roleService.findAll(0, 2);
+        assertNotNull(result);
+        assertEquals(1, result.getTotalPages());
+        assertEquals(0, result.getNumber());
+        assertEquals(1, result.getTotalElements());
+        assertEquals(List.of(role), result.getContent());
+
+        when(this.roleRepository.findAll(PageRequest.of(0, 2)))
+                .thenReturn(new PageImpl<>(Collections.emptyList()));
+        result = this.roleService.findAll(0, 2);
+        assertNotNull(result);
+        assertEquals(Collections.emptyList(), result.getContent());
+
+    }
+
 }
