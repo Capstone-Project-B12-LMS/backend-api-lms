@@ -96,4 +96,24 @@ public class RoleServiceTest {
 
     }
 
+    @Test
+    public void tstFindAllWithPageableAndSort() {
+        when(this.roleRepository.findAll(PageRequest.of(0, 2, Sort.)))
+                .thenReturn(new PageImpl<>(List.of(role), PageRequest.of(0, 2), 1));
+
+        var result = this.roleService.findAll(0, 2);
+        assertNotNull(result);
+        assertEquals(1, result.getTotalPages());
+        assertEquals(0, result.getNumber());
+        assertEquals(1, result.getTotalElements());
+        assertEquals(List.of(role), result.getContent());
+
+        when(this.roleRepository.findAll(PageRequest.of(0, 2)))
+                .thenReturn(new PageImpl<>(Collections.emptyList()));
+        result = this.roleService.findAll(0, 2);
+        assertNotNull(result);
+        assertEquals(Collections.emptyList(), result.getContent());
+
+    }
+
 }
