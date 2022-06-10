@@ -16,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -27,7 +29,6 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.*;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Role;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
 import com.capstoneprojectb12.lms.backendapilms.services.UserService;
-import com.jayway.jsonpath.Option;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -40,8 +41,6 @@ public class UserControllerTest {
 
         @MockBean
         private UserService userService;
-
-        private String token;
 
         private static final UserNew userNew = UserNew.builder()
                         .fullName("irda islakhu afa")
@@ -117,6 +116,18 @@ public class UserControllerTest {
         }
 
         @Test
+        public void testRegisterAlreadyExists() throws Exception {
+                when(this.userService.save(any(User.class))).thenThrow(DataIntegrityViolationException.class);
+                when(this.userService.toEntity(any(UserNew.class))).thenThrow(DataIntegrityViolationException.class);
+                this.mockMvc.perform(post(Constant.BASE_URL + "/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(JSON.create(userNew))
+                                .accept(MediaType.APPLICATION_JSON))
+                                .andDo(print())
+                                .andExpect(status().isBadRequest());
+        }
+
+        @Test
         public MvcResult testLoginSuccess() throws Exception {
                 var user = UserLogin.builder()
                                 .email("myemail@gmail.com")
@@ -180,7 +191,7 @@ public class UserControllerTest {
                                 .password("null")
                                 .build();
                 var request = JSON.create(user);
-
+                when(this.userService.findByEmail(anyString())).thenThrow(BadCredentialsException.class);
                 this.mockMvc.perform(post(Constant.BASE_URL + "/login")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
