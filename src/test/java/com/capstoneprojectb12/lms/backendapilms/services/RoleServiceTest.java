@@ -62,4 +62,15 @@ public class RoleServiceTest {
 
         assertThrows(NullPointerException.class, () -> this.roleService.update(role));
     }
+
+    @Test
+    public void testDeleteById() {
+        when(this.roleRepository.findById(anyString())).thenReturn(Optional.of(role));
+        var result = this.roleService.deleteById("id");
+        assertTrue(result);
+
+        when(this.roleRepository.findById(anyString())).thenReturn(Optional.empty());
+        result = this.roleService.deleteById("id");
+        assertFalse(result);
+    }
 }
