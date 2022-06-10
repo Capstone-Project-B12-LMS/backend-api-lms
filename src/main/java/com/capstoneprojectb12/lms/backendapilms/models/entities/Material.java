@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SQLDelete(sql = "UPDATE assignments SET is_deleted = true WHERE id = ?")
 @SuperBuilder
-public class Assignment extends BaseEntity {
+public class Material extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "class")

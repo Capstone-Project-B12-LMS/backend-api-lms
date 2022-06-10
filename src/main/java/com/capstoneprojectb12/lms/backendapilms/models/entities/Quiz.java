@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 public class Quiz extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
-    private Assignment assignment;
+    private Material material;
 
     @Column(nullable = false)
     private String name;
