@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.ClassStatus;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
@@ -36,6 +37,19 @@ public class ClassServiceTest {
             .code("wkwkwk")
             .status(ClassStatus.ACTIVE)
             .users(Collections.emptyList())
+            .build();
+    private final ClassUpdate classUpdate = ClassUpdate.builder()
+            .name("updated class")
+            .room("updated room")
+            .status(ClassStatus.WILL_END)
+            .build();
+    private final Class updatedClass = Class.builder()
+            .id("updated id")
+            .name(classUpdate.getName())
+            .room(classUpdate.getRoom())
+            .status(classUpdate.getStatus())
+            .code(classEntity.getCode())
+            .users(classEntity.getUsers())
             .build();
 
     @Test
@@ -67,5 +81,15 @@ public class ClassServiceTest {
         when(this.classRepository.save(any(Class.class))).thenReturn(nullable(Class.class));
         result = this.classService.update(classEntity);
         assertFalse(result.isPresent());
+
+        // update with class update
+        when(this.classRepository.save(any(Class.class))).thenReturn(updatedClass);
+        result = this.classService.update(classEntity, classUpdate);
+        assertTrue(result.isPresent());
+        assertEquals(updatedClass.getName(), result.get().getName());
+        assertEquals(updatedClass.getStatus(), result.get().getStatus());
+        assertEquals(updatedClass.getRoom(), result.get().getRoom());
+
     }
+
 }
