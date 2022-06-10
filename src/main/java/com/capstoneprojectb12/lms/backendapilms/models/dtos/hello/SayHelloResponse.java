@@ -1,5 +1,7 @@
 package com.capstoneprojectb12.lms.backendapilms.models.dtos.hello;
 
+import java.io.Serializable;
+
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -8,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class SayHelloResponse {
+public class SayHelloResponse implements Serializable {
     private String message;
     private Object errors;
 }

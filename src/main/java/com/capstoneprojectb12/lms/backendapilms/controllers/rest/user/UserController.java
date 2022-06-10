@@ -23,7 +23,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @RestController
-@RequestMapping(value = { "/restapi" })
+@RequestMapping(value = { "/restapi/v1" })
 @RequiredArgsConstructor
 public class UserController {
     private final AuthenticationManager authenticationManager;
@@ -58,16 +58,15 @@ public class UserController {
                     .build();
 
             return ResponseEntity.ok(response);
+        } catch (UsernameNotFoundException e) {
+            log.error("user not found", e);
+            return ApiResponse.responseBad(e.getMessage());
         } catch (BadCredentialsException e) {
-            var response = ResponseToken.builder()
-                    .error(e.getMessage())
-                    .token(null)
-                    .status(false)
-                    .build();
-            return ResponseEntity.badRequest().body(response);
+            log.error("password doesn't match", e);
+            return ApiResponse.responseBad(e.getMessage());
         } catch (Exception e) {
             log.error("Login failed", e);
-            return ResponseEntity.internalServerError().body(ResponseToken.builder().error(e.getMessage()).build());
+            return ApiResponse.responseError(e);
         }
     }
 
@@ -80,7 +79,7 @@ public class UserController {
         try {
             var user = this.userService.toEntity(request);
             var savedUser = this.userService.save(user);
-            return ApiResponse.responseOk(savedUser.get());
+            return ApiResponse.responseOk(savedUser);
         } catch (DataIntegrityViolationException e) {
             log.error("data already exists", e);
             return ApiResponse.responseBad("data already exists");
@@ -93,9 +92,9 @@ public class UserController {
     @PreAuthorize(value = "hasAnyAuthority('USER')")
     @GetMapping(value = { "/users/{id}" })
     public ResponseEntity<?> findById(@PathVariable(name = "id") String id) {
-
+        log.info("entering endpoint to find user by id");
         try {
-            var user = this.userService.findByEmail(id);
+            var user = this.userService.findById(id);
             if (user.isPresent()) {
                 return ResponseEntity.ok(ApiResponse.success(user.get()));
             }

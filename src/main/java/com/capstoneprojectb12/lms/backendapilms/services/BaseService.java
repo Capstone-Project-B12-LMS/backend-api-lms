@@ -1,5 +1,6 @@
 package com.capstoneprojectb12.lms.backendapilms.services;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,7 +9,7 @@ import org.springframework.data.domain.Sort;
 
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
 
-public interface BaseService<T> {
+public interface BaseService<T> extends Serializable {
     public Optional<T> save(T entity);
 
     public Optional<T> update(T entity);

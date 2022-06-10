@@ -1,5 +1,7 @@
 package com.capstoneprojectb12.lms.backendapilms.controllers.rest.classes;
 
+import java.util.NoSuchElementException;
+
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -18,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-@RequestMapping(value = { "/restapi/class" })
+@RequestMapping(value = { "/restapi/v1/class" })
 @RequiredArgsConstructor
 public class ClassController {
     private final ClassService classService;
@@ -61,6 +63,9 @@ public class ClassController {
 
             classEntity = this.classService.update(classEntity.get());
             return ApiResponse.responseOk(classEntity.get());
+        } catch (NoSuchElementException e) {
+            log.error("class not found", e);
+            return ApiResponse.responseBad(e.getMessage());
         } catch (Exception e) {
             log.error("error while update user", e);
             return ApiResponse.responseError(e);

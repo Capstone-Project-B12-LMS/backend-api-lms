@@ -41,7 +41,7 @@ public class UserService implements BaseService<User>, UserDetailsService {
     public Optional<User> save(User entity) {
         entity.setPassword(passwordEncoder.encode(entity.getPassword()));
         var savedUser = this.userRepository.save(entity);
-        return Optional.of(Optional.of(savedUser)).orElse(Optional.empty());
+        return Optional.of(savedUser);// .orElse(Optional.empty());
     }
 
     @Override

@@ -122,7 +122,7 @@
 				<configuration>
 					<excludes>
 						<exclude>**/utilities/**</exclude>
-						<exclude>**/controllers/**</exclude>
+						<!-- <exclude>**/controllers/**</exclude> -->
 						<exclude>**/models/**</exclude>
 						<exclude>**/filters/**</exclude>
 						<exclude>**/backendapilms/*.class</exclude>
