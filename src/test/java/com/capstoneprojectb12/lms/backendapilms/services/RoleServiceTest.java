@@ -50,4 +50,16 @@ public class RoleServiceTest {
         role = this.roleService.deleteById("id");
         assertTrue(role);
     }
+
+    @Test
+    public void testUpdate() {
+        when(this.roleRepository.save(any(Role.class))).thenReturn(role);
+        var result = this.roleService.update(role);
+        assertTrue(result.isPresent());
+        assertEquals(role.getName(), result.get().getName());
+
+        when(this.roleRepository.save(any(Role.class))).thenReturn(null);
+
+        assertThrows(NullPointerException.class, () -> this.roleService.update(role));
+    }
 }
