@@ -233,15 +233,24 @@ public class UserControllerTest {
         }
 
         @Test
-        public void testFindByIdSuccess() throws Exception {
-                var result = this.testLoginSuccess();
+        public void testFindById() throws Exception {
+                // success
                 when(this.userService.findById(anyString())).thenReturn(Optional.ofNullable(userEntity));
                 this.mockMvc.perform(get(Constant.BASE_URL + "/users/id")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .header("Authorization", "Bearer " + JSON.getToken(result))
+                                .header("Authorization", "Bearer " + JSON.getToken(this.testLoginSuccess()))
                                 .accept(MediaType.APPLICATION_JSON))
                                 .andDo(print())
                                 .andExpect(status().isOk());
+
+                // not found
+                when(this.userService.findById(anyString())).thenReturn(Optional.empty());
+                this.mockMvc.perform(get(Constant.BASE_URL + "/users/id")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", "Bearer " + JSON.getToken(this.testLoginSuccess()))
+                                .accept(MediaType.APPLICATION_JSON))
+                                .andDo(print())
+                                .andExpect(status().isForbidden());
         }
 
         @Test
