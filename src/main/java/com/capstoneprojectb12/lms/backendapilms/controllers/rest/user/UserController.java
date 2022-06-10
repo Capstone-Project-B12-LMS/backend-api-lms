@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import javax.validation.Valid;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.*;
@@ -79,7 +80,10 @@ public class UserController {
         try {
             var user = this.userService.toEntity(request);
             var savedUser = this.userService.save(user);
-            return ApiResponse.responseOk(errors);
+            return ApiResponse.responseOk(savedUser.get());
+        } catch (DataIntegrityViolationException e) {
+            log.error("data already exists", e);
+            return ApiResponse.responseBad("data already exists");
         } catch (Exception e) {
             log.error("Failed when register user", e);
             return ApiResponse.responseError(e);
@@ -87,11 +91,11 @@ public class UserController {
     }
 
     @PreAuthorize(value = "hasAnyAuthority('USER')")
-    @GetMapping(value = { "/users/{email}" })
-    public ResponseEntity<?> findByEmail(@PathVariable(name = "email") String email) {
+    @GetMapping(value = { "/users/{id}" })
+    public ResponseEntity<?> findById(@PathVariable(name = "id") String id) {
 
         try {
-            var user = this.userService.findByEmail(email);
+            var user = this.userService.findByEmail(id);
             if (user.isPresent()) {
                 return ResponseEntity.ok(ApiResponse.success(user.get()));
             }
