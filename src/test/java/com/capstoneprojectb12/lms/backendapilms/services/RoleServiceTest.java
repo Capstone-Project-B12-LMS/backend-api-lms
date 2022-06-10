@@ -59,7 +59,7 @@ public class RoleServiceTest {
         assertTrue(result.isPresent());
         assertEquals(role.getName(), result.get().getName());
 
-        when(this.roleRepository.save(any(Role.class))).thenReturn(null);
+        when(this.roleRepository.save(any(Role.class))).thenThrow(NullPointerException.class);
 
         assertThrows(NullPointerException.class, () -> this.roleService.update(role));
     }
@@ -100,7 +100,7 @@ public class RoleServiceTest {
         when(this.roleRepository.findAll(PageRequest.of(0, 2, Sort.by("name").ascending())))
                 .thenReturn(new PageImpl<>(List.of(role), PageRequest.of(0, 2), 1));
 
-        var result = this.roleService.findAll(0, 2);
+        var result = this.roleService.findAll(0, 2, Sort.by("name").ascending());
         assertNotNull(result);
         assertEquals(1, result.getTotalPages());
         assertEquals(0, result.getNumber());
