@@ -23,11 +23,11 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import com.capstoneprojectb12.lms.backendapilms.controllers.rest.utils.Constant;
 import com.capstoneprojectb12.lms.backendapilms.controllers.rest.utils.JSON;
-import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserLogin;
-import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserNew;
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.*;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Role;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
 import com.capstoneprojectb12.lms.backendapilms.services.UserService;
+import com.jayway.jsonpath.Option;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -60,6 +60,11 @@ public class UserControllerTest {
                                         .id("id")
                                         .name("USER")
                                         .build()))
+                        .build();
+        private static final UserUpdate userUpdate = UserUpdate.builder()
+                        .fullName("updated name")
+                        .email("updated@gmail.com")
+                        .telepon("0987654321")
                         .build();
 
         @Test
@@ -226,5 +231,53 @@ public class UserControllerTest {
                                 .accept(MediaType.APPLICATION_JSON))
                                 .andDo(print())
                                 .andExpect(status().isOk());
+        }
+
+        @Test
+        public void testUpdate() throws Exception {
+                // success
+                when(this.userService.findById(anyString()))
+                                .thenReturn(Optional.ofNullable(userEntity));
+                when(this.userService.update(any(User.class), any(UserUpdate.class)))
+                                .thenReturn(Optional.ofNullable(userEntity));
+                this.mockMvc.perform(put(Constant.BASE_URL + "/users/id")
+                                .header("Authorization", "Bearer " + JSON.getToken(this.testLoginSuccess()))
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(JSON.create(userUpdate)))
+                                .andDo(print())
+                                .andExpect(status().isOk());
+
+                // forbidden
+                this.mockMvc.perform(put(Constant.BASE_URL + "/users/id")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(JSON.create(userUpdate)))
+                                .andDo(print())
+                                .andExpect(status().isForbidden());
+
+                // user not found
+                when(this.userService.findById(anyString())).thenReturn(Optional.empty());
+                this.mockMvc.perform(put(Constant.BASE_URL + "/users/id")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .header("Authorization", "Bearer " + JSON.getToken(this.testLoginSuccess()))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(JSON.create(userUpdate)))
+                                .andDo(print())
+                                .andExpect(status().isForbidden());
+
+                // internal server error
+                when(this.userService.findById(anyString()))
+                                .thenReturn(Optional.ofNullable(userEntity));
+                when(this.userService.update(any(User.class), any(UserUpdate.class)))
+                                .thenReturn(Optional.empty());
+                this.mockMvc.perform(put(Constant.BASE_URL + "/users/id")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .header("Authorization", "Bearer " + JSON.getToken(this.testLoginSuccess()))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(JSON.create(userUpdate)))
+                                .andDo(print())
+                                .andExpect(status().isInternalServerError());
+
         }
 }
