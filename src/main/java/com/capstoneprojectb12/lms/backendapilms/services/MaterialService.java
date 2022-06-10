@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Material;
+import com.capstoneprojectb12.lms.backendapilms.models.repositories.MaterialRepository;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -18,10 +19,11 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 @RequiredArgsConstructor
 public class MaterialService implements BaseService<Material> {
+    private final MaterialRepository materialRepository;
+
     @Override
     public Optional<Material> save(Material entity) {
-        // TODO Auto-generated method stub
-        return null;
+        return Optional.ofNullable(this.materialRepository.save(entity));
     }
 
     @Override
