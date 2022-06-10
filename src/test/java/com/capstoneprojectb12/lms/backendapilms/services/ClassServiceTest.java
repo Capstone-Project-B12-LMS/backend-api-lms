@@ -104,4 +104,18 @@ public class ClassServiceTest {
         result = this.classService.deleteById("id");
         assertFalse(result);
     }
+
+    @Test
+    public void testFindById() {
+        // success
+        when(this.classRepository.findById(anyString())).thenReturn(Optional.ofNullable(classEntity));
+        var result = this.classService.findById("id");
+        assertTrue(result.isPresent());
+        assertEquals(classEntity.getCode(), result.get().getCode());
+
+        // failed
+        when(this.classRepository.findById(anyString())).thenReturn(Optional.empty());
+        result = this.classService.findById("id");
+        assertFalse(result.isPresent());
+    }
 }
