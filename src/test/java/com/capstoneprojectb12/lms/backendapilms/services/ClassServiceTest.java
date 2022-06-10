@@ -31,7 +31,7 @@ public class ClassServiceTest {
     @Autowired
     private ClassService classService;
 
-    private final Class classEntity = Class.builder()
+    public static final Class classEntity = Class.builder()
             .id("id")
             .name("my class")
             .room("my room")
