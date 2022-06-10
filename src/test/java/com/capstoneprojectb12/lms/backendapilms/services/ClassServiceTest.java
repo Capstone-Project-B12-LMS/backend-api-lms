@@ -38,6 +38,14 @@ public class ClassServiceTest {
             .status(ClassStatus.ACTIVE)
             .users(Collections.emptyList())
             .build();
+    private final Class classEntity2 = Class.builder()
+            .id("id")
+            .name("ny class")
+            .room("my room")
+            .code("wkwkwk")
+            .status(ClassStatus.ACTIVE)
+            .users(Collections.emptyList())
+            .build();
     private final ClassUpdate classUpdate = ClassUpdate.builder()
             .name("updated class")
             .room("updated room")
@@ -129,6 +137,7 @@ public class ClassServiceTest {
 
     @Test
     public void testFindAllWithPageable() {
+        // without sorting
         // success
         when(this.classRepository.findAll(any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(classEntity)));
@@ -142,5 +151,27 @@ public class ClassServiceTest {
         result = this.classService.findAll(0, 1);
         assertNotNull(result);
         assertEquals(Collections.emptyList(), result.getContent());
+
+    }
+
+    @Test
+    public void testFindAllWithSort() {
+        // with sorting
+        // ascending
+        when(this.classRepository.findAll(any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(classEntity, classEntity2)));
+        var result = this.classService.findAll(0, 1, Sort.by("name").ascending());
+        assertNotEquals(Collections.emptyList(), result.getContent());
+        assertEquals(classEntity, result.getContent().get(0));
+        assertEquals(classEntity2, result.getContent().get(1));
+
+        // descending
+        when(this.classRepository.findAll(any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(classEntity2, classEntity)));
+        result = this.classService.findAll(0, 1, Sort.by("name").descending());
+        assertNotEquals(Collections.emptyList(), result.getContent());
+        assertEquals(classEntity2, result.getContent().get(0));
+        assertEquals(classEntity, result.getContent().get(1));
+
     }
 }
