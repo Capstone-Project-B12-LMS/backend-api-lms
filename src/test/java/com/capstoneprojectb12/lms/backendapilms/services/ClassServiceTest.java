@@ -4,8 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import java.util.Collections;
-import java.util.Optional;
+import java.util.*;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -117,5 +116,13 @@ public class ClassServiceTest {
         when(this.classRepository.findById(anyString())).thenReturn(Optional.empty());
         result = this.classService.findById("id");
         assertFalse(result.isPresent());
+    }
+
+    @Test
+    public void testFindAll() {
+        when(this.classRepository.findAll()).thenReturn(List.of(classEntity));
+        var result = this.classService.findAll();
+        assertNotNull(result);
+        assertEquals(classEntity.getCode(), result.get(0).getCode());
     }
 }
