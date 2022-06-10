@@ -5,9 +5,9 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Collections;
+import java.util.Optional;
 
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +40,32 @@ public class ClassServiceTest {
 
     @Test
     public void testSave() {
+        // success
         when(this.classRepository.save(any(Class.class))).thenReturn(classEntity);
         var result = this.classService.save(classEntity);
         assertTrue(result.isPresent());
         assertEquals(classEntity, result.get());
         assertEquals(classEntity.getStatus(), result.get().getStatus());
+
+        // failed
+        when(this.classRepository.save(any(Class.class))).thenReturn(nullable(Class.class));
+        result = this.classService.save(classEntity);
+        assertFalse(result.isPresent());
+    }
+
+    @Test
+    public void testUpdate() {
+        // success
+        var tempName = classEntity.getName();
+        classEntity.setName("updated name");
+        when(this.classRepository.save(any(Class.class))).thenReturn(classEntity);
+        var result = this.classService.update(classEntity);
+        assertTrue(result.isPresent());
+        assertEquals("updated name", result.get().getName());
+
+        // failed
+        when(this.classRepository.save(any(Class.class))).thenReturn(nullable(Class.class));
+        result = this.classService.update(classEntity);
+        assertFalse(result.isPresent());
     }
 }

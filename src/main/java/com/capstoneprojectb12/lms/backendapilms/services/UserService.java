@@ -41,13 +41,13 @@ public class UserService implements BaseService<User>, UserDetailsService {
     public Optional<User> save(User entity) {
         entity.setPassword(passwordEncoder.encode(entity.getPassword()));
         var savedUser = this.userRepository.save(entity);
-        return Optional.of(savedUser);// .orElse(Optional.empty());
+        return Optional.ofNullable(savedUser);// .orElse(Optional.empty());
     }
 
     @Override
     public Optional<User> update(User entity) {
         var updatedUser = this.userRepository.save(entity);
-        return Optional.of(Optional.of(updatedUser)).orElse(Optional.empty());
+        return Optional.ofNullable(updatedUser);
     }
 
     public Optional<User> update(User entity, UserUpdate userUpdate) {
