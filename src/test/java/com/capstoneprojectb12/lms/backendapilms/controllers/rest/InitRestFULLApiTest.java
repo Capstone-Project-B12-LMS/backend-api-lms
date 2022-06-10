@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import com.capstoneprojectb12.lms.backendapilms.controllers.rest.utils.Constant;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.hello.SayHelloInput;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -27,7 +28,7 @@ public class InitRestFULLApiTest {
                 String requestBody = new ObjectMapper().valueToTree(body).toString();
                 this.mockMvc
                                 .perform(MockMvcRequestBuilders
-                                                .post("/restapi")
+                                                .post(Constant.BASE_URL)
                                                 .contentType(MediaType.APPLICATION_JSON)
                                                 .content(requestBody))
                                 .andDo(MockMvcResultHandlers

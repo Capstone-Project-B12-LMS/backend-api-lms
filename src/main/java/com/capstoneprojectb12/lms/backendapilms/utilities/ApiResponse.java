@@ -1,5 +1,7 @@
 package com.capstoneprojectb12.lms.backendapilms.utilities;
 
+import java.io.Serializable;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 
@@ -11,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class ApiResponse<T> {
+public class ApiResponse<T> implements Serializable {
     private Object errors;
     private boolean status = false;
     private T data;

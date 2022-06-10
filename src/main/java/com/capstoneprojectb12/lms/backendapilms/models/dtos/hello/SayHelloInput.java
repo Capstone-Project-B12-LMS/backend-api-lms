@@ -1,5 +1,7 @@
 package com.capstoneprojectb12.lms.backendapilms.models.dtos.hello;
 
+import java.io.Serializable;
+
 import javax.validation.constraints.*;
 
 import lombok.*;
@@ -10,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class SayHelloInput {
+public class SayHelloInput implements Serializable {
     @NotNull(message = "cannot be null")
     @NotBlank(message = "cannot be  blank")
     @NotEmpty(message = "cannot be empty")
