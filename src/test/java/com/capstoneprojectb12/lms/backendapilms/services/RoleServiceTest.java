@@ -11,8 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.*;
 
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Role;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.RoleRepository;
@@ -98,7 +97,7 @@ public class RoleServiceTest {
 
     @Test
     public void tstFindAllWithPageableAndSort() {
-        when(this.roleRepository.findAll(PageRequest.of(0, 2, Sort.)))
+        when(this.roleRepository.findAll(PageRequest.of(0, 2, Sort.by("name").ascending())))
                 .thenReturn(new PageImpl<>(List.of(role), PageRequest.of(0, 2), 1));
 
         var result = this.roleService.findAll(0, 2);
