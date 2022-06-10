@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.*;
 
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassNew;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.ClassStatus;
@@ -173,5 +174,28 @@ public class ClassServiceTest {
         assertEquals(classEntity2, result.getContent().get(0));
         assertEquals(classEntity, result.getContent().get(1));
 
+    }
+
+    @Test
+    public void testToPaginationResponse() {
+        var purePage = new PageImpl<>(List.of(classEntity), PageRequest.of(0, 1), 1);
+        var pageResponse = this.classService.toPaginationResponse(purePage);
+        assertEquals(0, pageResponse.getPage());
+        assertEquals(1, pageResponse.getSize());
+        assertEquals(1, pageResponse.getTotalPage());
+        assertEquals(1, pageResponse.getTotalSize());
+        assertEquals(purePage.getContent(), pageResponse.getData());
+    }
+
+    @Test
+    public void testToEntity() {
+        var classNew = ClassNew.builder()
+                .name("new class")
+                .room("rom of new class")
+                .build();
+
+        var entity = this.classService.toEntity(classNew);
+        assertEquals(classNew.getName(), entity.getName());
+        assertEquals(classNew.getRoom(), entity.getRoom());
     }
 }
