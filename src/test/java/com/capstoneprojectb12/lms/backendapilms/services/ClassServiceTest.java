@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.*;
 
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
@@ -124,5 +125,22 @@ public class ClassServiceTest {
         var result = this.classService.findAll();
         assertNotNull(result);
         assertEquals(classEntity.getCode(), result.get(0).getCode());
+    }
+
+    @Test
+    public void testFindAllWithPageable() {
+        // success
+        when(this.classRepository.findAll(any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(classEntity)));
+        var result = this.classService.findAll(0, 1);
+        assertNotNull(result);
+        assertEquals(List.of(classEntity), result.getContent());
+
+        // failed
+        when(this.classRepository.findAll(any(Pageable.class)))
+                .thenReturn(new PageImpl<>(Collections.emptyList()));
+        result = this.classService.findAll(0, 1);
+        assertNotNull(result);
+        assertEquals(Collections.emptyList(), result.getContent());
     }
 }
