@@ -16,7 +16,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.entities.Role;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.RoleRepository;
 
 @SpringBootTest
-@Tag(value = "RoleServiceTest")
+@Tag(value = "roleServiceTest")
 public class RoleServiceTest {
 
     @MockBean
