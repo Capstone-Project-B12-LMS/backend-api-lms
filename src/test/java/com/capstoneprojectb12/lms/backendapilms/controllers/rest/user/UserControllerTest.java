@@ -19,6 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import com.capstoneprojectb12.lms.backendapilms.controllers.rest.utils.Constant;
 import com.capstoneprojectb12.lms.backendapilms.controllers.rest.utils.JSON;
@@ -39,6 +40,8 @@ public class UserControllerTest {
 
         @MockBean
         private UserService userService;
+
+        private String token;
 
         private static final UserNew userNew = UserNew.builder()
                         .fullName("irda islakhu afa")
@@ -109,7 +112,7 @@ public class UserControllerTest {
         }
 
         @Test
-        public void testLoginSuccess() throws Exception {
+        public MvcResult testLoginSuccess() throws Exception {
                 var user = UserLogin.builder()
                                 .email("myemail@gmail.com")
                                 .password("mypass")
@@ -118,14 +121,16 @@ public class UserControllerTest {
 
                 when(this.userService.findByEmail(any(String.class))).thenReturn(Optional.of(userEntity));
                 when(this.userService.loadUserByUsername(anyString())).thenReturn(userEntity);
-                this.mockMvc.perform(post(Constant.BASE_URL + "/login")
+                var result = this.mockMvc.perform(post(Constant.BASE_URL + "/login")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(request))
                                 .andDo(print())
                                 .andExpect(status().isOk())
+                                .andReturn()
                 //
                 ;
+                return result;
         }
 
         @Test
@@ -200,18 +205,26 @@ public class UserControllerTest {
         }
 
         @Test
-        @Disabled
         public void testFindByIdUnauthorized() throws Exception {
                 var request = JSON.create(userNew);
-                var result = this.mockMvc.perform(post(Constant.BASE_URL + "/register")
+                this.mockMvc.perform(get(Constant.BASE_URL + "/users/" + "userid")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(request))
                                 .andDo(print())
-                                .andExpect(status().isOk())
+                                .andExpect(status().isForbidden())
                                 .andReturn();
+        }
 
-                // result.getResponse
-                // this.mockMvc.perform(get(Constant.BASE_URL + "/users/", null))
+        @Test
+        public void testFindByIdSuccess() throws Exception {
+                var result = this.testLoginSuccess();
+                when(this.userService.findById(anyString())).thenReturn(Optional.ofNullable(userEntity));
+                this.mockMvc.perform(get(Constant.BASE_URL + "/users/id")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", "Bearer " + JSON.getToken(result))
+                                .accept(MediaType.APPLICATION_JSON))
+                                .andDo(print())
+                                .andExpect(status().isOk());
         }
 }
