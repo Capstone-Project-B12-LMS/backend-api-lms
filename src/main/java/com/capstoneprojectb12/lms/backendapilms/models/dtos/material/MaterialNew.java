@@ -1,6 +1,6 @@
 package com.capstoneprojectb12.lms.backendapilms.models.dtos.material;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,13 +37,13 @@ public class MaterialNew {
 	
 	private String topicId;
 	
-	@ApiModelProperty(allowEmptyValue = true, dataType = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@Schema(nullable = true, type = MediaType.MULTIPART_FORM_DATA_VALUE)
 	private MultipartFile video;
 	
-	@ApiModelProperty(allowEmptyValue = true, dataType = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@Schema(nullable = true, type = MediaType.MULTIPART_FORM_DATA_VALUE)
 	private MultipartFile file;
 	
-	@ApiModelProperty(allowEmptyValue = true)
+	@Schema(nullable = true)
 	private LocalDateTime deadline;
 	
 	@NotNull(message = "cannot be null")

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping(value = {"/restapi/class/material"})
+@RequestMapping(value = {"/restapi/v1/class/material"})
 public class ClassMaterialController {
 	@PostMapping
 	public ResponseEntity<?> save() {
