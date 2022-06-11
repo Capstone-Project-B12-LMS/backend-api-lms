@@ -1,22 +1,26 @@
 package com.capstoneprojectb12.lms.backendapilms.models.entities;
 
-import java.time.LocalDateTime;
-
-import javax.persistence.*;
-
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
 
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import java.time.LocalDateTime;
 
-@Entity(name = "assignments")
+@Entity(name = "materials")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SQLDelete(sql = "UPDATE assignments SET is_deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE materials SET is_deleted = true WHERE id = ?")
 @SuperBuilder
-public class Assignment extends BaseEntity {
+public class Material extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "class")

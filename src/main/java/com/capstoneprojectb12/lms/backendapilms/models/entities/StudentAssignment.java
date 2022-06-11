@@ -20,7 +20,7 @@ public class StudentAssignment extends BaseEntity {
     private User user;
 
     @ManyToOne
-    private Assignment assignment;
+    private Material assignment;
 
     private boolean isDone;
 

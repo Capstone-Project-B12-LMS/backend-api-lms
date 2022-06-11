@@ -24,7 +24,7 @@ public class RoleService implements BaseService<Role> {
     @Override
     public Optional<Role> save(Role entity) {
         entity.setName(entity.getName().toUpperCase().trim());
-        return Optional.of(Optional.of(this.roleRepository.save(entity))).orElse(Optional.empty());
+        return Optional.ofNullable(this.roleRepository.save(entity));
     }
 
     @Override

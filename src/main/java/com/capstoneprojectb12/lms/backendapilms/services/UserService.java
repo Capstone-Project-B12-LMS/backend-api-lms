@@ -1,25 +1,27 @@
 package com.capstoneprojectb12.lms.backendapilms.services;
 
-import java.util.List;
-import java.util.Optional;
-
-import javax.transaction.Transactional;
-
-import org.springframework.data.domain.*;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserNew;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Role;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -41,13 +43,13 @@ public class UserService implements BaseService<User>, UserDetailsService {
     public Optional<User> save(User entity) {
         entity.setPassword(passwordEncoder.encode(entity.getPassword()));
         var savedUser = this.userRepository.save(entity);
-        return Optional.of(savedUser);// .orElse(Optional.empty());
+        return Optional.ofNullable(savedUser);
     }
 
     @Override
     public Optional<User> update(User entity) {
         var updatedUser = this.userRepository.save(entity);
-        return Optional.of(Optional.of(updatedUser)).orElse(Optional.empty());
+        return Optional.ofNullable(updatedUser);
     }
 
     public Optional<User> update(User entity, UserUpdate userUpdate) {

@@ -26,7 +26,7 @@ public class ClassService implements BaseService<Class> {
 
     @Override
     public Optional<Class> save(Class entity) {
-        return Optional.of(Optional.of(this.classRepository.save(entity))).orElse(Optional.empty());
+        return Optional.ofNullable(this.classRepository.save(entity));
     }
 
     @Override

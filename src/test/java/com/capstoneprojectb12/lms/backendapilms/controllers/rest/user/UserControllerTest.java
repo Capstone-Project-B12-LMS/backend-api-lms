@@ -16,14 +16,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import com.capstoneprojectb12.lms.backendapilms.controllers.rest.utils.Constant;
 import com.capstoneprojectb12.lms.backendapilms.controllers.rest.utils.JSON;
-import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserLogin;
-import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserNew;
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.*;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Role;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
 import com.capstoneprojectb12.lms.backendapilms.services.UserService;
@@ -40,13 +43,13 @@ public class UserControllerTest {
         @MockBean
         private UserService userService;
 
-        private static final UserNew userNew = UserNew.builder()
+        public static final UserNew userNew = UserNew.builder()
                         .fullName("irda islakhu afa")
                         .email("myemail@gmail.com")
                         .password("mypass")
                         .telepon("1234567890")
                         .build();
-        private static final User userEntity = User.builder()
+        public static final User userEntity = User.builder()
                         .id("id")
                         .fullName(userNew.getFullName())
                         .email(userNew.getEmail())
@@ -57,6 +60,11 @@ public class UserControllerTest {
                                         .id("id")
                                         .name("USER")
                                         .build()))
+                        .build();
+        public static final UserUpdate userUpdate = UserUpdate.builder()
+                        .fullName("updated name")
+                        .email("updated@gmail.com")
+                        .telepon("0987654321")
                         .build();
 
         @Test
@@ -109,7 +117,19 @@ public class UserControllerTest {
         }
 
         @Test
-        public void testLoginSuccess() throws Exception {
+        public void testRegisterAlreadyExists() throws Exception {
+                when(this.userService.save(any(User.class))).thenThrow(DataIntegrityViolationException.class);
+                when(this.userService.toEntity(any(UserNew.class))).thenThrow(DataIntegrityViolationException.class);
+                this.mockMvc.perform(post(Constant.BASE_URL + "/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(JSON.create(userNew))
+                                .accept(MediaType.APPLICATION_JSON))
+                                .andDo(print())
+                                .andExpect(status().isBadRequest());
+        }
+
+        @Test
+        public MvcResult testLoginSuccess() throws Exception {
                 var user = UserLogin.builder()
                                 .email("myemail@gmail.com")
                                 .password("mypass")
@@ -118,14 +138,16 @@ public class UserControllerTest {
 
                 when(this.userService.findByEmail(any(String.class))).thenReturn(Optional.of(userEntity));
                 when(this.userService.loadUserByUsername(anyString())).thenReturn(userEntity);
-                this.mockMvc.perform(post(Constant.BASE_URL + "/login")
+                var result = this.mockMvc.perform(post(Constant.BASE_URL + "/login")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(request))
                                 .andDo(print())
                                 .andExpect(status().isOk())
+                                .andReturn()
                 //
                 ;
+                return result;
         }
 
         @Test
@@ -170,7 +192,7 @@ public class UserControllerTest {
                                 .password("null")
                                 .build();
                 var request = JSON.create(user);
-
+                when(this.userService.findByEmail(anyString())).thenThrow(BadCredentialsException.class);
                 this.mockMvc.perform(post(Constant.BASE_URL + "/login")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
@@ -200,18 +222,83 @@ public class UserControllerTest {
         }
 
         @Test
-        @Disabled
         public void testFindByIdUnauthorized() throws Exception {
                 var request = JSON.create(userNew);
-                var result = this.mockMvc.perform(post(Constant.BASE_URL + "/register")
+                this.mockMvc.perform(get(Constant.BASE_URL + "/users/" + "userid")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .content(request))
                                 .andDo(print())
-                                .andExpect(status().isOk())
+                                .andExpect(status().isForbidden())
                                 .andReturn();
+        }
 
-                // result.getResponse
-                // this.mockMvc.perform(get(Constant.BASE_URL + "/users/", null))
+        @Test
+        public void testFindById() throws Exception {
+                // success
+                when(this.userService.findById(anyString())).thenReturn(Optional.ofNullable(userEntity));
+                this.mockMvc.perform(get(Constant.BASE_URL + "/users/id")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", "Bearer " + JSON.getToken(this.testLoginSuccess()))
+                                .accept(MediaType.APPLICATION_JSON))
+                                .andDo(print())
+                                .andExpect(status().isOk());
+
+                // not found
+                when(this.userService.findById(anyString())).thenReturn(Optional.empty());
+                this.mockMvc.perform(get(Constant.BASE_URL + "/users/id")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", "Bearer " + JSON.getToken(this.testLoginSuccess()))
+                                .accept(MediaType.APPLICATION_JSON))
+                                .andDo(print())
+                                .andExpect(status().isForbidden());
+        }
+
+        @Test
+        public void testUpdate() throws Exception {
+                // success
+                when(this.userService.findById(anyString()))
+                                .thenReturn(Optional.ofNullable(userEntity));
+                when(this.userService.update(any(User.class), any(UserUpdate.class)))
+                                .thenReturn(Optional.ofNullable(userEntity));
+                this.mockMvc.perform(put(Constant.BASE_URL + "/users/id")
+                                .header("Authorization", "Bearer " + JSON.getToken(this.testLoginSuccess()))
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(JSON.create(userUpdate)))
+                                .andDo(print())
+                                .andExpect(status().isOk());
+
+                // forbidden
+                this.mockMvc.perform(put(Constant.BASE_URL + "/users/id")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(JSON.create(userUpdate)))
+                                .andDo(print())
+                                .andExpect(status().isForbidden());
+
+                // user not found
+                when(this.userService.findById(anyString())).thenReturn(Optional.empty());
+                this.mockMvc.perform(put(Constant.BASE_URL + "/users/id")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .header("Authorization", "Bearer " + JSON.getToken(this.testLoginSuccess()))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(JSON.create(userUpdate)))
+                                .andDo(print())
+                                .andExpect(status().isForbidden());
+
+                // internal server error
+                when(this.userService.findById(anyString()))
+                                .thenReturn(Optional.ofNullable(userEntity));
+                when(this.userService.update(any(User.class), any(UserUpdate.class)))
+                                .thenReturn(Optional.empty());
+                this.mockMvc.perform(put(Constant.BASE_URL + "/users/id")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .header("Authorization", "Bearer " + JSON.getToken(this.testLoginSuccess()))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(JSON.create(userUpdate)))
+                                .andDo(print())
+                                .andExpect(status().isInternalServerError());
+
         }
 }

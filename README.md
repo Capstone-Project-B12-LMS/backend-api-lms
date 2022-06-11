@@ -37,7 +37,7 @@ Here we have 2 mode of API
 
 - `GraphQL API`
 
-  - On GraphQL API you can access `http://localhost:8080/graphiql?path=/graphql` to use `GraphQL` in browser and you can send your `GraphQL Query` in `http://localhost:8080/graphql`
+  - On GraphQL API you can access `http://localhost:8080/gql/v1/graphiql?path=/graphql` to use `GraphQL` in browser and you can send your `GraphQL Query` in `http://localhost:8080/gql/v1/graphql`
 
 # Using Deployed App
 
@@ -50,6 +50,6 @@ Use resource bellow to use it.
 
 - `GraphQL API`
 
-  - GraphiQL to test graphql in browser with simple documentation : http://ec2-34-212-169-254.us-west-2.compute.amazonaws.com/graphiql?path=/graphql
+  - GraphiQL to test graphql in browser with simple documentation : http://ec2-34-212-169-254.us-west-2.compute.amazonaws.com/gql/v1/graphiql?path=/gql/v1/graphql
 
-  - GraphQL url : http://ec2-34-212-169-254.us-west-2.compute.amazonaws.com/graphql
+  - GraphQL url : http://ec2-34-212-169-254.us-west-2.compute.amazonaws.com/gql/v1/graphql

@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping(value = { "/restapi/v1/class" })
 @RequiredArgsConstructor
+@PreAuthorize(value = "hasAnyAuthority('USER')")
 public class ClassController {
     private final ClassService classService;
 
