@@ -1,89 +1,151 @@
 package com.capstoneprojectb12.lms.backendapilms.services;
 
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.material.MaterialNew;
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.material.MaterialUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Material;
+import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.MaterialRepository;
+import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.ClassNotFoundException;
+import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.DataNotFoundException;
+import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.MethodNotImplementedException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.*;
+
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MaterialService implements BaseService<Material> {
+public class MaterialService implements BaseService<Material, MaterialNew, MaterialUpdate> {
 	private final MaterialRepository materialRepository;
-	private final ClassService classService;
-	
+	private final ClassRepository classRepository;
 	
 	@Override
-	public Optional<Material> save(Material entity) {
-		return Optional.ofNullable(this.materialRepository.save(entity));
+	public ResponseEntity<?> save(MaterialNew newEntity) {
+		try {
+			var material = this.toEntity(newEntity);
+			material = this.materialRepository.save(material);
+			return ok(material);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return err(e);
+		}
 	}
 	
 	@Override
-	public Optional<Material> update(Material entity) {
-		// TODO Auto-generated method stub
-		return null;
+	public ResponseEntity<?> update(String entityId, MaterialUpdate updateEntity) {
+		try {
+			var temp = this.toEntity(updateEntity);
+			var material = this.materialRepository.findById(entityId).orElseThrow(DataNotFoundException :: new);
+			
+			material.setClasses(temp.getClasses());
+			material.setContent(temp.getContent());
+			material.setPoint(temp.getPoint());
+			material.setDeadline(temp.getDeadline());
+			material.setTitle(temp.getTitle());
+//			material.setVideoUri(); // TODO: create file service first
+//			material.setFileUrl(); // TODO: create file service first
+//			material.setTopic(); // TODO: create topic repo/service first
+			
+			material = this.materialRepository.save(material);
+			return ok(material);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return err(e);
+		}
 	}
 	
 	@Override
-	public boolean deleteById(String id) {
-		// TODO Auto-generated method stub
-		return false;
+	public ResponseEntity<?> deleteById(String id) {
+		try {
+			var material = this.materialRepository.findById(id);
+			if (material.isEmpty()) {
+				log.warn(FinalVariable.DATA_NOT_FOUND);
+				return bad(FinalVariable.DATA_NOT_FOUND);
+			}
+			this.classRepository.deleteById(id);
+			log.info(FinalVariable.DELETE_SUCCESS);
+			return ok(material.get());
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return err(e);
+		}
 	}
 	
 	@Override
-	public boolean existsById(String id) {
-		// TODO Auto-generated method stub
-		return false;
+	public ResponseEntity<?> findById(String id) {
+		try {
+			var material = this.materialRepository.findById(id).orElseThrow(DataNotFoundException :: new);
+			return ok(material);
+		} catch (DataNotFoundException e) {
+			log.error(e.getMessage());
+			return bad(e.getMessage());
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return err(e);
+		}
 	}
 	
 	@Override
-	public Optional<Material> findById(String id) {
-		// TODO Auto-generated method stub
-		return null;
+	public ResponseEntity<?> findAll() {
+		try {
+			var materials = this.materialRepository.findAll();
+			return ok(materials);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return err(e);
+		}
 	}
 	
 	@Override
-	public List<Material> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+	public ResponseEntity<?> findAll(boolean showDeleted) {
+		throw new MethodNotImplementedException();
 	}
 	
 	@Override
-	public List<Material> findAll(boolean showDeleted) {
-		// TODO Auto-generated method stub
-		return null;
+	public ResponseEntity<?> findAll(int page, int size) {
+		return this.findAll(page, size, Sort.unsorted());
 	}
 	
 	@Override
-	public Page<Material> findAll(int page, int size) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public Page<Material> findAll(int page, int size, Sort sort) {
-		// TODO Auto-generated method stub
-		return null;
+	public ResponseEntity<?> findAll(int page, int size, Sort sort) {
+		try {
+			var request = PageRequest.of(page, size, sort);
+			var materials = this.materialRepository.findAll(request);
+			var responsePage = this.toPaginationResponse(materials);
+			return ok(materials);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return err(e);
+		}
 	}
 	
 	@Override
 	public PaginationResponse<List<Material>> toPaginationResponse(Page<Material> page) {
-		// TODO Auto-generated method stub
-		return null;
+		return PaginationResponse.<List<Material>>builder()
+				.page(page.getNumber())
+				.size(page.getSize())
+				.totalPage(page.getTotalPages())
+				.totalSize(page.getTotalElements())
+				.data(page.getContent())
+				.build();
 	}
 	
-	public Material toEntity(MaterialNew materialNew) throws ClassNotFoundException {
+	@Override
+	public Material toEntity(MaterialNew materialNew) {
 		return Material.builder()
-				.classes(this.classService
+				.classes(this.classRepository
 						.findById(materialNew
 								.getClassId())
 						.orElseThrow(ClassNotFoundException :: new))

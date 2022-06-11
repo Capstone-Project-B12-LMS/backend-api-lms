@@ -2,6 +2,7 @@ package com.capstoneprojectb12.lms.backendapilms.controllers.rest.classes.materi
 
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.material.MaterialNew;
 import com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -17,18 +18,11 @@ import javax.validation.Valid;
 @RequestMapping(value = {"/restapi/v1/class/material"})
 public class ClassMaterialController {
 	@PostMapping
-	public ResponseEntity<?> save(@RequestBody @Valid MaterialNew request, Errors errors) {
+	public ResponseEntity<?> save(@RequestBody @Valid MaterialNew request, @Parameter(hidden = true) Errors errors) {
 		log.info("entering endpoint to create new material");
 		if (errors.hasErrors()) {
 			return ApiResponse.errorValidation(errors);
 		}
-		
-		try {
-		
-		} catch (Exception e) {
-		
-		}
-		
 		return null;
 	}
 }

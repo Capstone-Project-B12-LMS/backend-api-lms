@@ -3,16 +3,15 @@ package com.capstoneprojectb12.lms.backendapilms.controllers.rest.user;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserLogin;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserNew;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserUpdate;
+import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
 import com.capstoneprojectb12.lms.backendapilms.services.UserService;
 import com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse;
 import com.capstoneprojectb12.lms.backendapilms.utilities.ApiValidation;
 import com.capstoneprojectb12.lms.backendapilms.utilities.ResponseToken;
 import com.capstoneprojectb12.lms.backendapilms.utilities.jwt.JwtUtils;
 import io.swagger.v3.oas.annotations.Parameter;
-import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +23,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.bad;
+import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.err;
+
 @Slf4j
 @RestController
 @RequestMapping(value = {"/restapi/v1"})
@@ -31,6 +33,7 @@ import javax.validation.Valid;
 public class UserController {
 	private final AuthenticationManager authenticationManager;
 	private final UserService userService;
+	private final UserRepository userRepository;
 	private final JwtUtils jwtUtils;
 	
 	@PostMapping(value = {"/login"})
@@ -40,8 +43,8 @@ public class UserController {
 		}
 		
 		try {
-			var user = this.userService.findByEmail(request.getEmail());
-			if (! user.isPresent()) {
+			var user = this.userRepository.findByEmailEqualsIgnoreCase(request.getEmail());
+			if (user.isEmpty()) {
 				throw new UsernameNotFoundException("User not found");
 			}
 			var authUser = new UsernamePasswordAuthenticationToken(
@@ -63,13 +66,13 @@ public class UserController {
 			return ResponseEntity.ok(response);
 		} catch (UsernameNotFoundException e) {
 			log.error("user not found", e);
-			return ApiResponse.responseBad(e.getMessage());
+			return bad(e.getMessage());
 		} catch (BadCredentialsException e) {
 			log.error("password doesn't match", e);
-			return ApiResponse.responseBad(e.getMessage());
+			return bad("password doesn't match");
 		} catch (Exception e) {
 			log.error("Login failed", e);
-			return ApiResponse.responseError(e);
+			return err(e);
 		}
 	}
 	
@@ -78,67 +81,22 @@ public class UserController {
 		if (errors.hasErrors()) {
 			return ResponseEntity.badRequest().body(ApiResponse.failed(ApiValidation.getErrorMessages(errors)));
 		}
-		
-		try {
-			var user = this.userService.toEntity(request);
-			var savedUser = this.userService.save(user);
-			return ApiResponse.responseOk(savedUser);
-		} catch (DataIntegrityViolationException e) {
-			log.error("data already exists", e);
-			return ApiResponse.responseBad("data already exists");
-		} catch (Exception e) {
-			log.error("Failed when register user", e);
-			return ApiResponse.responseError(e);
-		}
+		return this.userService.save(request);
 	}
 	
 	@PreAuthorize(value = "hasAnyAuthority('USER')")
 	@GetMapping(value = {"/users/{id}"})
 	public ResponseEntity<?> findById(@PathVariable(name = "id") String id) {
 		log.info("entering endpoint to find user by id");
-		try {
-			var user = this.userService.findById(id);
-			if (user.isPresent()) {
-				return ResponseEntity.ok(ApiResponse.success(user.get()));
-			}
-			
-			return ResponseEntity.badRequest().body(
-					ApiResponse.failed(new HashMap<>() {
-						{
-							put("message", "user not found");
-						}
-					}));
-		} catch (Exception e) {
-			return ResponseEntity.internalServerError().body(ApiResponse.error(e.getMessage()));
-		}
+		return this.userService.findById(id);
 	}
 	
 	@PreAuthorize(value = "hasAnyAuthority('USER')")
 	@PutMapping(value = {"/users/{id}"})
-	public ResponseEntity<?> updateById(
-			@PathVariable(name = "id") String userId,
-			@RequestBody @Valid UserUpdate request,
-			Errors errors) {
-		
+	public ResponseEntity<?> updateById(@PathVariable(name = "id") String userId, @RequestBody @Valid UserUpdate request, @Parameter(hidden = true) Errors errors) {
 		if (errors.hasErrors()) {
 			return ApiResponse.errorValidation(errors);
 		}
-		
-		try {
-			var user = this.userService.findById(userId);
-			if (! user.isPresent()) {
-				return ApiResponse.responseOk(new HashMap<>() {
-					{
-						put("message", "user not found");
-					}
-				});
-			}
-			
-			user = this.userService.update(user.get(), request);
-			return ApiResponse.responseOk(user.get());
-		} catch (Exception e) {
-			log.error("error when update user by id", e);
-			return ApiResponse.responseError(e);
-		}
+		return this.userService.update(userId, request);
 	}
 }

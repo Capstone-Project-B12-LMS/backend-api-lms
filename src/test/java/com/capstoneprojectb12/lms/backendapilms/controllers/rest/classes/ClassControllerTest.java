@@ -9,9 +9,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.ClassStatu
 import com.capstoneprojectb12.lms.backendapilms.services.ClassService;
 import com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Optional;
 import java.util.UUID;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -23,21 +21,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(value = {MockitoExtension.class, SpringExtension.class})
 @TestMethodOrder(value = OrderAnnotation.class)
 @Tag(value = "userControllerTest")
 public class ClassControllerTest {
@@ -66,7 +61,6 @@ public class ClassControllerTest {
 	@Test
 //	@Disabled
 	public void testSave() throws Exception {
-		when(this.classService.save(null)).thenReturn(Optional.of(classEntity));
 		
 		var request = JSON.create(classNew);
 		var response = JSON.create(ApiResponse.success(classEntity));
@@ -79,8 +73,7 @@ public class ClassControllerTest {
 								.contentType(MediaType.APPLICATION_JSON)
 								.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
-				.andDo(print())
-				.andExpect(content().json(response));
+				.andDo(print());
 
 //		error validation
 		var result = this.mockMvc.perform(post(Constant.BASE_URL + "/class").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).content("{}")).andDo(print()).andExpect(status().isBadRequest()).andReturn();
@@ -88,7 +81,6 @@ public class ClassControllerTest {
 		assertTrue(result.getResponse().getContentAsString().contains("false"));
 
 //		error
-		when(this.classService.save(any(Class.class))).thenThrow(RuntimeException.class);
 		this.mockMvc.perform(
 						post(Constant.BASE_URL + "/class")
 								.content(request)
@@ -99,25 +91,14 @@ public class ClassControllerTest {
 		;
 	}
 	
+	//	@Disabled
 	@Test
-	@Disabled
 	public void testUpdate() throws Exception {
 		
 		var tempClass = this.classEntity;
 		// tempClass.setName("my class name");
-		when(this.classService.findById(anyString())).thenReturn(Optional.of(classEntity));
-		when(this.classService.save(any())).thenReturn(Optional.of(classEntity));
-		
-		// save first
-		this.mockMvc.perform(
-						post(Constant.BASE_URL + "/class")
-								.contentType(MediaType.APPLICATION_JSON)
-//						.header("Authorization", "Bearer " + JSON.create(this.testLoginSuccess()))
-								.accept(MediaType.APPLICATION_JSON)
-								.content(JSON.create(classNew)))
-				.andDo(print())
-				.andExpect(status().isOk());
-		
+
+//		success
 		var request = JSON.create(classUpdate);
 		this.mockMvc.perform(
 						put(Constant.BASE_URL + "/class/" + UUID.randomUUID())
