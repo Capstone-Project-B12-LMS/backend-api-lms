@@ -54,6 +54,11 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
     public boolean isAccountNonExpired() {
         return this.isEnabled();
     }

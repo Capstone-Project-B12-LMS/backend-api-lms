@@ -16,7 +16,7 @@ import io.swagger.annotations.ApiResponses;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
-@RequestMapping(value = { "/restapi/v1" })
+@RequestMapping(value = {"/restapi/v1"})
 public class InitRestFullAPI {
     @GetMapping
     @ApiResponses(value = {
@@ -31,6 +31,9 @@ public class InitRestFullAPI {
     }
 
     @PostMapping
+    @ApiResponses(
+            @ApiResponse(message = "All user can access this enpoint", code = 200)
+    )
     public ResponseEntity<?> init(@RequestBody @Valid SayHelloInput to, @ApiIgnore Errors errors) {
         if (errors.hasErrors()) {
             return ResponseEntity.badRequest().body(ApiValidation.getErrorMessages(errors));

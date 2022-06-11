@@ -6,7 +6,7 @@ services:
    container_name: backend-api-lms-app
    restart: on-failure
    ports:
-     - 80:8080
+     - "80:8080"
    networks:
     - kelompok-b12
    env_file:
@@ -20,7 +20,7 @@ services:
     container_name: backend-api-lms-cc
     restart: on-failure
     ports:
-      - 8081:80
+      - "8081:80"
     networks:
       - kelompok-b12
     
@@ -29,7 +29,7 @@ services:
     restart: on-failure
     container_name: backend-api-lms-db-postgresql
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_USER=postgres
@@ -42,7 +42,7 @@ services:
     restart: on-failure
     container_name: backend-api-lms-db-mongodb
     ports:
-      - 27017:20717
+      - "27017:20717"
     networks:
       - kelompok-b12
     environment:
