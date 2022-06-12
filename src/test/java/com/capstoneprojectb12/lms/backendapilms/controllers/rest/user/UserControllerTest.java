@@ -9,11 +9,8 @@ import com.capstoneprojectb12.lms.backendapilms.models.entities.Role;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
 import com.capstoneprojectb12.lms.backendapilms.services.UserService;
 import java.util.List;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +62,7 @@ public class UserControllerTest {
 	private UserService userService;
 	
 	@Test
+	@Disabled
 	@Order(1)
 	public void registerTestSuccess() throws Exception {
 		var requestBody = JSON.create(userNew);
@@ -80,6 +78,7 @@ public class UserControllerTest {
 	}
 	
 	@Test
+	@Disabled
 	@Order(2)
 	public void registerBadRequest() throws Exception {
 		var tempUser = userNew;
@@ -97,6 +96,7 @@ public class UserControllerTest {
 	}
 	
 	@Test
+	@Disabled
 	public void testRegisterErrorValidation() throws Exception {
 		var userRegister = userNew;
 		userRegister.setEmail(null);
@@ -114,6 +114,7 @@ public class UserControllerTest {
 	}
 	
 	@Test
+	@Disabled
 	public void testRegisterAlreadyExists() throws Exception {
 		this.mockMvc.perform(post(Constant.BASE_URL + "/register")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -124,6 +125,7 @@ public class UserControllerTest {
 	}
 	
 	@Test
+	@Disabled
 	public MvcResult testLoginSuccess() throws Exception {
 		var user = UserLogin.builder()
 				.email("myemail@gmail.com")
@@ -144,6 +146,7 @@ public class UserControllerTest {
 	}
 	
 	@Test
+	@Disabled
 	public void testLoginUserNotFound() throws Exception {
 		var user = UserLogin.builder()
 				.email("myemail@gmail.commmm")
@@ -162,6 +165,7 @@ public class UserControllerTest {
 	}
 	
 	@Test
+	@Disabled
 	public void testLoginValidationError() throws Exception {
 		var user = UserLogin.builder()
 				.email("myemail@gmail.commmm")
@@ -179,6 +183,7 @@ public class UserControllerTest {
 	}
 	
 	@Test
+	@Disabled
 	public void testLoginPasswordNotMatch() throws Exception {
 		var user = UserLogin.builder()
 				.email("myemail@gmail.com")
@@ -196,6 +201,7 @@ public class UserControllerTest {
 	}
 	
 	@Test
+	@Disabled
 	public void testLoginInternalServerError() throws Exception {
 		var user = UserLogin.builder()
 				.email("myemail@gmail.com")
@@ -213,6 +219,7 @@ public class UserControllerTest {
 	}
 	
 	@Test
+	@Disabled
 	public void testFindByIdUnauthorized() throws Exception {
 		var request = JSON.create(userNew);
 		this.mockMvc.perform(get(Constant.BASE_URL + "/users/" + "userid")
@@ -225,6 +232,7 @@ public class UserControllerTest {
 	}
 	
 	@Test
+	@Disabled
 	public void testFindById() throws Exception {
 		// success
 		this.mockMvc.perform(get(Constant.BASE_URL + "/users/id")
@@ -244,6 +252,7 @@ public class UserControllerTest {
 	}
 	
 	@Test
+	@Disabled
 	public void testUpdate() throws Exception {
 		// success
 		this.mockMvc.perform(put(Constant.BASE_URL + "/users/id")

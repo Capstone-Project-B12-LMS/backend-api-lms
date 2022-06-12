@@ -10,6 +10,7 @@ import com.capstoneprojectb12.lms.backendapilms.services.ClassService;
 import com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.UUID;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -59,6 +60,7 @@ public class ClassControllerTest {
 	private ClassService classService;
 	
 	@Test
+	@Disabled
 //	@Disabled
 	public void testSave() throws Exception {
 		
@@ -93,6 +95,7 @@ public class ClassControllerTest {
 	
 	//	@Disabled
 	@Test
+	@Disabled
 	public void testUpdate() throws Exception {
 		
 		var tempClass = this.classEntity;

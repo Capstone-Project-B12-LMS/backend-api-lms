@@ -1,6 +1,7 @@
 package com.capstoneprojectb12.lms.backendapilms.services;
 
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.role.RoleNew;
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.role.RoleUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Role;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.RoleRepository;
 import java.util.NoSuchElementException;
@@ -32,6 +33,10 @@ public class RoleServiceTest {
 	private static final RoleNew roleNew = RoleNew.builder()
 			.name(role.getName())
 			.description(role.getDescription())
+			.build();
+	private static final RoleUpdate roleUpdate = RoleUpdate.builder()
+			.name(roleNew.getName())
+			.description(roleNew.getDescription())
 			.build();
 	@MockBean
 	private RoleRepository roleRepository;
@@ -80,17 +85,42 @@ public class RoleServiceTest {
 	}
 	
 	@Test
+	public void testUpdate() {
+//		success
+		when(this.roleRepository.findById(anyString())).thenReturn(Optional.of(role));
+		when(this.roleRepository.save(any(Role.class))).thenReturn(role);
+		var res = this.roleService.update("id", roleUpdate);
+		var api = getResponse(res);
+		var roleData = (Role) api.getData();
+		
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertTrue(api.isStatus());
+		assertNotNull(api.getData());
+		assertNull(api.getErrors());
+		assertEquals(role, roleData);
+		reset(this.roleRepository);
+
+//		any exception
+		when(this.roleRepository.findById(anyString())).thenReturn(Optional.empty());
+		res = this.roleService.update("id", roleUpdate);
+		api = getResponse(res);
+		roleData = (Role) api.getData();
+		
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, res.getStatusCode());
+		assertFalse(api.isStatus());
+		assertNull(api.getData());
+		assertNotNull(api.getErrors());
+
+//		when(this.roleRepository.save(any(Role.class))).thenThrow(NullPointerException.class);
+	}
+	
+	@Test
 	public void testFindById() {
 		when(this.roleRepository.findById(anyString())).thenReturn(Optional.empty());
 		
 		when(this.roleRepository.findById(anyString())).thenReturn(Optional.of(RoleServiceTest.role));
 	}
 	
-	@Test
-	public void testUpdate() {
-		when(this.roleRepository.save(any(Role.class))).thenReturn(role);
-		when(this.roleRepository.save(any(Role.class))).thenThrow(NullPointerException.class);
-	}
 	
 	@Test
 	public void testDeleteById() {
