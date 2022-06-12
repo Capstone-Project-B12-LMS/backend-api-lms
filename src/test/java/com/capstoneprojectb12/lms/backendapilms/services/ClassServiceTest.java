@@ -179,6 +179,7 @@ public class ClassServiceTest {
 	
 	@Test
 	public void testFindById() {
+//		TODO: Test this
 		// success
 		when(this.classRepository.findById(anyString())).thenReturn(Optional.ofNullable(classEntity));
 		var result = this.classService.findById("id");
@@ -190,6 +191,7 @@ public class ClassServiceTest {
 	
 	@Test
 	public void testFindAll() {
+//		TODO: Test this
 		when(this.classRepository.findAll()).thenReturn(List.of(classEntity));
 		var result = this.classService.findAll();
 		assertNotNull(result);
@@ -197,6 +199,7 @@ public class ClassServiceTest {
 	
 	@Test
 	public void testFindAllWithPageable() {
+//		TODO: Test this
 		// without sorting
 		// success
 		when(this.classRepository.findAll(any(Pageable.class)))
@@ -214,6 +217,7 @@ public class ClassServiceTest {
 	
 	@Test
 	public void testFindAllWithSort() {
+//		TODO: Test this
 		// with sorting
 		// ascending
 		when(this.classRepository.findAll(any(Pageable.class)))
@@ -240,6 +244,7 @@ public class ClassServiceTest {
 	
 	@Test
 	public void testToEntity() {
+//		TODO: Test this
 		var classNew = ClassNew.builder()
 				.name("new class")
 				.room("rom of new class")
