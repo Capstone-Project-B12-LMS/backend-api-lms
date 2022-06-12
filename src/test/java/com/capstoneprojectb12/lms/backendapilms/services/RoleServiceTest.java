@@ -4,6 +4,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.role.RoleNew;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.role.RoleUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Role;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.RoleRepository;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.junit.jupiter.api.Tag;
@@ -152,6 +153,33 @@ public class RoleServiceTest {
 		assertNull(api.getData());
 	}
 	
+	@Test
+	public void testFindAll() {
+//		success
+		when(this.roleRepository.findAll()).thenReturn(List.of(role));
+		var res = this.roleService.findAll();
+		var api = getResponse(res);
+		var roleData = (List<Role>) api.getData();
+		
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertTrue(api.isStatus());
+		assertNotNull(api.getData());
+		assertNull(api.getErrors());
+		assertEquals(List.of(role), roleData);
+		reset(this.roleRepository);
+
+//		any exception
+		when(this.roleRepository.findAll()).thenThrow(NoSuchElementException.class);
+		res = this.roleService.findAll();
+		api = getResponse(res);
+		roleData = (List<Role>) api.getData();
+		
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, res.getStatusCode());
+		assertFalse(api.isStatus());
+		assertNull(api.getData());
+		assertNotNull(api.getErrors());
+		assertNotEquals(List.of(role), roleData);
+	}
 	
 	@Test
 	public void testDeleteById() {
