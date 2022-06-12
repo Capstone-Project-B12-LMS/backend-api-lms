@@ -6,7 +6,9 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
 import com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse;
+import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.MethodNotImplementedException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.UserNotFoundException;
+import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -19,6 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -54,6 +60,8 @@ public class UserServiceTest {
 			.email(user.getEmail())
 			.telepon(user.getTelepon())
 			.build();
+	
+	private static final Page<User> userPages = new PageImpl<User>(List.of(user), PageRequest.of(0, 1), 1);
 	@MockBean
 	private UserRepository userRepository;
 	@Autowired
@@ -237,4 +245,36 @@ public class UserServiceTest {
 		assertNull(apiRes.getData());
 	}
 	
+	@Test
+	public void testFindAllDeleted() {
+//		not implemented
+		assertThrows(MethodNotImplementedException.class, () -> this.userService.findAll(true));
+	}
+	
+	@Test
+	public void testFindAllWithPageable() {
+//		success
+		when(this.userRepository.findAll(any(Pageable.class))).thenReturn(userPages);
+		var response = this.userService.findAll(0, 1);
+		var apiRes = getResponse(response);
+		var pageResponse = (PaginationResponse<List<User>>) apiRes.getData();
+		
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertNotNull(pageResponse);
+		assertEquals(0, pageResponse.getPage());
+		assertEquals(1, pageResponse.getSize());
+		assertEquals(1, pageResponse.getTotalPage());
+		assertEquals(1, pageResponse.getTotalSize());
+		reset(this.userRepository);
+
+//		any exception
+		when(this.userRepository.findAll(any(Pageable.class))).thenThrow(NullPointerException.class);
+		response = this.userService.findAll(0, 1);
+		apiRes = getResponse(response);
+		
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+		assertFalse(apiRes.isStatus());
+		assertNotNull(apiRes.getErrors());
+		assertNull(apiRes.getData());
+	}
 }
