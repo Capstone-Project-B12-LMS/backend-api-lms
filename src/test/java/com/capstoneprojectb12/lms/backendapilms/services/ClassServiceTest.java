@@ -19,10 +19,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.getResponse;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -59,6 +61,11 @@ public class ClassServiceTest {
 			.code(classEntity.getCode())
 			.users(classEntity.getUsers())
 			.build();
+	
+	private final ClassNew classNew = ClassNew.builder()
+			.name(classEntity.getName())
+			.room(classEntity.getRoom())
+			.build();
 	@MockBean
 	private ClassRepository classRepository;
 	@Autowired
@@ -66,10 +73,33 @@ public class ClassServiceTest {
 	
 	@Test
 	public void testSave() {
-		// success
+//		 success
 		when(this.classRepository.save(any(Class.class))).thenReturn(classEntity);
-		// failed
+		var res = this.classService.save(classNew);
+		var api = getResponse(res);
+		var data = (Class) api.getData();
+		
+		assertNotNull(res);
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertTrue(api.isStatus());
+		assertNull(api.getErrors());
+		assertNotNull(api.getData());
+		assertEquals(classEntity.getName(), data.getName());
+		assertEquals(classEntity.getRoom(), data.getRoom());
+		reset(this.classRepository);
+
+//		 failed
 		when(this.classRepository.save(any(Class.class))).thenReturn(nullable(Class.class));
+		
+		res = this.classService.save(classNew);
+		api = getResponse(res);
+		data = (Class) api.getData();
+		
+		assertNotNull(res);
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, res.getStatusCode());
+		assertFalse(api.isStatus());
+		assertNotNull(api.getErrors());
+		assertNull(api.getData());
 	}
 	
 	@Test
