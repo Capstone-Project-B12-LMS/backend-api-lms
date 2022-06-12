@@ -16,6 +16,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,14 +27,17 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.getResponse;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @Tag(value = "userServiceTest")
@@ -276,5 +280,31 @@ public class UserServiceTest {
 		assertFalse(apiRes.isStatus());
 		assertNotNull(apiRes.getErrors());
 		assertNull(apiRes.getData());
+	}
+	
+	@Test
+	public void testGetCurrentUser() {
+//		success
+		MockedStatic<SecurityContextHolder> security = mockStatic(SecurityContextHolder.class);
+		security.when(() -> SecurityContextHolder.getContext().getAuthentication().getName()).thenReturn(new SecurityContext() {
+			@Override
+			public Authentication getAuthentication() {
+				return new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword(), user.getAuthorities());
+			}
+			
+			@Override
+			public void setAuthentication(Authentication authentication) {
+			
+			}
+		});
+		
+		var email = this.userService.getCurrentUser();
+		assertNotNull(email);
+		assertEquals(user.getEmail(), email);
+		security.close();
+
+//		failed and use system
+		email = this.userService.getCurrentUser();
+		assertEquals("SYSTEM", email);
 	}
 }

@@ -43,8 +43,7 @@ public class UserService implements BaseService<User, UserNew, UserUpdate>, User
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		return this.userRepository
-				.findByEmailEqualsIgnoreCase(username)
+		return this.findByEmail(username)
 				.orElseThrow(() -> new UsernameNotFoundException("Username not found"));
 	}
 	
@@ -181,8 +180,7 @@ public class UserService implements BaseService<User, UserNew, UserUpdate>, User
 	
 	public String getCurrentUser() {
 		try {
-			var email = SecurityContextHolder.getContext().getAuthentication().getName();
-			return email;
+			return SecurityContextHolder.getContext().getAuthentication().getName();
 		} catch (Exception e) {
 			log.error("Error: " + e.getMessage());
 			return "SYSTEM";
