@@ -4,6 +4,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.role.RoleNew;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.role.RoleUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Role;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.RoleRepository;
+import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.MethodNotImplementedException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -182,18 +183,26 @@ public class RoleServiceTest {
 	}
 	
 	@Test
+	public void testFindAllDeleted() {
+//		not implemented
+		assertThrows(MethodNotImplementedException.class, () -> this.roleService.findAll(true));
+	}
+	
+	@Test
 	public void testDeleteById() {
 		when(this.roleRepository.findById(anyString())).thenReturn(Optional.of(role));
-		
+//		TODO: test this
 		when(this.roleRepository.findById(anyString())).thenReturn(Optional.empty());
 	}
 	
 	@Test
 	public void tstFindAllWithPageable() {
+//		TODO: test this
 	}
 	
 	@Test
 	public void testFindAllWithPageableAndSort() {
+//		TODO: test this
 	
 	}
 	
