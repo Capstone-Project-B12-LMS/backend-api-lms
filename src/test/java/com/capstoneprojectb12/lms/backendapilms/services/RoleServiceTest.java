@@ -267,9 +267,20 @@ public class RoleServiceTest {
 	}
 	
 	@Test
-	public void testFindAllWithPageableAndSort() {
-//		TODO: test this
-	
+	public void testFindByNames() {
+//		success
+		when(this.roleRepository.findByNameEqualsIgnoreCase(anyString())).thenReturn(Optional.of(role));
+		var roles = this.roleService.findByNames("USER", "your name");
+		assertNotNull(role);
+		assertEquals(1, roles.size());
+		assertEquals("USER", roles.get(0).getName());
+		reset(this.roleRepository);
+
+//		failed to get role from database and create it
+		when(this.roleRepository.findByNameEqualsIgnoreCase(anyString())).thenReturn(Optional.empty());
+		when(this.roleRepository.save(any(Role.class))).thenReturn(role);
+		roles = this.roleService.findByNames("USER");
+		assertNotNull(roles);
+		assertEquals(1, roles.size());
 	}
-	
 }

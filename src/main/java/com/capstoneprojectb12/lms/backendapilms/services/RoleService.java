@@ -9,6 +9,7 @@ import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.DataNotFoun
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.MethodNotImplementedException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -112,15 +113,7 @@ public class RoleService implements BaseService<Role, RoleNew, RoleUpdate> {
 	
 	@Override
 	public ResponseEntity<?> findAll(int page, int size) {
-		try {
-			Pageable pageable = PageRequest.of(page, size);
-			var roles = this.roleRepository.findAll(pageable);
-			var pageResponse = this.toPaginationResponse(roles);
-			return ok(pageResponse);
-		} catch (Exception e) {
-			log.error(e.getMessage());
-			return err(e);
-		}
+		return this.findAll(page, size, Sort.unsorted());
 	}
 	
 	@Override
@@ -157,7 +150,7 @@ public class RoleService implements BaseService<Role, RoleNew, RoleUpdate> {
 	}
 	
 	public List<Role> findByNames(String... names) {
-		var roles = new ArrayList<Role>();
+		var roles = new HashSet<Role>();
 		for (var name : names) {
 			var role = this.findByName(name);
 			if (role.isEmpty()) {
@@ -170,7 +163,7 @@ public class RoleService implements BaseService<Role, RoleNew, RoleUpdate> {
 			}
 			role.ifPresent(roles :: add);
 		}
-		return roles;
+		return new ArrayList<Role>(roles);
 	}
 	
 	public Optional<Role> findByName(String name) {
