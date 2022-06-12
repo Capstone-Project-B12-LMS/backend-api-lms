@@ -1,16 +1,23 @@
 package com.capstoneprojectb12.lms.backendapilms.services;
 
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.role.RoleNew;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Role;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.RoleRepository;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 
+import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.getResponse;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -22,6 +29,10 @@ public class RoleServiceTest {
 			.name("USER")
 			.description("-")
 			.build();
+	private static final RoleNew roleNew = RoleNew.builder()
+			.name(role.getName())
+			.description(role.getDescription())
+			.build();
 	@MockBean
 	private RoleRepository roleRepository;
 	@Autowired
@@ -29,7 +40,43 @@ public class RoleServiceTest {
 	
 	@Test
 	public void testSave() {
+//		success
 		when(this.roleRepository.save(any())).thenReturn(role);
+		var res = this.roleService.save(roleNew);
+		var api = getResponse(res);
+		var saved = (Role) api.getData();
+		
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertTrue(api.isStatus());
+		assertNull(api.getErrors());
+		assertNotNull(saved);
+		assertEquals(role.getName(), saved.getName());
+		assertEquals(role.getDescription(), saved.getDescription());
+		reset(this.roleRepository);
+
+//		failed and already exists
+		when(this.roleRepository.save(any())).thenThrow(DataIntegrityViolationException.class);
+		res = this.roleService.save(roleNew);
+		api = getResponse(res);
+		saved = (Role) api.getData();
+		
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertFalse(api.isStatus());
+		assertNotNull(api.getErrors());
+		assertNull(saved);
+		reset(this.roleRepository);
+
+//		any exception
+		when(this.roleRepository.save(any())).thenThrow(NoSuchElementException.class);
+		res = this.roleService.save(roleNew);
+		api = getResponse(res);
+		saved = (Role) api.getData();
+		
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, res.getStatusCode());
+		assertFalse(api.isStatus());
+		assertNotNull(api.getErrors());
+		assertNull(saved);
+		
 	}
 	
 	@Test
@@ -57,7 +104,7 @@ public class RoleServiceTest {
 	}
 	
 	@Test
-	public void tstFindAllWithPageableAndSort() {
+	public void testFindAllWithPageableAndSort() {
 	
 	}
 	
