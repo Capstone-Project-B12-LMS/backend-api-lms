@@ -5,9 +5,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.ClassStatus;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -153,12 +151,30 @@ public class ClassServiceTest {
 	@Test
 	public void testDeleteById() {
 		// success
-		when(this.classRepository.existsById(anyString())).thenReturn(true);
+		when(this.classRepository.findById(anyString())).thenReturn(Optional.of(classEntity));
 		var result = this.classService.deleteById("id");
+		var api = getResponse(result);
+		var deletedData = (Class) api.getData();
+		
+		assertEquals(HttpStatus.OK, result.getStatusCode());
+		assertTrue(api.isStatus());
+		assertNull(api.getErrors());
+		assertNotNull(api.getData());
+		assertTrue(api.getData() instanceof Class);
+		assert Objects.equals(classEntity.getName(), deletedData.getName());
+		reset(this.classRepository);
+		
 		
 		// failed
-		when(this.classRepository.existsById(anyString())).thenReturn(false);
+		when(this.classRepository.findById(anyString())).thenThrow(NoSuchElementException.class);
 		result = this.classService.deleteById("id");
+		api = getResponse(result);
+		deletedData = (Class) api.getData();
+		
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
+		assertNotNull(api.getErrors());
+		assertNull(api.getData());
+		assertFalse(api.getData() instanceof Class);
 	}
 	
 	@Test
