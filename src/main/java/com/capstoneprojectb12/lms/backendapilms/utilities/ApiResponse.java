@@ -34,7 +34,9 @@ public class ApiResponse<T> implements Serializable {
 		return ApiResponse.<Object>builder()
 				.data(null)
 				.status(false)
-				.errors(errorMessage)
+				.errors(new HashMap<>() {{
+					put("message", errorMessage);
+				}})
 				.build();
 	}
 	
