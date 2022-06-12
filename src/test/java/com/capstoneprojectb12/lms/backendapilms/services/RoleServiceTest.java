@@ -190,9 +190,42 @@ public class RoleServiceTest {
 	
 	@Test
 	public void testDeleteById() {
+//		success
 		when(this.roleRepository.findById(anyString())).thenReturn(Optional.of(role));
-//		TODO: test this
+		var res = this.roleService.deleteById("id");
+		var api = getResponse(res);
+		var roleData = (Role) api.getData();
+		assertNotNull(roleData);
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertTrue(api.isStatus());
+		assertNull(api.getErrors());
+		assertEquals(role.getId(), roleData.getId());
+		assertEquals(role.getName(), roleData.getName());
+		assertEquals(role.getDescription(), roleData.getDescription());
+		reset(this.roleRepository);
+
+//		data not found
 		when(this.roleRepository.findById(anyString())).thenReturn(Optional.empty());
+		res = this.roleService.deleteById("id");
+		api = getResponse(res);
+		roleData = (Role) api.getData();
+		assertNull(roleData);
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertFalse(api.isStatus());
+		assertNotNull(api.getErrors());
+		assertNull(api.getData());
+		reset(this.roleRepository);
+
+//		any exception
+		when(this.roleRepository.findById(anyString())).thenThrow(NoSuchElementException.class);
+		res = this.roleService.deleteById("id");
+		api = getResponse(res);
+		roleData = (Role) api.getData();
+		assertNull(roleData);
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, res.getStatusCode());
+		assertFalse(api.isStatus());
+		assertNotNull(api.getErrors());
+		assertNull(api.getData());
 	}
 	
 	@Test

@@ -66,7 +66,6 @@ public class RoleService implements BaseService<Role, RoleNew, RoleUpdate> {
 	@Override
 	public ResponseEntity<?> deleteById(String id) {
 		try {
-			
 			var role = this.roleRepository.findById(id);
 			if (role.isPresent() && ! role.get().getIsDeleted()) {
 				this.roleRepository.deleteById(id);
