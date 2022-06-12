@@ -105,16 +105,49 @@ public class ClassServiceTest {
 	@Test
 	public void testUpdate() {
 		// success
-		var tempName = classEntity.getName();
-		classEntity.setName("updated name");
 		when(this.classRepository.save(any(Class.class))).thenReturn(classEntity);
+		when(this.classRepository.findById(anyString())).thenReturn(Optional.of(classEntity));
+		
+		var res = this.classService.update("id", classUpdate);
+		var api = getResponse(res);
+		var data = (Class) api.getData();
+		
+		assertNotNull(res);
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertNull(api.getErrors());
+		assertTrue(api.isStatus());
+		assertNotNull(api.getData());
+		assertEquals(classEntity.getName(), data.getName());
+		assertEquals(classEntity.getRoom(), data.getRoom());
+		assertEquals(classEntity.getStatus(), data.getStatus());
+		reset(this.classRepository);
 		
 		// failed
-		when(this.classRepository.save(any(Class.class))).thenReturn(nullable(Class.class));
+		when(this.classRepository.findById(anyString())).thenReturn(Optional.empty());
+		res = this.classService.update("id", classUpdate);
+		api = getResponse(res);
+		data = (Class) api.getData();
 		
-		// update with class update
-		when(this.classRepository.save(any(Class.class))).thenReturn(updatedClass);
+		assertNotNull(res);
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertNull(api.getData());
+		assertFalse(api.isStatus());
+		assertNotNull(api.getErrors());
+		reset(this.classRepository);
+
+//		handle any exception
+		when(this.classRepository.findById(anyString())).thenReturn(Optional.of(classEntity));
+		when(this.classRepository.save(any(Class.class))).thenThrow(NullPointerException.class);
+		res = this.classService.update("id", classUpdate);
+		api = getResponse(res);
+		data = (Class) api.getData();
 		
+		assertNotNull(res);
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, res.getStatusCode());
+		assertNull(api.getData());
+		assertFalse(api.isStatus());
+		assertNotNull(api.getErrors());
+		reset(this.classRepository);
 	}
 	
 	@Test
