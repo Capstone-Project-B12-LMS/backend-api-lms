@@ -110,15 +110,46 @@ public class RoleServiceTest {
 		assertFalse(api.isStatus());
 		assertNull(api.getData());
 		assertNotNull(api.getErrors());
-
-//		when(this.roleRepository.save(any(Role.class))).thenThrow(NullPointerException.class);
 	}
 	
 	@Test
 	public void testFindById() {
-		when(this.roleRepository.findById(anyString())).thenReturn(Optional.empty());
+//		success
+		when(this.roleRepository.findById(anyString())).thenReturn(Optional.of(role));
+		var res = this.roleService.findById("id");
+		var api = getResponse(res);
+		var roleData = (Role) api.getData();
 		
-		when(this.roleRepository.findById(anyString())).thenReturn(Optional.of(RoleServiceTest.role));
+		
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertTrue(api.isStatus());
+		assertNotNull(api.getData());
+		assertNull(api.getErrors());
+		reset(this.roleRepository);
+
+
+//		data not found
+		when(this.roleRepository.findById(anyString())).thenReturn(Optional.empty());
+		res = this.roleService.findById("id");
+		api = getResponse(res);
+		roleData = (Role) api.getData();
+		
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertFalse(api.isStatus());
+		assertNotNull(api.getErrors());
+		assertNull(api.getData());
+		reset(this.roleRepository);
+
+//		any exception
+		when(this.roleRepository.findById(anyString())).thenThrow(NoSuchElementException.class);
+		res = this.roleService.findById("id");
+		api = getResponse(res);
+		roleData = (Role) api.getData();
+		
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, res.getStatusCode());
+		assertFalse(api.isStatus());
+		assertNotNull(api.getErrors());
+		assertNull(api.getData());
 	}
 	
 	
