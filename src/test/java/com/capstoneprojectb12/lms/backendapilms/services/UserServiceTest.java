@@ -213,11 +213,28 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	public void testExistsbyId() {
-	}
-	
-	@Test
 	public void testFindAll() {
+//		success
+		when(this.userRepository.findAll()).thenReturn(List.of(user));
+		var response = this.userService.findAll();
+		var apiRes = getResponse(response);
+		var users = (List<User>) apiRes.getData();
+		
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertTrue(apiRes.isStatus());
+		assertNull(apiRes.getErrors());
+		assertNotNull(users);
+		reset(this.userRepository);
+
+//		any exception
+		when(this.userRepository.findAll()).thenThrow(NoSuchElementException.class);
+		response = this.userService.findAll();
+		apiRes = getResponse(response);
+		
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+		assertFalse(apiRes.isStatus());
+		assertNotNull(apiRes.getErrors());
+		assertNull(apiRes.getData());
 	}
 	
 }
