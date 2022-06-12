@@ -5,6 +5,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.role.RoleUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Role;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.RoleRepository;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.MethodNotImplementedException;
+import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -14,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.getResponse;
@@ -229,8 +233,37 @@ public class RoleServiceTest {
 	}
 	
 	@Test
-	public void tstFindAllWithPageable() {
-//		TODO: test this
+	public void testFindAllWithPageable() {
+//		success
+		when(this.roleRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(List.of(role), PageRequest.of(0, 1), 1));
+		var res = this.roleService.findAll(0, 1);
+		var api = getResponse(res);
+		var pageResponse = (PaginationResponse<List<Role>>) api.getData();
+		
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertNotNull(api);
+		assertTrue(api.isStatus());
+		assertNotNull(api.getData());
+		assertNull(api.getErrors());
+		assertEquals(0, pageResponse.getPage());
+		assertEquals(1, pageResponse.getSize());
+		assertEquals(1, pageResponse.getTotalPage());
+		assertEquals(1, pageResponse.getTotalSize());
+		assertEquals(role, pageResponse.getData().get(0));
+		reset(this.roleRepository);
+
+//		any exception
+		when(this.roleRepository.findAll(any(Pageable.class))).thenThrow(NoSuchElementException.class);
+		res = this.roleService.findAll(0, 1);
+		api = getResponse(res);
+		pageResponse = (PaginationResponse<List<Role>>) api.getData();
+		
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, res.getStatusCode());
+		assertNotNull(api);
+		assertFalse(api.isStatus());
+		assertNull(api.getData());
+		assertNotNull(api.getErrors());
+		assertNull(pageResponse);
 	}
 	
 	@Test

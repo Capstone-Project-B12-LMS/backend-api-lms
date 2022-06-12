@@ -159,7 +159,7 @@ public class RoleService implements BaseService<Role, RoleNew, RoleUpdate> {
 	public List<Role> findByNames(String... names) {
 		var roles = new ArrayList<Role>();
 		for (var name : names) {
-			var role = this.roleRepository.findByNameEqualsIgnoreCase(name);
+			var role = this.findByName(name);
 			if (role.isEmpty()) {
 				var roleNew = Role.builder()
 						.name(name)
