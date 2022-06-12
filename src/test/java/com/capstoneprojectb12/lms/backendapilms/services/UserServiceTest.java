@@ -39,6 +39,7 @@ public class UserServiceTest {
 			.fullName("irda islakhu afa")
 			.email("myemail@gmail.com")
 			.telepon("0987654321")
+			.isDeleted(false)
 			.roles(List.of(RoleServiceTest.role))
 			.password("mypass")
 			.build();
@@ -104,6 +105,7 @@ public class UserServiceTest {
 		var result = this.userService.save(userNew);
 		var savedUser = (User) Objects.requireNonNull(getResponse(result).getData());
 		
+		assertFalse(savedUser.getIsDeleted());
 		assertEquals(HttpStatus.OK, result.getStatusCode());
 		assertEquals(user.getFullName(), savedUser.getFullName());
 		assertEquals(user.getEmail(), savedUser.getEmail());
@@ -171,6 +173,43 @@ public class UserServiceTest {
 	
 	@Test
 	public void testDeleteById() {
+//		success
+		when(this.userRepository.findById(anyString())).thenReturn(Optional.of(user));
+		var response = this.userService.deleteById("id");
+		var apiRes = getResponse(response);
+		var deletedUser = (User) apiRes.getData();
+		
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertTrue(apiRes.isStatus());
+		
+		assertNotNull(deletedUser);
+		assertEquals(user.getId(), deletedUser.getId());
+		reset(this.userRepository);
+
+//		not found
+		when(this.userRepository.findById(anyString())).thenReturn(Optional.empty());
+		response = this.userService.deleteById("id");
+		apiRes = getResponse(response);
+		deletedUser = (User) apiRes.getData();
+		
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		
+		assertNull(deletedUser);
+		assertNotNull(apiRes.getErrors());
+		assertFalse(apiRes.isStatus());
+		reset(this.userRepository);
+
+//		any exception
+		when(this.userRepository.findById(anyString())).thenThrow(NullPointerException.class);
+		response = this.userService.deleteById("id");
+		apiRes = getResponse(response);
+		deletedUser = (User) apiRes.getData();
+		
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+		assertFalse(apiRes.isStatus());
+		
+		assertNull(deletedUser);
+		assertNotNull(apiRes.getErrors());
 	}
 	
 	@Test

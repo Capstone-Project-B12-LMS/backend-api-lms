@@ -91,7 +91,7 @@ public class UserService implements BaseService<User, UserNew, UserUpdate>, User
 			if (user.isPresent() && ! user.get().getIsDeleted()) {
 				this.userRepository.deleteById(id);
 				log.info(FinalVariable.DELETE_SUCCESS);
-				return ok(user);
+				return ok(user.get());
 			}
 			log.error(FinalVariable.DATA_NOT_FOUND);
 			return bad(FinalVariable.DATA_NOT_FOUND);
