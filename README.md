@@ -58,3 +58,23 @@ Use resource bellow to use it.
       documentation : http://ec2-34-212-169-254.us-west-2.compute.amazonaws.com/gql/v1/graphiql?path=/gql/v1/graphql
 
     - GraphQL url : http://ec2-34-212-169-254.us-west-2.compute.amazonaws.com/gql/v1/graphql
+
+# Note :
+
+- Some endpoints may already be protected. So, require `Authorization` and `Authentication` to access endpoints
+  with `Jwt Token`. To access endpoint with `Jwt Token` please register first and login with registered account and you
+  will have the `Token` as response, you can use it to access all endpoints. Follow format bellow to access protected
+  endpoints.
+
+    - Using `Authorization` Header
+    ```json
+      {
+        "Authorization": "Bearer <Paste Your Token Here>"
+      }
+   ```
+  and later it will look like this
+   ```json
+      {
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiVVNFUiJ9XSwiZXhwIjoxNjU0ODMzODE4LCJ1c2VySWQiOiI5ZDRhMDU1ZC0xNDNmLTRmNTEtOWJmYS02MTg5YjU1YTlkMDMiLCJpYXQiOjE2NTQ4MzAyMTh9.9CG4JCyKqrzgOq3a89zkhaMLVSf7W-WnYQSxAJwhrOk"
+      } 
+   ```

@@ -47,7 +47,6 @@ public class MaterialNew {
 	private LocalDateTime deadline;
 	
 	@NotNull(message = "cannot be null")
-	@NotBlank(message = "cannot be blank")
 	private Integer point;
 	
 	@NotNull(message = "cannot be null")

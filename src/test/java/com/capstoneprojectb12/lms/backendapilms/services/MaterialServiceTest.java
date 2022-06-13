@@ -30,8 +30,8 @@ import static org.mockito.Mockito.when;
 @Tag(value = "materialServiceTest")
 public class MaterialServiceTest {
 	
-	private final LocalDateTime deadline = LocalDateTime.now();
-	public final Material material = Material.builder()
+	private static final LocalDateTime deadline = LocalDateTime.now();
+	public static final Material material = Material.builder()
 			.id("id")
 			.classes(ClassServiceTest.classEntity)
 			.title("material title")
@@ -43,7 +43,7 @@ public class MaterialServiceTest {
 			.point(100)
 			.category(null)
 			.build();
-	private final MaterialNew materialNew = MaterialNew.builder()
+	public static final MaterialNew materialNew = MaterialNew.builder()
 			.classId("id")
 			.category("material category")
 			.content("material content")
