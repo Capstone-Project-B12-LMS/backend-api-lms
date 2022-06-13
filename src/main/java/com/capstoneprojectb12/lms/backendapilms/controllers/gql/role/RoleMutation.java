@@ -6,13 +6,14 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.role.RoleNew;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.role.RoleUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Role;
 import com.capstoneprojectb12.lms.backendapilms.services.RoleService;
-import com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
+
+import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.extract;
+import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.getResponse;
 
 @Slf4j
 @Controller
@@ -24,10 +25,7 @@ public class RoleMutation implements BaseMutation<Role, RoleNew, RoleUpdate> {
 	@SchemaMapping(field = "save")
 	public Role save(@Argument(name = "request") RoleNew request) {
 		log.info("Entering method to save new role");
-		var response = this.roleService.save(request);
-		var apiRes = (ApiResponse<?>) Objects.requireNonNull(response.getBody());
-		var role = (Role) apiRes.getData();
-		return role;
+		return extract(new Role(), getResponse(this.roleService.save(request))).orElse(null);
 	}
 	
 	@Override
