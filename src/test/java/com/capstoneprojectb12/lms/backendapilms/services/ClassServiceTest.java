@@ -5,6 +5,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.ClassStatus;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
+import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
 import java.util.*;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -183,10 +184,51 @@ public class ClassServiceTest {
 		// success
 		when(this.classRepository.findById(anyString())).thenReturn(Optional.ofNullable(classEntity));
 		var result = this.classService.findById("id");
+		var api = getResponse(result);
+		var data = (Class) api.getData();
+		
+		assertEquals(HttpStatus.OK, result.getStatusCode());
+		assertTrue(api.isStatus());
+		assertNull(api.getErrors());
+		assertNotNull(api.getData());
+		
+		assert classEntity != null;
+		assertEquals(classEntity.getId(), data.getId());
+		assertFalse(data.getIsDeleted());
+		assertEquals(classEntity.getName(), data.getName());
+		assertEquals(classEntity.getRoom(), data.getRoom());
+		assertNotNull(data.getCode());
+		reset(this.classRepository);
 		
 		// failed
 		when(this.classRepository.findById(anyString())).thenReturn(Optional.empty());
 		result = this.classService.findById("id");
+		api = getResponse(result);
+		data = (Class) api.getData();
+		
+		assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
+		assertFalse(api.isStatus());
+		assertNotNull(api.getErrors());
+		assertNull(api.getData());
+		assert api.getErrors() instanceof HashMap;
+		assertNotNull(((HashMap<String, Object>) api.getErrors()).get("message"));
+		assertTrue(((HashMap<String, Object>) api.getErrors()).get("message").toString().equalsIgnoreCase(FinalVariable.DATA_NOT_FOUND));
+		reset(this.classRepository);
+
+//		any error
+		when(this.classRepository.findById(anyString())).thenThrow(NoSuchElementException.class);
+		result = this.classService.findById("id");
+		api = getResponse(result);
+		data = (Class) api.getData();
+		
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
+		assertFalse(api.isStatus());
+		assertNotNull(api.getErrors());
+		assertNull(api.getData());
+		assert api.getErrors() instanceof HashMap;
+		System.out.println("\033\143");
+		System.out.println(api.getErrors());
+//		assertNotNull(((HashMap<String, Object>) api.getErrors()).get("message"));
 	}
 	
 	@Test

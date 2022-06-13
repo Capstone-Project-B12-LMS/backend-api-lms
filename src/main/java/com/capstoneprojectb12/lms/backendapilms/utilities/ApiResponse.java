@@ -26,7 +26,9 @@ public class ApiResponse<T> implements Serializable {
 		return ApiResponse.<Object>builder()
 				.data(null)
 				.status(false)
-				.errors(messages)
+				.errors(new HashMap<String, Object>() {{
+					put("message", messages);
+				}})
 				.build();
 	}
 	
@@ -34,7 +36,7 @@ public class ApiResponse<T> implements Serializable {
 		return ApiResponse.<Object>builder()
 				.data(null)
 				.status(false)
-				.errors(new HashMap<>() {{
+				.errors(new HashMap<String, Object>() {{
 					put("message", errorMessage);
 				}})
 				.build();

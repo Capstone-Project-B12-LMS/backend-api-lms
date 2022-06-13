@@ -6,6 +6,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
 import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.ClassNotFoundException;
+import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.DataNotFoundException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.MethodNotImplementedException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
 import java.util.List;
@@ -86,12 +87,11 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 	public ResponseEntity<?> findById(String id) {
 		try {
 			var value = this.classRepository.findById(id)
-					.orElseThrow(ClassNotFoundException :: new);
-			if (value == null) {
-				log.warn(FinalVariable.DATA_NOT_FOUND);
-				return bad(FinalVariable.DATA_NOT_FOUND);
-			}
+					.orElseThrow(DataNotFoundException :: new);
 			return ok(value);
+		} catch (DataNotFoundException e) {
+			log.warn(FinalVariable.DATA_NOT_FOUND);
+			return bad(FinalVariable.DATA_NOT_FOUND);
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			return err(e);
