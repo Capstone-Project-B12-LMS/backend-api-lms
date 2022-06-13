@@ -13,8 +13,9 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
+import static com.capstoneprojectb12.lms.backendapilms.models.dtos.base.ResponseDelete.notDeleted;
+import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.extract;
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.getResponse;
-import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.gqlResponseDelete;
 
 @Slf4j
 @Controller
@@ -27,34 +28,20 @@ public class ClassMutation implements BaseMutation<Class, ClassNew, ClassUpdate>
 	@Override
 	@SchemaMapping(field = "save")
 	public Class save(@Argument(name = "request") ClassNew request) {
-		var classRequest = this.classService.toEntity(request);
-		try {
-			return this.classRepository.save(classRequest);
-		} catch (Exception e) {
-			return null;
-		}
+		return extract(new Class(), this.classService.save(request)).orElse(null);
 	}
 	
 	@Override
 	@SchemaMapping(field = "updateById")
 	public Class update(@Argument(name = "id") String id, @Argument(name = "request") ClassUpdate request) {
-		try {
-			log.info("Get class by id");
-			var response = this.classService.update(id, request);
-			log.info("Success updated class");
-			var classEntity = (Class) getResponse(response).getData();
-			assert classEntity != null;
-			return classEntity;
-		} catch (Exception e) {
-			log.error("failed when update class", e);
-			return null;
-		}
+		return extract(new Class(), this.classService.update(id, request)).orElse(null);
 	}
 	
 	@Override
 	@SchemaMapping(field = "deleteById")
-	public ResponseDelete deleteById(@Argument(name = "id") String id) {
-		return gqlResponseDelete(this.classService.deleteById(id));
+	public ResponseDelete<Class> deleteById(@Argument(name = "id") String id) {
+		var res = this.classService.deleteById(id);
+		return extract(new ResponseDelete<Class>(), res).orElse(notDeleted(getResponse(res).getErrors()));
 	}
 	
 }

@@ -24,7 +24,7 @@ type RolePagination implements PaginationResponse {
 }
 
 type ResponseDeleteRole implements ResponseDelete{
-    data: Role
+    deleted: Role
     error: Object
     status: Boolean!
 }

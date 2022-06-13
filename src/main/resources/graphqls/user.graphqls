@@ -39,7 +39,7 @@ type UserPagination implements PaginationResponse {
 }
 
 type ResponseDeleteUser implements ResponseDelete{
-    data: User
+    deleted: User
     error: Object
     status: Boolean!
 }

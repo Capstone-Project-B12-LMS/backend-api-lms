@@ -64,11 +64,6 @@ public class UserMutation {
 	//	@PreAuthorize(value = "hasAnyAuthority('USER')") // TODO: enable security
 	@SchemaMapping(field = "updateById")
 	public User updateById(@Argument(name = "id") String id, @Argument(name = "request") UserUpdate request) {
-		try {
-			return extract(new User(), getResponse(this.userService.update(id, request))).orElse(null);
-		} catch (Exception e) {
-			log.error("error when update user by id", e);
-			return null;
-		}
+		return extract(new User(), getResponse(this.userService.update(id, request))).orElse(null);
 	}
 }

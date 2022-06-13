@@ -5,13 +5,17 @@ import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
 import com.capstoneprojectb12.lms.backendapilms.services.UserService;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
+
+import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.extract;
+import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.getResponse;
+import static com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse.empty;
 
 @Slf4j
 @Controller
@@ -24,34 +28,32 @@ public class UserQuery implements BaseQuery<User> {
 	@Override
 	@SchemaMapping(field = "findAll")
 	public List<User> findAll() {
-		return this.userRepository.findAll();
+		return extract(new ArrayList<User>(), this.userService.findAll()).orElse(new ArrayList<>());
 	}
 	
 	@Override
 	@SchemaMapping(field = "findAllWithPageable")
 	public PaginationResponse<List<User>> findAllWithPageable(int page, int size) {
-		var userPage = this.userRepository.findAll(PageRequest.of(page, size));
-		return this.userService.toPaginationResponse(userPage);
+		return extract(new PaginationResponse<List<User>>(), this.userService.findAll(page, size)).orElse(empty(new ArrayList<>(), 0, 0));
 	}
 	
 	@Override
 	@SchemaMapping(field = "findById")
 	public User findById(@Argument(name = "id") String id) {
-		var user = this.userRepository.findById(id);
-		return user.orElse(null);
+		return extract(new User(), getResponse(this.userService.findById(id))).orElse(null);
 	}
 	
 	@Override
 	@SchemaMapping(field = "findAllDeleted")
 	public List<User> findAllDeleted() {
-		// TODO Auto-generated method stub
+		// TODO: implement me
 		return null;
 	}
 	
 	@Override
 	@SchemaMapping(field = "findAllDeletedWithPageable")
 	public PaginationResponse<List<User>> findAllDeletedWithPageable(int page, int size) {
-		// TODO Auto-generated method stub
+		// TODO: implement me
 		return null;
 	}
 	

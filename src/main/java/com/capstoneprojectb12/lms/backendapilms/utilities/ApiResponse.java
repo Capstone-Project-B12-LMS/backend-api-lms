@@ -93,6 +93,7 @@ public class ApiResponse<T> implements Serializable {
 		return notFound(FinalVariable.DATA_NOT_FOUND);
 	}
 	
+	@Deprecated
 	public static ResponseDelete gqlResponseDelete(ResponseEntity<?> response) {
 		var apiRes = (ApiResponse<?>) response.getBody();
 		assert apiRes != null;
@@ -114,5 +115,11 @@ public class ApiResponse<T> implements Serializable {
 			return Optional.empty();
 		}
 		return Optional.ofNullable((T) response.getData());
+	}
+	
+	public static <T> Optional<T> extract(
+			@NotNull(message = "Needed value cannot be null") T neededValue,
+			@NotNull(message = "Response Entity cannot be null") ResponseEntity<?> response) {
+		return extract(neededValue, getResponse(response));
 	}
 }

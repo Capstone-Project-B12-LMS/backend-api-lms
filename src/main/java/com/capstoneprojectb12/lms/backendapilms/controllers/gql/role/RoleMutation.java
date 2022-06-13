@@ -35,7 +35,7 @@ public class RoleMutation implements BaseMutation<Role, RoleNew, RoleUpdate> {
 	}
 	
 	@Override
-	public ResponseDelete deleteById(String id) {
+	public ResponseDelete<Role> deleteById(String id) {
 		// TODO: implement delete role by id
 		return null;
 	}
