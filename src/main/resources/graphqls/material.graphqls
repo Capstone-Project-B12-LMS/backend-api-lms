@@ -1,0 +1,14 @@
+# TODO: create schema Material here
+type MaterialQuery {
+    findAll: [User!]!
+    findAllWithPageable(page: Int!, size: Int!): UserPagination!
+    findAllDeleted: [User!]!
+    findAllDeletedWithPageable(page: Int!, size: Int!): UserPagination!
+    findById(id: ID!): User
+}
+
+type MaterialMutation {
+    save(request: RoleNew!): Role
+    update(id: ID!, request: RoleNew!): Role
+    deleteById(id: ID!): ResponseDeleteRole!
+}
