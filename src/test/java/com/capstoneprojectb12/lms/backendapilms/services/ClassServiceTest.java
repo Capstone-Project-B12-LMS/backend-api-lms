@@ -6,6 +6,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.ClassStatus;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
 import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
+import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.AnyException;
 import java.util.*;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -216,7 +217,7 @@ public class ClassServiceTest {
 		reset(this.classRepository);
 
 //		any error
-		when(this.classRepository.findById(anyString())).thenThrow(NoSuchElementException.class);
+		when(this.classRepository.findById(anyString())).thenThrow(AnyException.class);
 		result = this.classService.findById("id");
 		api = getResponse(result);
 		data = (Class) api.getData();
@@ -226,17 +227,40 @@ public class ClassServiceTest {
 		assertNotNull(api.getErrors());
 		assertNull(api.getData());
 		assert api.getErrors() instanceof HashMap;
-		System.out.println("\033\143");
-		System.out.println(api.getErrors());
-//		assertNotNull(((HashMap<String, Object>) api.getErrors()).get("message"));
+		assertNotNull(((HashMap<String, Object>) api.getErrors()).get("message"));
 	}
 	
 	@Test
 	public void testFindAll() {
-//		TODO: Test this
+//      success
 		when(this.classRepository.findAll()).thenReturn(List.of(classEntity));
 		var result = this.classService.findAll();
+		var api = getResponse(result);
+		var values = (List<Class>) api.getData();
+		
 		assertNotNull(result);
+		assertEquals(HttpStatus.OK, result.getStatusCode());
+		assertNotNull(api.getData());
+		assertNull(api.getErrors());
+		assertTrue(api.isStatus());
+		assertTrue(api.getData() instanceof List);
+		
+		assertEquals(List.of(classEntity), values);
+		assertEquals(classEntity.getId(), values.get(0).getId());
+		reset(this.classRepository);
+
+//		any exception
+		when(this.classRepository.findAll()).thenThrow(AnyException.class);
+		result = this.classService.findAll();
+		api = getResponse(result);
+		values = (List<Class>) api.getData();
+		
+		assertNotNull(result);
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
+		assertNull(api.getData());
+		assertNotNull(api.getErrors());
+		assertFalse(api.isStatus());
+		assertNull(values);
 	}
 	
 	@Test
