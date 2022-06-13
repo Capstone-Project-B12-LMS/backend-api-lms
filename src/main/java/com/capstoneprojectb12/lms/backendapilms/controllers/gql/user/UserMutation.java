@@ -1,25 +1,21 @@
 package com.capstoneprojectb12.lms.backendapilms.controllers.gql.user;
 
-import com.capstoneprojectb12.lms.backendapilms.models.dtos.base.ResponseDelete;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserLogin;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserNew;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
-import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
 import com.capstoneprojectb12.lms.backendapilms.services.UserService;
-import com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse;
 import com.capstoneprojectb12.lms.backendapilms.utilities.ResponseToken;
 import com.capstoneprojectb12.lms.backendapilms.utilities.jwt.JwtUtils;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 
+import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.extract;
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.getResponse;
 
 @Slf4j
@@ -28,15 +24,13 @@ import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.get
 @RequiredArgsConstructor
 public class UserMutation {
 	private final UserService userService;
-	private final UserRepository userRepository;
 	private final AuthenticationManager authenticationManager;
 	private final JwtUtils jwtUtils;
 	
 	@SchemaMapping(field = "register")
 	public User register(@Argument(name = "request") UserNew request) {
 		log.info("Entering method to save new role");
-		var response = this.userService.save(request);
-		return (User) getResponse(response).getData();
+		return extract(new User(), getResponse(this.userService.save(request))).orElse(null);
 	}
 	
 	@SchemaMapping(field = "login")
@@ -67,24 +61,14 @@ public class UserMutation {
 		}
 	}
 	
-	@PreAuthorize(value = "hasAnyAuthority('USER')")
+	//	@PreAuthorize(value = "hasAnyAuthority('USER')") // TODO: enable security
 	@SchemaMapping(field = "updateById")
 	public User updateById(@Argument(name = "id") String id, @Argument(name = "request") UserUpdate request) {
 		try {
-			var response = this.userService.update(id, request);
-			var apiRes = (ApiResponse<?>) response.getBody();
-			assert apiRes != null;
-			var user = (User) Objects.requireNonNull(apiRes.getData());
-			return user;
+			return extract(new User(), getResponse(this.userService.update(id, request))).orElse(null);
 		} catch (Exception e) {
 			log.error("error when update user by id", e);
 			return null;
 		}
 	}
-	
-	public ResponseDelete deleteById(String id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 }

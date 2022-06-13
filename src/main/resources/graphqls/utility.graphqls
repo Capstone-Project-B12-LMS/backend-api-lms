@@ -9,7 +9,7 @@ type ResponseToken {
     token: String
     error: Object
 }
-type ResponseDelete {
+interface ResponseDelete  {
     error: Object
     status: Boolean!
 }

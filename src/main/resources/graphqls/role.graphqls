@@ -1,36 +1,42 @@
 type Role {
-  id: ID!
-  name: String!
-  description: String!
+    id: ID!
+    name: String!
+    description: String!
 
-  createdBy: String!
-  createdAt: String!
-  updatedBy: String
-  updatedAt: String
-  isDeleted: Boolean!
+    createdBy: String!
+    createdAt: String!
+    updatedBy: String
+    updatedAt: String
+    isDeleted: Boolean!
 }
 
 input RoleNew {
-  name: String!
-  description: String!
+    name: String!
+    description: String!
 }
 
 type RolePagination implements PaginationResponse {
-  data: [Role!]!
-  page: Int!
-  size: Int!
-  totalPage: Int!
-  totalSize: Int!
+    data: [Role!]!
+    page: Int!
+    size: Int!
+    totalPage: Int!
+    totalSize: Int!
+}
+
+type ResponseDeleteRole implements ResponseDelete{
+    data: Role
+    error: Object
+    status: Boolean!
 }
 
 type RoleQuery {
-  findAll: [Role!]!
-  findAllWithPageable(page: Int!, size: Int!): RolePagination!
-  findAllDeleted: [Role!]!
-  findAllDeletedWithPageable(page: Int!, size: Int!): RolePagination!
+    findAll: [Role!]!
+    findAllWithPageable(page: Int!, size: Int!): RolePagination!
+    findAllDeleted: [Role!]!
+    findAllDeletedWithPageable(page: Int!, size: Int!): RolePagination!
 }
 type RoleMutation {
-  save(request: RoleNew!): Role
-  update(id: ID!, request: RoleNew!): Role
-  deleteById(id: ID!): ResponseDelete!
+    save(request: RoleNew!): Role
+    update(id: ID!, request: RoleNew!): Role
+    deleteById(id: ID!): ResponseDeleteRole!
 }
