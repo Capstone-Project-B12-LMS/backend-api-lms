@@ -145,10 +145,7 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 	@Override
 	public Material toEntity(MaterialNew materialNew) {
 		return Material.builder()
-				.classes(this.classRepository
-						.findById(materialNew
-								.getClassId())
-						.orElseThrow(ClassNotFoundException :: new))
+				.classes(this.classRepository.findById(materialNew.getClassId()).orElseThrow(ClassNotFoundException :: new))
 //				.category() // TODO: create when category not found
 //				.topic(materialNew.getTopicId()) // TODO: find topic by id or maybe create new topic if not exists
 //				.fileUrl() // TODO: save file first

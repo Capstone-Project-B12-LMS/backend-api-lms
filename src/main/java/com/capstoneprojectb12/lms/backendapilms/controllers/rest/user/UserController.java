@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -84,14 +83,14 @@ public class UserController {
 		return this.userService.save(request);
 	}
 	
-	@PreAuthorize(value = "hasAnyAuthority('USER')")
+	//	@PreAuthorize(value = "hasAnyAuthority('USER')")
 	@GetMapping(value = {"/users/{id}"})
 	public ResponseEntity<?> findById(@PathVariable(name = "id") String id) {
 		log.info("entering endpoint to find user by id");
 		return this.userService.findById(id);
 	}
 	
-	@PreAuthorize(value = "hasAnyAuthority('USER')")
+	//	@PreAuthorize(value = "hasAnyAuthority('USER')")
 	@PutMapping(value = {"/users/{id}"})
 	public ResponseEntity<?> updateById(@PathVariable(name = "id") String userId, @RequestBody @Valid UserUpdate request, @Parameter(hidden = true) Errors errors) {
 		if (errors.hasErrors()) {

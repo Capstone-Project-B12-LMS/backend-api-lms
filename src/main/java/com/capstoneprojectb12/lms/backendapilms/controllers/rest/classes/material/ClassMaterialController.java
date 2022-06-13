@@ -15,6 +15,7 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController
+//@PreAuthorize(value = "hasAnyAuthority('USER')")
 @RequestMapping(value = {"/restapi/v1/class/material"})
 public class ClassMaterialController {
 	@PostMapping
