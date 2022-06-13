@@ -4,8 +4,10 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.material.MaterialNew
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Material;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.MaterialRepository;
+import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.AnyException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.ClassNotFoundException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Optional;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -14,7 +16,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 
+import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.getResponse;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -66,6 +70,48 @@ public class MaterialServiceTest {
 	public void testSave() {
 //        success
 		when(this.materialRepository.save(any(Material.class))).thenReturn(material);
+		when(this.classRepository.findById(anyString())).thenReturn(Optional.of(ClassServiceTest.classEntity));
+		var res = this.materialService.save(materialNew);
+		var api = getResponse(res);
+		var materialData = (Material) api.getData();
+		
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertInstanceOf(Material.class, api.getData());
+		assertNotNull(api.getData());
+		assertNull(api.getErrors());
+		assertTrue(api.isStatus());
+		assertEquals(material.getId(), materialData.getId());
+		reset(this.classRepository, this.materialRepository);
+
+//		class with {classId} nto found
+		when(this.materialRepository.save(any(Material.class))).thenReturn(material);
+		when(this.classRepository.findById(anyString())).thenReturn(Optional.empty());
+		res = this.materialService.save(materialNew);
+		api = getResponse(res);
+		materialData = (Material) api.getData();
+		
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertNull(api.getData());
+		assertNotNull(api.getErrors());
+		assertFalse(api.isStatus());
+		assertInstanceOf(HashMap.class, api.getErrors());
+		assertNotNull(((HashMap<String, Object>) api.getErrors()).get("message"));
+		reset(this.classRepository, this.materialRepository);
+
+//		any exceptions
+		when(this.materialRepository.save(any(Material.class))).thenThrow(AnyException.class);
+		when(this.classRepository.findById(anyString())).thenReturn(Optional.of(ClassServiceTest.classEntity));
+		res = this.materialService.save(materialNew);
+		api = getResponse(res);
+		materialData = (Material) api.getData();
+		
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, res.getStatusCode());
+		assertNull(api.getData());
+		assertNotNull(api.getErrors());
+		assertFalse(api.isStatus());
+		assertInstanceOf(HashMap.class, api.getErrors());
+		assertNotNull(((HashMap<String, Object>) api.getErrors()).get("message"));
+		reset(this.classRepository, this.materialRepository);
 	}
 	
 	@Test

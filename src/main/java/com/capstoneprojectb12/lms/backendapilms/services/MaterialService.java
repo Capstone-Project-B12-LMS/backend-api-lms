@@ -37,6 +37,9 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 			var material = this.toEntity(newEntity);
 			material = this.materialRepository.save(material);
 			return ok(material);
+		} catch (ClassNotFoundException e) {
+			log.warn(FinalVariable.DATA_NOT_FOUND);
+			return bad(e.getMessage());
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			return err(e);
