@@ -3,6 +3,7 @@ package com.capstoneprojectb12.lms.backendapilms.controllers.gql.role;
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.base.BaseMutation;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.base.ResponseDelete;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.role.RoleNew;
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.role.RoleUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Role;
 import com.capstoneprojectb12.lms.backendapilms.services.RoleService;
 import com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Controller;
 @Controller
 @SchemaMapping(typeName = "RoleMutation")
 @RequiredArgsConstructor
-public class RoleMutation implements BaseMutation<Role, RoleNew> {
+public class RoleMutation implements BaseMutation<Role, RoleNew, RoleUpdate> {
 	private final RoleService roleService;
 	
 	@SchemaMapping(field = "save")
@@ -30,14 +31,14 @@ public class RoleMutation implements BaseMutation<Role, RoleNew> {
 	}
 	
 	@Override
-	public Role update(String id, RoleNew request) {
-		// TODO: implement me
+	public Role update(String id, RoleUpdate request) {
+//		TODO: implement update role
 		return null;
 	}
 	
 	@Override
 	public ResponseDelete deleteById(String id) {
-		// TODO: implement me
+		// TODO: implement delete role by id
 		return null;
 	}
 }

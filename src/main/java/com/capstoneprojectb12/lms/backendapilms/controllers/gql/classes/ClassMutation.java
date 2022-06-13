@@ -20,7 +20,7 @@ import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.gql
 @Controller
 @SchemaMapping(typeName = "ClassMutation")
 @RequiredArgsConstructor
-public class ClassMutation implements BaseMutation<Class, ClassNew> {
+public class ClassMutation implements BaseMutation<Class, ClassNew, ClassUpdate> {
 	private final ClassService classService;
 	private final ClassRepository classRepository;
 	
@@ -36,12 +36,6 @@ public class ClassMutation implements BaseMutation<Class, ClassNew> {
 	}
 	
 	@Override
-	// @SchemaMapping(field = "update")
-	public Class update(String id, ClassNew request) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	@SchemaMapping(field = "updateById")
 	public Class update(@Argument(name = "id") String id, @Argument(name = "request") ClassUpdate request) {
 		try {
