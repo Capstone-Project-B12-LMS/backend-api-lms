@@ -4,20 +4,25 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.base.ResponseDelete;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
+
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
+@Slf4j
 public class ApiResponse<T> implements Serializable {
 	private Object errors;
 	private boolean status = false;
@@ -33,7 +38,7 @@ public class ApiResponse<T> implements Serializable {
 				.build();
 	}
 	
-	public static ApiResponse<?> error(Object errorMessage) {
+	public static ApiResponse<?> error(String errorMessage) {
 		return ApiResponse.<Object>builder()
 				.data(null)
 				.status(false)
@@ -99,5 +104,15 @@ public class ApiResponse<T> implements Serializable {
 	
 	public static ApiResponse<?> getResponse(ResponseEntity<?> response) {
 		return (ApiResponse<?>) response.getBody();
+	}
+	
+	public static <T> Optional<T> extract(
+			@NotNull(message = "Needed value cannot be null") T neededValue,
+			@NotNull(message = "Api Response cannot be null") ApiResponse<?> response) throws ClassCastException {
+		if (response.getData() == null) {
+			log.warn("Cannot convert, Data from Api Response is not instance of Needed value");
+			return Optional.empty();
+		}
+		return Optional.ofNullable((T) response.getData());
 	}
 }
