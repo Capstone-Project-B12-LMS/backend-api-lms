@@ -17,8 +17,6 @@ import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.get
 @Controller
 @SchemaMapping(typeName = "ClassQuery")
 @RequiredArgsConstructor
-// @CrossOrigin(allowCredentials = "true")
-// @PreAuthorize(value = "hasAnyAuthority('USER')")
 public class ClassQuery implements BaseQuery<Class> {
 	private final ClassService classService;
 	

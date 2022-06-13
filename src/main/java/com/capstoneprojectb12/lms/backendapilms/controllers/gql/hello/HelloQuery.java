@@ -6,7 +6,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
 @Controller
-// @CrossOrigin(allowCredentials = "true")
 @SchemaMapping(typeName = "HelloQuery")
 public class HelloQuery {
 	@SchemaMapping(field = "sayHello")

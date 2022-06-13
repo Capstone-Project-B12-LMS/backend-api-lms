@@ -7,15 +7,16 @@ import com.capstoneprojectb12.lms.backendapilms.services.RoleService;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
+@Slf4j
 @Controller
 @SchemaMapping(typeName = "RoleQuery")
 @RequiredArgsConstructor
-// @CrossOrigin(allowCredentials = "true")
 public class RoleQuery implements BaseQuery<Role> {
 	private final RoleRepository roleRepository;
 	private final RoleService roleService;

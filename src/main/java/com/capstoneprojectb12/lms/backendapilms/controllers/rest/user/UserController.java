@@ -83,14 +83,14 @@ public class UserController {
 		return this.userService.save(request);
 	}
 	
-	//	@PreAuthorize(value = "hasAnyAuthority('USER')")
+	//	@PreAuthorize(value = "hasAnyAuthority('USER')") // TODO: enable scurity
 	@GetMapping(value = {"/users/{id}"})
 	public ResponseEntity<?> findById(@PathVariable(name = "id") String id) {
 		log.info("entering endpoint to find user by id");
 		return this.userService.findById(id);
 	}
 	
-	//	@PreAuthorize(value = "hasAnyAuthority('USER')")
+	//	@PreAuthorize(value = "hasAnyAuthority('USER')") // TODO: enable security
 	@PutMapping(value = {"/users/{id}"})
 	public ResponseEntity<?> updateById(@PathVariable(name = "id") String userId, @RequestBody @Valid UserUpdate request, @Parameter(hidden = true) Errors errors) {
 		if (errors.hasErrors()) {

@@ -7,16 +7,15 @@ import com.capstoneprojectb12.lms.backendapilms.services.UserService;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
+@Slf4j
 @Controller
 @SchemaMapping(typeName = "UserQuery")
-// @CrossOrigin(allowCredentials = "true")
-@PreAuthorize(value = "hasAnyAuthority('USER')")
 @RequiredArgsConstructor
 public class UserQuery implements BaseQuery<User> {
 	private final UserRepository userRepository;

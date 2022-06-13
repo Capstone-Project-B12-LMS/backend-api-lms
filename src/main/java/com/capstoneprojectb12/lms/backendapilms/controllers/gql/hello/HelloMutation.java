@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 @SchemaMapping(typeName = "HelloMutation")
-// @CrossOrigin(allowCredentials = "true")
 public class HelloMutation {
 	@SchemaMapping(field = "sayHello")
 	public SayHelloResponse sayHello(@Argument(name = "to") SayHelloInput to) {

@@ -17,7 +17,6 @@ import org.springframework.stereotype.Controller;
 @Controller
 @SchemaMapping(typeName = "RoleMutation")
 @RequiredArgsConstructor
-// @CrossOrigin(allowCredentials = "true")
 public class RoleMutation implements BaseMutation<Role, RoleNew> {
 	private final RoleService roleService;
 	

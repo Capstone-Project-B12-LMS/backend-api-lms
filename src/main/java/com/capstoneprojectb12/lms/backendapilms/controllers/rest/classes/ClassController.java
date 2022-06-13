@@ -17,7 +17,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping(value = {"/restapi/v1/class"})
 @RequiredArgsConstructor
-//@PreAuthorize(value = "hasAnyAuthority('USER')")
+//@PreAuthorize(value = "hasAnyAuthority('USER')") // TODO: enable security
 public class ClassController {
 	private final ClassService classService;
 	

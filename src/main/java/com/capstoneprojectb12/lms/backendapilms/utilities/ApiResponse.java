@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 
@@ -55,15 +56,24 @@ public class ApiResponse<T> implements Serializable {
 	}
 	
 	public static ResponseEntity<?> ok(Object data) {
-		return ResponseEntity.ok(success(data));
+		return ResponseEntity
+				.ok()
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(success(data));
 	}
 	
 	public static ResponseEntity<?> bad(Object message) {
-		return ResponseEntity.badRequest().body(failed(message));
+		return ResponseEntity
+				.badRequest()
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(failed(message));
 	}
 	
 	public static ResponseEntity<?> err(Exception message) {
-		return ResponseEntity.internalServerError().body(error(message.getMessage()));
+		return ResponseEntity
+				.internalServerError()
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(error(message.getMessage()));
 	}
 	
 	public static Map<String, Object> notFound(String message) {

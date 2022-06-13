@@ -20,8 +20,6 @@ import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.gql
 @Controller
 @SchemaMapping(typeName = "ClassMutation")
 @RequiredArgsConstructor
-// @CrossOrigin(allowCredentials = "true")
-// @PreAuthorize(value = "hasAnyAuthority('USER')")
 public class ClassMutation implements BaseMutation<Class, ClassNew> {
 	private final ClassService classService;
 	private final ClassRepository classRepository;

@@ -25,7 +25,6 @@ import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.get
 @Slf4j
 @Controller
 @SchemaMapping(typeName = "UserMutation")
-// @CrossOrigin(allowCredentials = "true")
 @RequiredArgsConstructor
 public class UserMutation {
 	private final UserService userService;
