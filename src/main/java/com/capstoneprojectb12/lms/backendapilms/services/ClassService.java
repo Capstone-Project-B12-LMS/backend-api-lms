@@ -116,15 +116,7 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 	
 	@Override
 	public ResponseEntity<?> findAll(int page, int size) {
-		try {
-			Pageable pageable = PageRequest.of(page, size);
-			var classPage = this.classRepository.findAll(pageable);
-			var pageResponse = this.toPaginationResponse(classPage);
-			return ok(pageResponse);
-		} catch (Exception e) {
-			log.error(e.getMessage());
-			return err(e);
-		}
+		return this.findAll(page, size, Sort.unsorted());
 	}
 	
 	@Override

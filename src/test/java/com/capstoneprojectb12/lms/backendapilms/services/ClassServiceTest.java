@@ -7,6 +7,8 @@ import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.ClassStatu
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
 import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.AnyException;
+import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.MethodNotImplementedException;
+import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
 import java.util.*;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -264,37 +266,47 @@ public class ClassServiceTest {
 	}
 	
 	@Test
-	public void testFindAllWithPageable() {
-//		TODO: Test this
-		// without sorting
-		// success
-		when(this.classRepository.findAll(any(Pageable.class)))
-				.thenReturn(new PageImpl<>(List.of(classEntity)));
-		var result = this.classService.findAll(0, 1);
-		assertNotNull(result);
-		
-		// failed
-		when(this.classRepository.findAll(any(Pageable.class)))
-				.thenReturn(new PageImpl<>(Collections.emptyList()));
-		result = this.classService.findAll(0, 1);
-		assertNotNull(result);
-		
+	public void testFindAllDeleted() {
+//		not implemented
+		assertThrows(MethodNotImplementedException.class, () -> this.classService.findAll(true));
 	}
 	
 	@Test
-	public void testFindAllWithSort() {
-//		TODO: Test this
-		// with sorting
-		// ascending
-		when(this.classRepository.findAll(any(Pageable.class)))
-				.thenReturn(new PageImpl<>(List.of(classEntity, classEntity2)));
-		var result = this.classService.findAll(0, 1, Sort.by("name").ascending());
+	public void testFindAllWithPageable() {
+		// success
+		when(this.classRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(List.of(classEntity), PageRequest.of(0, 1, Sort.unsorted()), 1));
+		var result = this.classService.findAll(0, 1);
+		var api = getResponse(result);
+		var values = (PaginationResponse<List<Class>>) api.getData();
 		
-		// descending
-		when(this.classRepository.findAll(any(Pageable.class)))
-				.thenReturn(new PageImpl<>(List.of(classEntity2, classEntity)));
-		result = this.classService.findAll(0, 1, Sort.by("name").descending());
+		assertNotNull(result);
+		assertEquals(HttpStatus.OK, result.getStatusCode());
+		assertNotNull(api);
+		assertNull(api.getErrors());
+		assertTrue(api.isStatus());
+		assertTrue(api.getData() instanceof PaginationResponse);
+		assertEquals(0, values.getPage());
+		assertEquals(1, values.getSize());
+		assertEquals(1, values.getTotalPage());
+		assertEquals(1, values.getTotalSize());
+		assertInstanceOf(PaginationResponse.class, api.getData());
+		assertEquals(classEntity.getId(), values.getData().get(0).getId());
+		reset(this.classRepository);
 		
+		// any exception
+		when(this.classRepository.findAll(any(Pageable.class))).thenThrow(AnyException.class);
+		result = this.classService.findAll(0, 1);
+		api = getResponse(result);
+		values = (PaginationResponse<List<Class>>) api.getData();
+		
+		assertNotNull(result);
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
+		assertNotNull(api);
+		assertFalse(api.isStatus());
+		assertNotNull(api.getErrors());
+		assertInstanceOf(HashMap.class, api.getErrors());
+		assertNotNull(((HashMap<String, Object>) api.getErrors()).get("message"));
+		assertNull(api.getData());
 	}
 	
 	@Test
