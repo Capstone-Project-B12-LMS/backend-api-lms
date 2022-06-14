@@ -18,7 +18,7 @@ type Material implements BaseSchema {
     isDeleted: Boolean!
 }
 
-type MaterialNew {
+input MaterialNew {
     classId: ID!
     title: String!
     content: String!
@@ -30,16 +30,30 @@ type MaterialNew {
     point: Int!
 }
 
+type ResponseDeleteMaterial implements ResponseDelete {
+    deleted: Material
+    error: Object
+    status: Boolean!
+}
+
+type MaterialPagination implements PaginationResponse {
+    data: [Material!]!
+    page: Int!
+    size: Int!
+    totalPage: Int!
+    totalSize: Int!
+}
+
 type MaterialQuery {
-    findAll: [User!]!
-    findAllWithPageable(page: Int!, size: Int!): UserPagination!
-    findAllDeleted: [User!]!
-    findAllDeletedWithPageable(page: Int!, size: Int!): UserPagination!
-    findById(id: ID!): User
+    findAll: [Material!]!
+    findAllWithPageable(page: Int!, size: Int!): MaterialPagination!
+    findAllDeleted: [Material!]!
+    findAllDeletedWithPageable(page: Int!, size: Int!): MaterialPagination!
+    findById(id: ID!): Material
 }
 
 type MaterialMutation {
-    save(request: RoleNew!): Role
-    update(id: ID!, request: RoleNew!): Role
-    deleteById(id: ID!): ResponseDeleteRole!
+    save(request: MaterialNew!): Material
+    update(id: ID!, request: MaterialNew!): Material
+    deleteById(id: ID!): ResponseDeleteMaterial!
 }
