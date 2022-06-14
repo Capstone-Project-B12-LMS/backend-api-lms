@@ -2,6 +2,7 @@ package com.capstoneprojectb12.lms.backendapilms.controllers.gql;
 
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.classes.ClassQuery;
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.hello.HelloQuery;
+import com.capstoneprojectb12.lms.backendapilms.controllers.gql.material.MaterialQuery;
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.role.RoleQuery;
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.user.UserQuery;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ public class GraphQLQuery {
 	private final RoleQuery roleQuery;
 	private final UserQuery userQuery;
 	private final ClassQuery classQuery;
+	private final MaterialQuery materialQuery;
 	
 	@SchemaMapping(field = "hello")
 	public HelloQuery helloQuery() {
@@ -40,5 +42,10 @@ public class GraphQLQuery {
 	@SchemaMapping(value = "class")
 	public ClassQuery classQuery() {
 		return this.classQuery;
+	}
+	
+	@SchemaMapping(field = "material")
+	public MaterialQuery materialQuery() {
+		return this.materialQuery;
 	}
 }

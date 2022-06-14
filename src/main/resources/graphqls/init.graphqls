@@ -1,16 +1,16 @@
 # create data type to store anything
 type Query {
-  hello: HelloQuery!
-  role: RoleQuery!
-  user: UserQuery!
-  class: ClassQuery!
-  # TODO: create field MaterialQuery here
+    hello: HelloQuery!
+    role: RoleQuery!
+    user: UserQuery!
+    class: ClassQuery!
+    material: MaterialQuery!
 }
 
 type Mutation {
-  hello: HelloMutation!
-  role: RoleMutation!
-  user: UserMutation!
-  class: ClassMutation!
-  # TODO: create field MatrialMutation here
+    hello: HelloMutation!
+    role: RoleMutation!
+    user: UserMutation!
+    class: ClassMutation!
+    material: MaterialMutation!
 }
