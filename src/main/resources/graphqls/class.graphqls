@@ -4,7 +4,7 @@ enum ClassStatus {
     WILL_END
 }
 
-type Class {
+type Class implements BaseSchema {
     id: ID!
     name: String!
     room: String

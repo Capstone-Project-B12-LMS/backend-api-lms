@@ -1,4 +1,4 @@
-type Role {
+type Role implements BaseSchema {
     id: ID!
     name: String!
     description: String!
