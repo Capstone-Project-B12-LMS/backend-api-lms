@@ -1,7 +1,6 @@
 package com.capstoneprojectb12.lms.backendapilms.models.dtos.material;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,7 +43,7 @@ public class MaterialNew {
 	private MultipartFile file;
 	
 	@Schema(nullable = true)
-	private LocalDateTime deadline;
+	private String deadline;
 	
 	@NotNull(message = "cannot be null")
 	private Integer point;

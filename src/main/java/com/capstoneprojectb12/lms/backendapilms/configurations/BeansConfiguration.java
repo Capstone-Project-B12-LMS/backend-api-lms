@@ -48,4 +48,9 @@ public class BeansConfiguration {
 						.version("1.0")
 				);
 	}
+
+//	@Bean
+//	public SimpleDateFormat simpleDateFormat() {
+//		return new SimpleDateFormat(FinalVariable.DATE_FORMAT);
+//	}
 }

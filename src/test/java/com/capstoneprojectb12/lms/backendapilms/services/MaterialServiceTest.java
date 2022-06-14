@@ -4,11 +4,12 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.material.MaterialNew
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Material;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.MaterialRepository;
+import com.capstoneprojectb12.lms.backendapilms.utilities.DateUtils;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.AnyException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.ClassNotFoundException;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,12 +26,22 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
+@Slf4j
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 @Tag(value = "materialServiceTest")
 public class MaterialServiceTest {
-	
-	private static final LocalDateTime deadline = LocalDateTime.now();
+	public static final MaterialNew materialNew = MaterialNew.builder()
+			.classId("id")
+			.category("material category")
+			.content("material content")
+			.deadline("14/06/2022 22:34:50")
+			.point(100)
+//				.file(null) // TODO: create file service first
+//				.video(null) // TODO: create file service first
+			.title("material title")
+			.topicId("topicId")
+			.build();
 	public static final Material material = Material.builder()
 			.id("id")
 			.classes(ClassServiceTest.classEntity)
@@ -39,20 +50,9 @@ public class MaterialServiceTest {
 			.topic(null)
 			.videoUri("url")
 			.fileUrl("url")
-			.deadline(deadline)
+			.deadline(DateUtils.parse(materialNew.getDeadline()))
 			.point(100)
 			.category(null)
-			.build();
-	public static final MaterialNew materialNew = MaterialNew.builder()
-			.classId("id")
-			.category("material category")
-			.content("material content")
-			.deadline(deadline)
-			.point(100)
-//				.file(null) // TODO: create file service first
-//				.video(null) // TODO: create file service first
-			.title("material title")
-			.topicId("topicId")
 			.build();
 	@Autowired
 	private MaterialService materialService;
@@ -126,9 +126,20 @@ public class MaterialServiceTest {
 //		assertEquals(materialNew.getFile().getOriginalFilename(), result.getFileUrl()); // TODO: create file service first
 //		assertEquals(materialNew.getVideo().getOriginalFilename(), result.getVideoUri()); // TODO: create file service first
 		assertEquals(materialNew.getContent(), result.getContent());
-		assertEquals(materialNew.getDeadline(), result.getDeadline());
+		assertEquals(DateUtils.parse(materialNew.getDeadline()), result.getDeadline());
 		assertEquals(materialNew.getPoint(), result.getPoint());
 		assertEquals(materialNew.getTitle(), result.getTitle());
+
+//		test exception when parse string to date
+//		var materialFailed = MaterialNew.builder()
+//				.deadline("hd930")
+//				.classId("id")
+//				.build();
+		var tempDeadline = materialNew.getDeadline();
+		materialNew.setDeadline("anyy");
+		result = this.materialService.toEntity(materialNew);
+		materialNew.setDeadline(tempDeadline);
+		assertNull(result.getDeadline());
 		reset(this.classRepository);
 
 //		failed

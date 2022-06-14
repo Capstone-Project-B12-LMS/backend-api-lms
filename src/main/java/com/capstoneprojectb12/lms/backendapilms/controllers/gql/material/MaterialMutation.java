@@ -7,6 +7,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.material.MaterialUpd
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Material;
 import com.capstoneprojectb12.lms.backendapilms.services.MaterialService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
@@ -19,7 +20,8 @@ public class MaterialMutation implements BaseMutation<Material, MaterialNew, Mat
 	private final MaterialService materialService;
 	
 	@Override
-	public Material save(MaterialNew request) {
+	@SchemaMapping(field = "save")
+	public Material save(@Argument(name = "request") MaterialNew request) {
 		return extract(new Material(), this.materialService.save(request)).orElse(null);
 	}
 	

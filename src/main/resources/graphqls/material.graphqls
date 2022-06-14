@@ -7,7 +7,7 @@ type Material implements BaseSchema {
     #    topic: Topic TODO: create topic schema graphql and CRUD topic first
     videoUrl: String
     fileUrl: String
-    deadline: Object
+    deadline: String
     point: Int!
 
     createdBy: String!
