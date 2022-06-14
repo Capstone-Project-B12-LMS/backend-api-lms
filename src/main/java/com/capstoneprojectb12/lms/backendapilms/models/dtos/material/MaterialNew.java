@@ -42,7 +42,7 @@ public class MaterialNew {
 	@Schema(nullable = true, type = MediaType.MULTIPART_FORM_DATA_VALUE)
 	private MultipartFile file;
 	
-	@Schema(nullable = true)
+	@Schema(nullable = true, description = "Please use format dd/MM/yyyy HH:mm:ss to save deadline (ex. 22/12/2022 23:59:40)")
 	private String deadline;
 	
 	@NotNull(message = "cannot be null")
