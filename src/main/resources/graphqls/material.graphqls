@@ -1,6 +1,6 @@
 type Material implements BaseSchema {
     id: ID!
-    class: Class!
+    class: Class
     title: String!
     content: String!
     #    category: Category TODO: create category schema graohql and CRUD category first
