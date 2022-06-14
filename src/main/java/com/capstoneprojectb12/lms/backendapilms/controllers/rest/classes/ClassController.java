@@ -51,4 +51,11 @@ public class ClassController {
 	public ResponseEntity<?> findAll() {
 		return this.classService.findAll();
 	}
+	
+	@GetMapping(value = {"/{page}/{size}"})
+	public ResponseEntity<?> findAll(
+			@PathVariable(required = true, name = "page") Integer page,
+			@PathVariable(required = true, name = "size") Integer size) {
+		return this.classService.findAll(page, size);
+	}
 }
