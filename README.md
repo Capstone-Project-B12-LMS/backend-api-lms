@@ -50,7 +50,7 @@ Use resource bellow to use it.
 
 - `Rest FULL API`
 
-    - API Docs : http://ec2-34-212-169-254.us-west-2.compute.amazonaws.com/restapi/v1/docs/swagger-ui/index.html#/
+    - API Docs : http://ec2-34-212-169-254.us-west-2.compute.amazonaws.com/restapi/v1/docs
 
 - `GraphQL API`
 
