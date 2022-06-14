@@ -13,6 +13,7 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.extract;
+import static com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse.empty;
 
 @Slf4j
 @Controller
@@ -29,9 +30,8 @@ public class ClassQuery implements BaseQuery<Class> {
 	
 	@Override
 	@SchemaMapping(field = "findAllWithPageable")
-	public PaginationResponse<List<Class>> findAllWithPageable(int page, int size) {
-		// TODO Auto-generated method stub
-		return null;
+	public PaginationResponse<List<Class>> findAllWithPageable(@Argument(name = "page") int page, @Argument(name = "size") int size) {
+		return extract(new PaginationResponse<List<Class>>(), this.classService.findAll(page, size)).orElse(empty(new ArrayList<>(), 0, 0));
 	}
 	
 	@Override
