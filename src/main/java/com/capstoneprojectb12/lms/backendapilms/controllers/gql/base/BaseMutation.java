@@ -2,10 +2,10 @@ package com.capstoneprojectb12.lms.backendapilms.controllers.gql.base;
 
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.base.ResponseDelete;
 
-public interface BaseMutation<T, S> {
-    public T save(S request);
-
-    public T update(String id, S request);
-
-    public ResponseDelete deleteById(String id);
+public interface BaseMutation<ENTITY, NEW, UPDATE> {
+	ENTITY save(NEW request);
+	
+	ENTITY update(String id, UPDATE request);
+	
+	ResponseDelete deleteById(String id);
 }

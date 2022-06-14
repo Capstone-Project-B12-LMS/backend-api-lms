@@ -1,54 +1,60 @@
 type User {
-  id: ID!
-  fullName: String!
-  email: String!
-  telepon: String!
-  password: String!
-  roles: [Role!]!
+    id: ID!
+    fullName: String!
+    email: String!
+    telepon: String!
+    password: String!
+    roles: [Role!]!
 
-  createdBy: String!
-  createdAt: String!
-  updatedBy: String
-  updatedAt: String
-  isDeleted: Boolean!
+    createdBy: String!
+    createdAt: String!
+    updatedBy: String
+    updatedAt: String
+    isDeleted: Boolean!
 }
 
 input UserNew {
-  fullName: String!
-  email: String!
-  telepon: String
-  password: String!
+    fullName: String!
+    email: String!
+    telepon: String
+    password: String!
 }
 input UserUpdate {
-  fullName: String!
-  email: String!
-  telepon: String
+    fullName: String!
+    email: String!
+    telepon: String
 }
 
 input UserLogin {
-  email: String!
-  password: String!
+    email: String!
+    password: String!
 }
 
 type UserPagination implements PaginationResponse {
-  data: [User!]!
-  page: Int!
-  size: Int!
-  totalPage: Int!
-  totalSize: Int!
+    data: [User!]!
+    page: Int!
+    size: Int!
+    totalPage: Int!
+    totalSize: Int!
+}
+
+type ResponseDeleteUser implements ResponseDelete{
+    deleted: User
+    error: Object
+    status: Boolean!
 }
 
 type UserQuery {
-  findAll: [User!]!
-  findAllWithPageable(page: Int!, size: Int!): UserPagination!
-  findAllDeleted: [User!]!
-  findAllDeletedWithPageable(page: Int!, size: Int!): UserPagination!
-  findById(id: ID!): User
+    findAll: [User!]!
+    findAllWithPageable(page: Int!, size: Int!): UserPagination!
+    findAllDeleted: [User!]!
+    findAllDeletedWithPageable(page: Int!, size: Int!): UserPagination!
+    findById(id: ID!): User
 }
 
 type UserMutation {
-  register(request: UserNew!): User
-  login(request: UserLogin!): ResponseToken!
-  deleteById(id: ID!): ResponseDelete!
-  updateById(id: ID!, request: UserUpdate!): User
+    register(request: UserNew!): User
+    login(request: UserLogin!): ResponseToken!
+    deleteById(id: ID!): ResponseDeleteUser!
+    updateById(id: ID!, request: UserUpdate!): User
 }

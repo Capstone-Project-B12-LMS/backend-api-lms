@@ -1,15 +1,15 @@
 interface PaginationResponse {
-  page: Int!
-  size: Int!
-  totalPage: Int!
-  totalSize: Int!
+    page: Int!
+    size: Int!
+    totalPage: Int!
+    totalSize: Int!
 }
 
 type ResponseToken {
-  token: String
-  error: Object
+    token: String
+    error: Object
 }
-type ResponseDelete {
-  error: Object
-  status: Boolean!
+interface ResponseDelete  {
+    error: Object
+    status: Boolean!
 }
