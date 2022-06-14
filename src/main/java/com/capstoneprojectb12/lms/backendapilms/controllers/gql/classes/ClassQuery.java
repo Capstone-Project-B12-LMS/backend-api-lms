@@ -37,14 +37,14 @@ public class ClassQuery implements BaseQuery<Class> {
 	@Override
 	@SchemaMapping(field = "findAllDeleted")
 	public List<Class> findAllDeleted() {
-		// TODO Auto-generated method stub
+		// TODO: implement find all deleted class
 		return null;
 	}
 	
 	@Override
 	@SchemaMapping(field = "findAllDeletedWithPageable")
 	public PaginationResponse<List<Class>> findAllDeletedWithPageable(int page, int size) {
-		// TODO Auto-generated method stub
+		// TODO: implement find all deleted class with pageable
 		return null;
 	}
 	
