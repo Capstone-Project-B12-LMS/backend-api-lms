@@ -18,6 +18,18 @@ type Material implements BaseSchema {
     isDeleted: Boolean!
 }
 
+type MaterialNew {
+    classId: ID!
+    title: String!
+    content: String!
+    category: String
+    topicId: String
+    #    video: Object TODO: learn how to get uploaded file in graphql first
+    #    file: Object TODO: learn how to get uploaded file in graphql first
+    deadline: Object
+    point: Int!
+}
+
 type MaterialQuery {
     findAll: [User!]!
     findAllWithPageable(page: Int!, size: Int!): UserPagination!
