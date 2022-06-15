@@ -146,4 +146,5 @@ public class MaterialServiceTest {
 		when(this.classRepository.findById(anyString())).thenReturn(Optional.empty());
 		assertThrows(ClassNotFoundException.class, () -> this.materialService.toEntity(materialNew));
 	}
+	
 }

@@ -2,6 +2,7 @@ package com.capstoneprojectb12.lms.backendapilms.controllers.rest.classes;
 
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassNew;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassUpdate;
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.JoinClass;
 import com.capstoneprojectb12.lms.backendapilms.services.ClassService;
 import com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -57,5 +58,13 @@ public class ClassController {
 			@PathVariable(required = true, name = "page") Integer page,
 			@PathVariable(required = true, name = "size") Integer size) {
 		return this.classService.findAll(page, size);
+	}
+	
+	@PostMapping(value = {"/join"})
+	public ResponseEntity<?> join(@RequestBody @Valid JoinClass request, Errors errors) {
+		if (errors.hasErrors()) {
+			return ApiResponse.errorValidation(errors);
+		}
+		return this.classService.joinUserToClass(request);
 	}
 }

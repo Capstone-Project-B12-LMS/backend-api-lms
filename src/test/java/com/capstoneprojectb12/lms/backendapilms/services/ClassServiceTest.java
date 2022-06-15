@@ -2,9 +2,11 @@ package com.capstoneprojectb12.lms.backendapilms.services;
 
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassNew;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassUpdate;
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.JoinClass;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.ClassStatus;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
+import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
 import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.AnyException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.MethodNotImplementedException;
@@ -23,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 
+import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.extract;
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.getResponse;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -34,44 +37,23 @@ import static org.mockito.Mockito.when;
 @Tag(value = "classServiceTest")
 public class ClassServiceTest {
 	
-	public static final Class classEntity = Class.builder()
-			.id("id")
-			.name("my class")
-			.room("my room")
-			.code("wkwkwk")
-			.status(ClassStatus.ACTIVE)
-			.users(Collections.emptyList())
-			.build();
-	private final Class classEntity2 = Class.builder()
-			.id("id")
-			.name("ny class")
-			.room("my room")
-			.code("wkwkwk")
-			.status(ClassStatus.ACTIVE)
-			.users(Collections.emptyList())
-			.build();
-	private final ClassUpdate classUpdate = ClassUpdate.builder()
-			.name("updated class")
-			.room("updated room")
-			.status(ClassStatus.WILL_END)
-			.build();
-	private final Class updatedClass = Class.builder()
-			.id("updated id")
-			.name(classUpdate.getName())
-			.room(classUpdate.getRoom())
-			.status(classUpdate.getStatus())
-			.code(classEntity.getCode())
-			.users(classEntity.getUsers())
-			.build();
+	public static final Class classEntity = Class.builder().id("id").name("my class").room("my room").code("wkwkwk").status(ClassStatus.ACTIVE).users(new ArrayList<>()).build();
+	private final Class classEntity2 = Class.builder().id("id").name("ny class").room("my room").code("wkwkwk").status(ClassStatus.ACTIVE).users(new ArrayList<>()).build();
+	private final ClassUpdate classUpdate = ClassUpdate.builder().name("updated class").room("updated room").status(ClassStatus.WILL_END).build();
+	private final Class updatedClass = Class.builder().id("updated id").name(classUpdate.getName()).room(classUpdate.getRoom()).status(classUpdate.getStatus()).code(classEntity.getCode()).users(classEntity.getUsers()).build();
 	
-	private final ClassNew classNew = ClassNew.builder()
-			.name(classEntity.getName())
-			.room(classEntity.getRoom())
-			.build();
+	private final ClassNew classNew = ClassNew.builder().name(classEntity.getName()).room(classEntity.getRoom()).build();
+	
+	private final JoinClass joinUserToClass = JoinClass.builder().classCode("id").userId("id").build();
+	
 	@MockBean
 	private ClassRepository classRepository;
 	@Autowired
 	private ClassService classService;
+	
+	@MockBean
+	private UserRepository userRepository;
+	
 	
 	@Test
 	public void testSave() {
@@ -323,12 +305,74 @@ public class ClassServiceTest {
 	@Test
 	public void testToEntity() {
 //		TODO: Test this
-		var classNew = ClassNew.builder()
-				.name("new class")
-				.room("rom of new class")
-				.build();
+		var classNew = ClassNew.builder().name("new class").room("rom of new class").build();
 		var entity = this.classService.toEntity(classNew);
 		assertEquals(classNew.getName(), entity.getName());
 		assertEquals(classNew.getRoom(), entity.getRoom());
+	}
+	
+	
+	@Test
+	public void testJoinUserToClass() {
+//		success
+		when(this.classRepository.findByCode(anyString())).thenReturn(Optional.of(classEntity));
+		when(this.userRepository.findById(anyString())).thenReturn(Optional.of(UserServiceTest.user));
+		var res = this.classService.joinUserToClass(joinUserToClass);
+		var api = getResponse(res);
+		var data = extract(new HashMap<String, Object>(), api);
+		
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertTrue(api.isStatus());
+		assertNull(api.getErrors());
+		assertNotNull(api.getData());
+		assert data.isPresent();
+		assertEquals("success", data.get().get("message"));
+		reset(this.classRepository, this.userRepository);
+
+//		class not found
+		when(this.classRepository.findByCode(anyString())).thenReturn(Optional.empty());
+		when(this.userRepository.findById(anyString())).thenReturn(Optional.of(UserServiceTest.user));
+		res = this.classService.joinUserToClass(joinUserToClass);
+		api = getResponse(res);
+		data = extract(new HashMap<String, Object>(), api);
+		
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertFalse(api.isStatus());
+		assertNotNull(api.getErrors());
+		assertNull(api.getData());
+		assert data.isEmpty();
+		assertTrue(api.getErrors() instanceof HashMap);
+		reset(this.classRepository, this.userRepository);
+
+//		class not found
+		when(this.classRepository.findByCode(anyString())).thenReturn(Optional.of(classEntity));
+		when(this.userRepository.findById(anyString())).thenReturn(Optional.empty());
+		res = this.classService.joinUserToClass(joinUserToClass);
+		api = getResponse(res);
+		data = extract(new HashMap<String, Object>(), api);
+		
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertFalse(api.isStatus());
+		assertNotNull(api.getErrors());
+		assertNull(api.getData());
+		assert data.isEmpty();
+		assertTrue(api.getErrors() instanceof HashMap);
+		assertTrue(((HashMap) api.getErrors()).get("message").toString().toLowerCase().contains("user"));
+		reset(this.classRepository, this.userRepository);
+
+//		any exception
+		when(this.classRepository.findByCode(anyString())).thenThrow(AnyException.class);
+		when(this.userRepository.findById(anyString())).thenReturn(Optional.empty());
+		res = this.classService.joinUserToClass(joinUserToClass);
+		api = getResponse(res);
+		data = extract(new HashMap<String, Object>(), api);
+		
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, res.getStatusCode());
+		assertFalse(api.isStatus());
+		assertNotNull(api.getErrors());
+		assertNull(api.getData());
+		assert data.isEmpty();
+		assertTrue(api.getErrors() instanceof HashMap);
+		reset(this.classRepository, this.userRepository);
 	}
 }
