@@ -4,7 +4,6 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassNew;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.JoinClass;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
-import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
 import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
@@ -13,10 +12,7 @@ import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.DataNotFoun
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.MethodNotImplementedException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.UserNotFoundException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -163,9 +159,9 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 			var classEntity = this.classRepository.findByCode(request.getClassCode()).orElseThrow(ClassNotFoundException :: new);
 			var user = this.userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException :: new);
 			
-			var users = (ArrayList<User>) classEntity.getUsers();
+			var users = new HashSet<>(classEntity.getUsers());
 			users.add(user);
-			classEntity.setUsers(users);
+			classEntity.setUsers(new ArrayList<>(users));
 			this.classRepository.save(classEntity);
 			
 			var status = new HashMap<String, Object>() {{
@@ -184,5 +180,9 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 			log.error(e.getMessage());
 			return err(e);
 		}
+	}
+	
+	public ResponseEntity<?> joinUserToClass(String classCode, String userId) {
+		return this.joinUserToClass(JoinClass.builder().classCode(classCode).userId(userId).build());
 	}
 }

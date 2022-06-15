@@ -317,10 +317,11 @@ public class ClassServiceTest {
 //		success
 		when(this.classRepository.findByCode(anyString())).thenReturn(Optional.of(classEntity));
 		when(this.userRepository.findById(anyString())).thenReturn(Optional.of(UserServiceTest.user));
-		var res = this.classService.joinUserToClass(joinUserToClass);
+		var res = this.classService.joinUserToClass(joinUserToClass.getClassCode(), joinUserToClass.getUserId());
 		var api = getResponse(res);
 		var data = extract(new HashMap<String, Object>(), api);
 		
+		assertNotNull(extract(new HashMap<String, Object>(), res).orElse(null));
 		assertEquals(HttpStatus.OK, res.getStatusCode());
 		assertTrue(api.isStatus());
 		assertNull(api.getErrors());
@@ -332,7 +333,7 @@ public class ClassServiceTest {
 //		class not found
 		when(this.classRepository.findByCode(anyString())).thenReturn(Optional.empty());
 		when(this.userRepository.findById(anyString())).thenReturn(Optional.of(UserServiceTest.user));
-		res = this.classService.joinUserToClass(joinUserToClass);
+		res = this.classService.joinUserToClass(joinUserToClass.getClassCode(), joinUserToClass.getUserId());
 		api = getResponse(res);
 		data = extract(new HashMap<String, Object>(), api);
 		
@@ -347,7 +348,7 @@ public class ClassServiceTest {
 //		class not found
 		when(this.classRepository.findByCode(anyString())).thenReturn(Optional.of(classEntity));
 		when(this.userRepository.findById(anyString())).thenReturn(Optional.empty());
-		res = this.classService.joinUserToClass(joinUserToClass);
+		res = this.classService.joinUserToClass(joinUserToClass.getClassCode(), joinUserToClass.getUserId());
 		api = getResponse(res);
 		data = extract(new HashMap<String, Object>(), api);
 		
@@ -363,7 +364,7 @@ public class ClassServiceTest {
 //		any exception
 		when(this.classRepository.findByCode(anyString())).thenThrow(AnyException.class);
 		when(this.userRepository.findById(anyString())).thenReturn(Optional.empty());
-		res = this.classService.joinUserToClass(joinUserToClass);
+		res = this.classService.joinUserToClass(joinUserToClass.getClassCode(), joinUserToClass.getUserId());
 		api = getResponse(res);
 		data = extract(new HashMap<String, Object>(), api);
 		
