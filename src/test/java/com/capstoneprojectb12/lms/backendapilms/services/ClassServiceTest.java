@@ -171,14 +171,13 @@ public class ClassServiceTest {
 		when(this.classRepository.findById(anyString())).thenReturn(Optional.ofNullable(classEntity));
 		var result = this.classService.findById("id");
 		var api = getResponse(result);
-		var data = (Class) api.getData();
+		var data = (ClassResponse) api.getData();
 		
 		assertEquals(HttpStatus.OK, result.getStatusCode());
 		assertTrue(api.isStatus());
 		assertNull(api.getErrors());
 		assertNotNull(api.getData());
 		
-		assert classEntity != null;
 		assertEquals(classEntity.getId(), data.getId());
 		assertFalse(data.getIsDeleted());
 		assertEquals(classEntity.getName(), data.getName());
@@ -190,7 +189,7 @@ public class ClassServiceTest {
 		when(this.classRepository.findById(anyString())).thenReturn(Optional.empty());
 		result = this.classService.findById("id");
 		api = getResponse(result);
-		data = (Class) api.getData();
+		data = (ClassResponse) api.getData();
 		
 		assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
 		assertFalse(api.isStatus());
@@ -205,7 +204,7 @@ public class ClassServiceTest {
 		when(this.classRepository.findById(anyString())).thenThrow(AnyException.class);
 		result = this.classService.findById("id");
 		api = getResponse(result);
-		data = (Class) api.getData();
+		data = (ClassResponse) api.getData();
 		
 		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
 		assertFalse(api.isStatus());
