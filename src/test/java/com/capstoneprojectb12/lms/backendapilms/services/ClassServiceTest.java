@@ -1,6 +1,7 @@
 package com.capstoneprojectb12.lms.backendapilms.services;
 
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassNew;
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassResponse;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.JoinClass;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
@@ -220,7 +221,7 @@ public class ClassServiceTest {
 		when(this.classRepository.findAll()).thenReturn(List.of(classEntity));
 		var result = this.classService.findAll();
 		var api = getResponse(result);
-		var values = (List<Class>) api.getData();
+		var values = (List<ClassResponse>) api.getData();
 		
 		assertNotNull(result);
 		assertEquals(HttpStatus.OK, result.getStatusCode());
@@ -229,7 +230,7 @@ public class ClassServiceTest {
 		assertTrue(api.isStatus());
 		assertTrue(api.getData() instanceof List);
 		
-		assertEquals(List.of(classEntity), values);
+		assertTrue(values.get(0) instanceof ClassResponse);
 		assertEquals(classEntity.getId(), values.get(0).getId());
 		reset(this.classRepository);
 
@@ -237,7 +238,7 @@ public class ClassServiceTest {
 		when(this.classRepository.findAll()).thenThrow(AnyException.class);
 		result = this.classService.findAll();
 		api = getResponse(result);
-		values = (List<Class>) api.getData();
+		values = (List<ClassResponse>) api.getData();
 		
 		assertNotNull(result);
 		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());

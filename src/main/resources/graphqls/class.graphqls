@@ -10,7 +10,7 @@ type Class implements BaseSchema {
     room: String
     code: String!
     status: ClassStatus!
-    users: [User!]
+    users: [UserClassResponse!]
 
     createdBy: String!
     createdAt: String!
@@ -38,6 +38,11 @@ input ClassUpdate {
     status: ClassStatus!
 }
 
+type UserClassResponse {
+    id: ID!
+    fullName: String!
+    email: String!
+}
 # input ClassUpdateUser {
 #   name: String!
 #   room: String

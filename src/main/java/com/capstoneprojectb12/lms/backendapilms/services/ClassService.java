@@ -1,6 +1,7 @@
 package com.capstoneprojectb12.lms.backendapilms.services;
 
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassNew;
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassResponse;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.JoinClass;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
@@ -104,8 +105,10 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 	@Override
 	public ResponseEntity<?> findAll() {
 		try {
-			var values = this.classRepository.findAll();
-			return ok(values);
+			var classes = this.classRepository.findAll();
+			var responses = new ArrayList<ClassResponse>();
+			classes.forEach((c) -> responses.add(ClassResponse.parseFromClass(c)));
+			return ok(responses);
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			return err(e);
