@@ -11,5 +11,6 @@ public class FinalVariable {
 	public static final String UPDATE_SUCCESS = "Update success";
 	public static final String UPDATE_FAILED = "Update failed";
 	
+	public static final String DATE_FORMAT = "dd/MM/yyyy HH:mm:ss";
 	
 }

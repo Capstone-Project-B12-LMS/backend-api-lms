@@ -1,16 +1,19 @@
 package com.capstoneprojectb12.lms.backendapilms.services;
 
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassNew;
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassResponse;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassUpdate;
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.JoinClass;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
+import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
 import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.ClassNotFoundException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.DataNotFoundException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.MethodNotImplementedException;
+import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.UserNotFoundException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -30,6 +33,7 @@ import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.*;
 @RequiredArgsConstructor
 public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 	private final ClassRepository classRepository;
+	private final UserRepository userRepository;
 	
 	
 	@Override
@@ -88,7 +92,7 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 		try {
 			var value = this.classRepository.findById(id)
 					.orElseThrow(DataNotFoundException :: new);
-			return ok(value);
+			return ok(ClassResponse.parseFromClass(value));
 		} catch (DataNotFoundException e) {
 			log.warn(FinalVariable.DATA_NOT_FOUND);
 			return bad(FinalVariable.DATA_NOT_FOUND);
@@ -101,8 +105,10 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 	@Override
 	public ResponseEntity<?> findAll() {
 		try {
-			var values = this.classRepository.findAll();
-			return ok(values);
+			var classes = this.classRepository.findAll();
+			var responses = new ArrayList<ClassResponse>();
+			classes.forEach((c) -> responses.add(ClassResponse.parseFromClass(c)));
+			return ok(responses);
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			return err(e);
@@ -149,5 +155,37 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 				.name(classNew.getName())
 				.room(classNew.getRoom())
 				.build();
+	}
+	
+	public ResponseEntity<?> joinUserToClass(JoinClass request) {
+		try {
+			var classEntity = this.classRepository.findByCode(request.getClassCode()).orElseThrow(ClassNotFoundException :: new);
+			var user = this.userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException :: new);
+			
+			var users = new HashSet<>(classEntity.getUsers());
+			users.add(user);
+			classEntity.setUsers(new ArrayList<>(users));
+			this.classRepository.save(classEntity);
+			
+			var status = new HashMap<String, Object>() {{
+				put("message", "success");
+			}};
+			
+			return ok(status);
+		} catch (ClassNotFoundException e) {
+			log.warn(e.getMessage());
+			return bad(e.getMessage());
+		} catch (UserNotFoundException e) {
+			log.warn(e.getMessage());
+			return bad(e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(e.getMessage());
+			return err(e);
+		}
+	}
+	
+	public ResponseEntity<?> joinUserToClass(String classCode, String userId) {
+		return this.joinUserToClass(JoinClass.builder().classCode(classCode).userId(userId).build());
 	}
 }

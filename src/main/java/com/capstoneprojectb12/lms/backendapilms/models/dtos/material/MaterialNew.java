@@ -1,7 +1,6 @@
 package com.capstoneprojectb12.lms.backendapilms.models.dtos.material;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,8 +42,8 @@ public class MaterialNew {
 	@Schema(nullable = true, type = MediaType.MULTIPART_FORM_DATA_VALUE)
 	private MultipartFile file;
 	
-	@Schema(nullable = true)
-	private LocalDateTime deadline;
+	@Schema(nullable = true, description = "Please use format dd/MM/yyyy HH:mm:ss to save deadline (ex. 22/12/2022 23:59:40)")
+	private String deadline;
 	
 	@NotNull(message = "cannot be null")
 	private Integer point;

@@ -4,13 +4,13 @@ enum ClassStatus {
     WILL_END
 }
 
-type Class {
+type Class implements BaseSchema {
     id: ID!
     name: String!
     room: String
     code: String!
     status: ClassStatus!
-    users: [User!]
+    users: [UserClassResponse!]
 
     createdBy: String!
     createdAt: String!
@@ -38,6 +38,11 @@ input ClassUpdate {
     status: ClassStatus!
 }
 
+type UserClassResponse {
+    id: ID!
+    fullName: String!
+    email: String!
+}
 # input ClassUpdateUser {
 #   name: String!
 #   room: String
@@ -61,4 +66,6 @@ type ClassMutation {
     save(request: ClassNew!): Class
     deleteById(id: ID!): ResponseDeleteClass!
     updateById(id: ID!, request: ClassUpdate!): Class
+
+    join(classCode: String!, userId: String!): Object
 }

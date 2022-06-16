@@ -7,5 +7,5 @@ public interface BaseMutation<ENTITY, NEW, UPDATE> {
 	
 	ENTITY update(String id, UPDATE request);
 	
-	ResponseDelete deleteById(String id);
+	ResponseDelete<ENTITY> deleteById(String id);
 }

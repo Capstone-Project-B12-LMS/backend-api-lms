@@ -5,6 +5,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.material.MaterialUpd
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Material;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.MaterialRepository;
+import com.capstoneprojectb12.lms.backendapilms.utilities.DateUtils;
 import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.ClassNotFoundException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.DataNotFoundException;
@@ -154,8 +155,21 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 //				.fileUrl() // TODO: save file first
 				.content(materialNew.getContent())
 				.point(materialNew.getPoint())
-				.deadline(materialNew.getDeadline())
+				.deadline(DateUtils.parse(materialNew.getDeadline()))
 				.title(materialNew.getTitle())
 				.build();
+	}
+	
+	public ResponseEntity<?> findAllByClassId(String classId) {
+		try {
+			var materials = this.materialRepository.findByClassesId(classId).orElseThrow(ClassNotFoundException :: new);
+			return ok(materials);
+		} catch (ClassNotFoundException e) {
+			log.warn(e.getMessage());
+			return bad(e.getMessage());
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return err(e);
+		}
 	}
 }

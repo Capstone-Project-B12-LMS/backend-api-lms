@@ -1,3 +1,11 @@
+interface BaseSchema {
+    createdBy: String!
+    createdAt: String!
+    updatedBy: String
+    updatedAt: String
+    isDeleted: Boolean!
+}
+
 interface PaginationResponse {
     page: Int!
     size: Int!
