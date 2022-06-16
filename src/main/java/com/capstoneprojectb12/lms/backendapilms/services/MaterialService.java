@@ -159,4 +159,17 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 				.title(materialNew.getTitle())
 				.build();
 	}
+	
+	public ResponseEntity<?> findAllByClassId(String classId) {
+		try {
+			var materials = this.materialRepository.findByClassesId(classId).orElseThrow(ClassNotFoundException :: new);
+			return ok(materials);
+		} catch (ClassNotFoundException e) {
+			log.warn(e.getMessage());
+			return bad(e.getMessage());
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return err(e);
+		}
+	}
 }

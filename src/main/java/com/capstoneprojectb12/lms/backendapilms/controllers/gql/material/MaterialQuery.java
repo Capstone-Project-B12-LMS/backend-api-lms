@@ -2,16 +2,28 @@ package com.capstoneprojectb12.lms.backendapilms.controllers.gql.material;
 
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.base.BaseQuery;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Material;
+import com.capstoneprojectb12.lms.backendapilms.services.MaterialService;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
+
+import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.extract;
 
 @Controller
 @RequiredArgsConstructor
 @SchemaMapping(typeName = "MaterialQuery")
 public class MaterialQuery implements BaseQuery<Material> {
+	private final MaterialService materialService;
+	
+	@SchemaMapping(field = "findAllByClassId")
+	public List<Material> findAllByClassId(@Argument(name = "classId") String classId) {
+		return extract(List.of(new Material()), this.materialService.findAllByClassId(classId)).orElse(new ArrayList<Material>());
+	}
+	
 	@Override
 	public List<Material> findAll() {
 //		TODO: implement find all material

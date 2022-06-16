@@ -49,6 +49,7 @@ type MaterialQuery {
     findAllDeleted: [Material!]!
     findAllDeletedWithPageable(page: Int!, size: Int!): MaterialPagination!
     findById(id: ID!): Material
+    findAllByClassId(classId: ID!): [Material!]
 }
 
 type MaterialMutation {

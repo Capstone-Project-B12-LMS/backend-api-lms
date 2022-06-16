@@ -7,7 +7,9 @@ import com.capstoneprojectb12.lms.backendapilms.models.repositories.MaterialRepo
 import com.capstoneprojectb12.lms.backendapilms.utilities.DateUtils;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.AnyException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.ClassNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Tag;
@@ -19,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 
+import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.extract;
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.getResponse;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -147,4 +150,66 @@ public class MaterialServiceTest {
 		assertThrows(ClassNotFoundException.class, () -> this.materialService.toEntity(materialNew));
 	}
 	
+	@Test
+	public void testFindAllByClassId() {
+//		success
+		when(this.materialRepository.findByClassesId(anyString())).thenReturn(Optional.of(new ArrayList<>(List.of(material))));
+		var res = this.materialService.findAllByClassId("id");
+		var api = getResponse(res);
+		var materials = extract(new ArrayList<Material>(), api);
+		
+		assertNotNull(res);
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertNull(api.getErrors());
+		assertTrue(api.isStatus());
+		assertNotNull(api.getData());
+		assertInstanceOf(List.class, api.getData());
+		assertTrue(materials.isPresent());
+		assertEquals(1, materials.get().size());
+		assertEquals(material, materials.get().get(0));
+		reset(this.materialRepository, this.classRepository);
+
+//		failed
+		when(this.materialRepository.findByClassesId(anyString())).thenReturn(Optional.of(new ArrayList<>(List.of())));
+		res = this.materialService.findAllByClassId("id");
+		api = getResponse(res);
+		materials = extract(new ArrayList<Material>(), api);
+		
+		assertNotNull(res);
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertNull(api.getErrors());
+		assertTrue(api.isStatus());
+		assertNotNull(api.getData());
+		assertInstanceOf(List.class, api.getData());
+		assertTrue(materials.isPresent());
+		reset(this.materialRepository, this.classRepository);
+
+//		class not found
+		when(this.materialRepository.findByClassesId(anyString())).thenReturn(Optional.empty());
+		res = this.materialService.findAllByClassId("id");
+		api = getResponse(res);
+		materials = extract(new ArrayList<Material>(), api);
+		
+		assertNotNull(res);
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertNotNull(api.getErrors());
+		assertFalse(api.isStatus());
+		assertNull(api.getData());
+		assertTrue(materials.isEmpty());
+		reset(this.materialRepository, this.classRepository);
+
+//		internal server error
+		when(this.materialRepository.findByClassesId(anyString())).thenThrow(AnyException.class);
+		res = this.materialService.findAllByClassId("id");
+		api = getResponse(res);
+		materials = extract(new ArrayList<Material>(), api);
+		
+		assertNotNull(res);
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, res.getStatusCode());
+		assertNotNull(api.getErrors());
+		assertFalse(api.isStatus());
+		assertNull(api.getData());
+		assertTrue(materials.isEmpty());
+		reset(this.materialRepository, this.classRepository);
+	}
 }
