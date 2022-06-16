@@ -92,7 +92,7 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 		try {
 			var value = this.classRepository.findById(id)
 					.orElseThrow(DataNotFoundException :: new);
-			return ok(value);
+			return ok(ClassResponse.parseFromClass(value));
 		} catch (DataNotFoundException e) {
 			log.warn(FinalVariable.DATA_NOT_FOUND);
 			return bad(FinalVariable.DATA_NOT_FOUND);
