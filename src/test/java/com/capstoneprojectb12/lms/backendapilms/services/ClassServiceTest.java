@@ -60,6 +60,7 @@ public class ClassServiceTest {
 	public void testSave() {
 //		 success
 		when(this.classRepository.save(any(Class.class))).thenReturn(classEntity);
+		when(this.userRepository.findByEmailEqualsIgnoreCase(anyString())).thenReturn(Optional.of(UserServiceTest.user));
 		var res = this.classService.save(classNew);
 		var api = getResponse(res);
 		var data = (Class) api.getData();

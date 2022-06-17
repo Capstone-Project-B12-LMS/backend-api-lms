@@ -5,6 +5,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassRespons
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.JoinClass;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
+import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
 import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
@@ -34,6 +35,7 @@ import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.*;
 public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 	private final ClassRepository classRepository;
 	private final UserRepository userRepository;
+	private final UserService userService;
 	
 	
 	@Override
@@ -62,6 +64,13 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 	public ResponseEntity<?> save(ClassNew newEntity) {
 		try {
 			var classEntity = this.toEntity(newEntity);
+			var currentUserEmail = this.userService.getCurrentUser();
+			var currentUser = this.userRepository.findByEmailEqualsIgnoreCase(currentUserEmail).orElseThrow(UserNotFoundException :: new);
+			
+			classEntity.setUsers(new ArrayList<User>() {{
+				add(currentUser);
+			}});
+			
 			var savedClass = Optional.of(this.classRepository.save(classEntity));
 			log.info(FinalVariable.SAVE_SUCCESS);
 			return ok(savedClass.get());
