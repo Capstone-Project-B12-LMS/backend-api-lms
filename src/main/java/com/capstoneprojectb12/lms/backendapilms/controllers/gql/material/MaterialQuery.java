@@ -48,9 +48,10 @@ public class MaterialQuery implements BaseQuery<Material> {
 		return null;
 	}
 	
+	
 	@Override
-	public Material findById(String id) {
-//		TODO: implement find material by id
-		return null;
+	@SchemaMapping(field = "findById")
+	public Material findById(@Argument(name = "id") String id) {
+		return extract(new Material(), this.materialService.findById(id)).orElse(null);
 	}
 }

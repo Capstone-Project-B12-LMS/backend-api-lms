@@ -30,7 +30,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 @Slf4j
-@SpringBootTest
+@SpringBootTest(classes = {MaterialService.class})
 @ExtendWith(MockitoExtension.class)
 @Tag(value = "materialServiceTest")
 public class MaterialServiceTest {
@@ -211,5 +211,64 @@ public class MaterialServiceTest {
 		assertNull(api.getData());
 		assertTrue(materials.isEmpty());
 		reset(this.materialRepository, this.classRepository);
+	}
+	
+	@Test
+	public void testFindById() {
+//		success
+		when(this.materialRepository.findById(anyString())).thenReturn(Optional.of(material));
+		var res = this.materialService.findById("id");
+		var api = getResponse(res);
+		var data = extract(material, api);
+		
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertTrue(api.isStatus());
+		assertNull(api.getErrors());
+		assertNotNull(api.getData());
+		assertInstanceOf(Material.class, api.getData());
+		assertTrue(data.isPresent());
+		assertEquals(material.getId(), data.get().getId());
+		assertEquals(material.getTitle(), data.get().getTitle());
+		assertEquals(material.getDeadline(), data.get().getDeadline());
+		assertEquals(material.getContent(), data.get().getContent());
+		assertEquals(material.getClasses(), data.get().getClasses());
+		assertEquals(material.getCategory(), data.get().getCategory());
+		assertEquals(material.getVideoUri(), data.get().getVideoUri());
+		assertEquals(material.getFileUrl(), data.get().getFileUrl());
+		assertEquals(material.getCreatedBy(), data.get().getCreatedBy());
+		assertEquals(material.getCreatedAt(), data.get().getCreatedAt());
+		assertEquals(material.getUpdatedBy(), data.get().getUpdatedBy());
+		assertEquals(material.getUpdatedAt(), data.get().getUpdatedAt());
+		assertEquals(material.getIsDeleted(), data.get().getIsDeleted());
+		reset(this.materialRepository, this.classRepository);
+
+//		data not found
+		when(this.materialRepository.findById(anyString())).thenReturn(Optional.empty());
+		res = this.materialService.findById("id");
+		api = getResponse(res);
+		data = extract(material, api);
+		
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertFalse(api.isStatus());
+		assertNotNull(api.getErrors());
+		assertNull(api.getData());
+		assertTrue(data.isEmpty());
+		assertInstanceOf(HashMap.class, api.getErrors());
+		assertNotNull(((HashMap<String, Object>) api.getErrors()).get("message"));
+
+//		test any exception
+		when(this.materialRepository.findById(anyString())).thenThrow(AnyException.class);
+		res = this.materialService.findById("id");
+		api = getResponse(res);
+		data = extract(material, api);
+		
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, res.getStatusCode());
+		assertFalse(api.isStatus());
+		assertNotNull(api.getErrors());
+		assertNull(api.getData());
+		assertTrue(data.isEmpty());
+		assertInstanceOf(HashMap.class, api.getErrors());
+		assertNotNull(((HashMap<String, Object>) api.getErrors()).get("message"));
+		
 	}
 }
