@@ -33,4 +33,9 @@ public class ClassMaterialController {
 	public ResponseEntity<?> findAllByClassId(@PathVariable(required = true, name = "classId") String classId) {
 		return this.materialService.findAllByClassId(classId);
 	}
+	
+	@GetMapping(value = {"/{id}"})
+	public ResponseEntity<?> findById(@PathVariable(name = "id", required = true) String id) {
+		return this.materialService.findById(id);
+	}
 }

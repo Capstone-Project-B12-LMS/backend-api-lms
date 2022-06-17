@@ -43,8 +43,7 @@ public class UserService implements BaseService<User, UserNew, UserUpdate>, User
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		return this.findByEmail(username)
-				.orElseThrow(() -> new UsernameNotFoundException("Username not found"));
+		return this.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Username not found"));
 	}
 	
 	@Override

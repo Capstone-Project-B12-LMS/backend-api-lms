@@ -7,6 +7,7 @@ import com.capstoneprojectb12.lms.backendapilms.controllers.gql.role.RoleMutatio
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.user.UserMutation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -37,7 +38,7 @@ public class GraphQLMutation {
 		return this.userMutation;
 	}
 	
-	//	@PreAuthorize(value = "hasAnyAuthority('USER')") // TODO: enable security
+	@PreAuthorize(value = "hasAnyAuthority('USER')") // TODO: enable security
 	@SchemaMapping(field = "class")
 	public ClassMutation classMutation() {
 		return this.classMutation;
