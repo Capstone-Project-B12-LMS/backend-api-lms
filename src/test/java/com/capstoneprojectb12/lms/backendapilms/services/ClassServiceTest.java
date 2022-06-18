@@ -60,6 +60,7 @@ public class ClassServiceTest {
 	public void testSave() {
 //		 success
 		when(this.classRepository.save(any(Class.class))).thenReturn(classEntity);
+		when(this.userRepository.findByEmailEqualsIgnoreCase(anyString())).thenReturn(Optional.of(UserServiceTest.user));
 		var res = this.classService.save(classNew);
 		var api = getResponse(res);
 		var data = (Class) api.getData();
@@ -317,17 +318,18 @@ public class ClassServiceTest {
 //		success
 		when(this.classRepository.findByCode(anyString())).thenReturn(Optional.of(classEntity));
 		when(this.userRepository.findById(anyString())).thenReturn(Optional.of(UserServiceTest.user));
+		when(this.classRepository.save(any(Class.class))).thenReturn(classEntity);
 		var res = this.classService.joinUserToClass(joinUserToClass.getClassCode(), joinUserToClass.getUserId());
 		var api = getResponse(res);
-		var data = extract(new HashMap<String, Object>(), api);
+		var data = extract(classEntity, api);
 		
-		assertNotNull(extract(new HashMap<String, Object>(), res).orElse(null));
+		assertNotNull(extract(classEntity, res).orElse(null));
 		assertEquals(HttpStatus.OK, res.getStatusCode());
 		assertTrue(api.isStatus());
 		assertNull(api.getErrors());
 		assertNotNull(api.getData());
 		assert data.isPresent();
-		assertEquals("success", data.get().get("message"));
+		assertInstanceOf(Class.class, api.getData());
 		reset(this.classRepository, this.userRepository);
 
 //		class not found
@@ -335,7 +337,7 @@ public class ClassServiceTest {
 		when(this.userRepository.findById(anyString())).thenReturn(Optional.of(UserServiceTest.user));
 		res = this.classService.joinUserToClass(joinUserToClass.getClassCode(), joinUserToClass.getUserId());
 		api = getResponse(res);
-		data = extract(new HashMap<String, Object>(), api);
+		data = extract(classEntity, api);
 		
 		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
 		assertFalse(api.isStatus());
@@ -350,7 +352,7 @@ public class ClassServiceTest {
 		when(this.userRepository.findById(anyString())).thenReturn(Optional.empty());
 		res = this.classService.joinUserToClass(joinUserToClass.getClassCode(), joinUserToClass.getUserId());
 		api = getResponse(res);
-		data = extract(new HashMap<String, Object>(), api);
+		data = extract(classEntity, api);
 		
 		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
 		assertFalse(api.isStatus());
@@ -366,7 +368,7 @@ public class ClassServiceTest {
 		when(this.userRepository.findById(anyString())).thenReturn(Optional.empty());
 		res = this.classService.joinUserToClass(joinUserToClass.getClassCode(), joinUserToClass.getUserId());
 		api = getResponse(res);
-		data = extract(new HashMap<String, Object>(), api);
+		data = extract(classEntity, api);
 		
 		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, res.getStatusCode());
 		assertFalse(api.isStatus());
@@ -375,5 +377,37 @@ public class ClassServiceTest {
 		assert data.isEmpty();
 		assertTrue(api.getErrors() instanceof HashMap);
 		reset(this.classRepository, this.userRepository);
+	}
+	
+	@Test
+	public void testFindClassByUserId() {
+//		success
+		when(this.classRepository.findByUsersIdAndStatus(anyString(), any(ClassStatus.class))).thenReturn(new ArrayList<>(List.of(classEntity)));
+		var result = this.classService.findByUserId("id", ClassStatus.ACTIVE.name());
+		var api = getResponse(result);
+		var data = extract(new ArrayList<>(), api);
+		
+		assertEquals(HttpStatus.OK, result.getStatusCode());
+		assertNotNull(api.getData());
+		assertNull(api.getErrors());
+		assertTrue(api.isStatus());
+		assertInstanceOf(List.class, api.getData());
+		assertTrue(data.isPresent());
+		assertEquals(1, data.get().size());
+		reset(this.classRepository);
+
+//		any exception
+		when(this.classRepository.findByUsersIdAndStatus(anyString(), any(ClassStatus.class))).thenThrow(AnyException.class);
+		result = this.classService.findByUserId("id", ClassStatus.ACTIVE.name());
+		api = getResponse(result);
+		data = extract(new ArrayList<>(), api);
+		
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
+		assertNull(api.getData());
+		assertNotNull(api.getErrors());
+		assertFalse(api.isStatus());
+		assertInstanceOf(HashMap.class, api.getErrors());
+		assertFalse(data.isPresent());
+		reset(this.classRepository);
 	}
 }

@@ -1,4 +1,4 @@
-package com.capstoneprojectb12.lms.backendapilms.controllers.rest.classes.material;
+package com.capstoneprojectb12.lms.backendapilms.controllers.rest.material;
 
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.material.MaterialNew;
 import com.capstoneprojectb12.lms.backendapilms.services.MaterialService;
@@ -15,7 +15,7 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 //@PreAuthorize(value = "hasAnyAuthority('USER')") // TODO: enable security
-@RequestMapping(value = {"/restapi/v1/class/material"})
+@RequestMapping(value = {"/restapi/v1/material"})
 @RequiredArgsConstructor
 public class ClassMaterialController {
 	private final MaterialService materialService;
@@ -29,7 +29,7 @@ public class ClassMaterialController {
 		return this.materialService.save(request);
 	}
 	
-	@GetMapping(value = {"/by/class/{classId}"})
+	@GetMapping(value = {"/class/{classId}"})
 	public ResponseEntity<?> findAllByClassId(@PathVariable(required = true, name = "classId") String classId) {
 		return this.materialService.findAllByClassId(classId);
 	}

@@ -5,6 +5,8 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassRespons
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.JoinClass;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
+import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
+import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.ClassStatus;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
 import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
@@ -13,7 +15,10 @@ import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.DataNotFoun
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.MethodNotImplementedException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.UserNotFoundException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -34,6 +39,7 @@ import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.*;
 public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 	private final ClassRepository classRepository;
 	private final UserRepository userRepository;
+	private final UserService userService;
 	
 	
 	@Override
@@ -62,6 +68,13 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 	public ResponseEntity<?> save(ClassNew newEntity) {
 		try {
 			var classEntity = this.toEntity(newEntity);
+			var currentUserEmail = this.userService.getCurrentUser();
+			var currentUser = this.userRepository.findByEmailEqualsIgnoreCase(currentUserEmail).orElseThrow(UserNotFoundException :: new);
+			
+			classEntity.setUsers(new ArrayList<User>() {{
+				add(currentUser);
+			}});
+			
 			var savedClass = Optional.of(this.classRepository.save(classEntity));
 			log.info(FinalVariable.SAVE_SUCCESS);
 			return ok(savedClass.get());
@@ -165,13 +178,8 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 			var users = new HashSet<>(classEntity.getUsers());
 			users.add(user);
 			classEntity.setUsers(new ArrayList<>(users));
-			this.classRepository.save(classEntity);
-			
-			var status = new HashMap<String, Object>() {{
-				put("message", "success");
-			}};
-			
-			return ok(status);
+			classEntity = this.classRepository.save(classEntity);
+			return ok(classEntity);
 		} catch (ClassNotFoundException e) {
 			log.warn(e.getMessage());
 			return bad(e.getMessage());
@@ -187,5 +195,16 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 	
 	public ResponseEntity<?> joinUserToClass(String classCode, String userId) {
 		return this.joinUserToClass(JoinClass.builder().classCode(classCode).userId(userId).build());
+	}
+	
+	public ResponseEntity<?> findByUserId(String id, String status) {
+		try {
+			var classStatus = ClassStatus.valueOf(status.trim().toUpperCase());
+			var classes = this.classRepository.findByUsersIdAndStatus(id, classStatus);
+			return ok(classes);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return err(e);
+		}
 	}
 }

@@ -50,6 +50,7 @@ type UserQuery {
     findAllDeleted: [User!]!
     findAllDeletedWithPageable(page: Int!, size: Int!): UserPagination!
     findById(id: ID!): User
+    findByClassByUserId(id: ID!, classStatus: ClassStatus!): [Class!]
 }
 
 type UserMutation {
