@@ -3,6 +3,7 @@ package com.capstoneprojectb12.lms.backendapilms.controllers.rest.user;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserLogin;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserNew;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserUpdate;
+import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.ClassStatus;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
 import com.capstoneprojectb12.lms.backendapilms.services.ClassService;
 import com.capstoneprojectb12.lms.backendapilms.services.UserService;
@@ -101,8 +102,8 @@ public class UserController {
 		return this.userService.update(userId, request);
 	}
 	
-	@GetMapping(value = {"/users/class/{userId}"})
-	public ResponseEntity<?> getUserClassByUserId(@PathVariable(name = "userId") String userId) {
-		return this.classService.findByUserId(userId);
+	@GetMapping(value = {"/users/class/{userId}/{classStatus}"})
+	public ResponseEntity<?> getUserClassByUserId(@PathVariable(name = "userId") String userId, @PathVariable(name = "classStatus") ClassStatus classStatus) {
+		return this.classService.findByUserId(userId, classStatus.name());
 	}
 }

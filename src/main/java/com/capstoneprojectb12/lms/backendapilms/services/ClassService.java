@@ -6,6 +6,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.JoinClass;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
+import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.ClassStatus;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
 import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
@@ -196,9 +197,10 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 		return this.joinUserToClass(JoinClass.builder().classCode(classCode).userId(userId).build());
 	}
 	
-	public ResponseEntity<?> findByUserId(String id) {
+	public ResponseEntity<?> findByUserId(String id, String status) {
 		try {
-			var classes = this.classRepository.findByUsersId(id);
+			var classStatus = ClassStatus.valueOf(status.trim().toUpperCase());
+			var classes = this.classRepository.findByUsersIdAndStatus(id, classStatus);
 			return ok(classes);
 		} catch (Exception e) {
 			log.error(e.getMessage());

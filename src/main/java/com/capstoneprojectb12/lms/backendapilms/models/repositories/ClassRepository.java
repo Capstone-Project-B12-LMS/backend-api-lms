@@ -1,6 +1,7 @@
 package com.capstoneprojectb12.lms.backendapilms.models.repositories;
 
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
+import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.ClassStatus;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -16,5 +17,5 @@ public interface ClassRepository extends JpaRepository<Class, String> {
 	
 	Page<Class> findAll(Pageable pageable);
 	
-	List<Class> findByUsersId(String userId);
+	List<Class> findByUsersIdAndStatus(String userId, ClassStatus classStatus);
 }

@@ -382,8 +382,8 @@ public class ClassServiceTest {
 	@Test
 	public void testFindClassByUserId() {
 //		success
-		when(this.classRepository.findByUsersId(anyString())).thenReturn(new ArrayList<>(List.of(classEntity)));
-		var result = this.classService.findByUserId("id");
+		when(this.classRepository.findByUsersIdAndStatus(anyString(), any(ClassStatus.class))).thenReturn(new ArrayList<>(List.of(classEntity)));
+		var result = this.classService.findByUserId("id", ClassStatus.ACTIVE.name());
 		var api = getResponse(result);
 		var data = extract(new ArrayList<>(), api);
 		
@@ -397,8 +397,8 @@ public class ClassServiceTest {
 		reset(this.classRepository);
 
 //		any exception
-		when(this.classRepository.findByUsersId(anyString())).thenThrow(AnyException.class);
-		result = this.classService.findByUserId("id");
+		when(this.classRepository.findByUsersIdAndStatus(anyString(), any(ClassStatus.class))).thenThrow(AnyException.class);
+		result = this.classService.findByUserId("id", ClassStatus.ACTIVE.name());
 		api = getResponse(result);
 		data = extract(new ArrayList<>(), api);
 		

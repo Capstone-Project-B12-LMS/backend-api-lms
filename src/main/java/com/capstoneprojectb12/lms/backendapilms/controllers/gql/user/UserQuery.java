@@ -3,6 +3,7 @@ package com.capstoneprojectb12.lms.backendapilms.controllers.gql.user;
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.base.BaseQuery;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
+import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.ClassStatus;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
 import com.capstoneprojectb12.lms.backendapilms.services.ClassService;
 import com.capstoneprojectb12.lms.backendapilms.services.UserService;
@@ -47,8 +48,8 @@ public class UserQuery implements BaseQuery<User> {
 	}
 	
 	@SchemaMapping(field = "findByClassByUserId")
-	public List<Class> findByClassByUserId(@Argument(name = "id") String userId) {
-		return extract(new ArrayList<Class>(), this.classService.findByUserId(userId)).orElse(null);
+	public List<Class> findByClassByUserId(@Argument(name = "id") String userId, @Argument(name = "classStatus") ClassStatus classStatus) {
+		return extract(new ArrayList<Class>(), this.classService.findByUserId(userId, classStatus.name())).orElse(null);
 	}
 	
 	@Override
