@@ -318,17 +318,18 @@ public class ClassServiceTest {
 //		success
 		when(this.classRepository.findByCode(anyString())).thenReturn(Optional.of(classEntity));
 		when(this.userRepository.findById(anyString())).thenReturn(Optional.of(UserServiceTest.user));
+		when(this.classRepository.save(any(Class.class))).thenReturn(classEntity);
 		var res = this.classService.joinUserToClass(joinUserToClass.getClassCode(), joinUserToClass.getUserId());
 		var api = getResponse(res);
-		var data = extract(new HashMap<String, Object>(), api);
+		var data = extract(classEntity, api);
 		
-		assertNotNull(extract(new HashMap<String, Object>(), res).orElse(null));
+		assertNotNull(extract(classEntity, res).orElse(null));
 		assertEquals(HttpStatus.OK, res.getStatusCode());
 		assertTrue(api.isStatus());
 		assertNull(api.getErrors());
 		assertNotNull(api.getData());
 		assert data.isPresent();
-		assertEquals("success", data.get().get("message"));
+		assertInstanceOf(Class.class, api.getData());
 		reset(this.classRepository, this.userRepository);
 
 //		class not found
@@ -336,7 +337,7 @@ public class ClassServiceTest {
 		when(this.userRepository.findById(anyString())).thenReturn(Optional.of(UserServiceTest.user));
 		res = this.classService.joinUserToClass(joinUserToClass.getClassCode(), joinUserToClass.getUserId());
 		api = getResponse(res);
-		data = extract(new HashMap<String, Object>(), api);
+		data = extract(classEntity, api);
 		
 		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
 		assertFalse(api.isStatus());
@@ -351,7 +352,7 @@ public class ClassServiceTest {
 		when(this.userRepository.findById(anyString())).thenReturn(Optional.empty());
 		res = this.classService.joinUserToClass(joinUserToClass.getClassCode(), joinUserToClass.getUserId());
 		api = getResponse(res);
-		data = extract(new HashMap<String, Object>(), api);
+		data = extract(classEntity, api);
 		
 		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
 		assertFalse(api.isStatus());
@@ -367,7 +368,7 @@ public class ClassServiceTest {
 		when(this.userRepository.findById(anyString())).thenReturn(Optional.empty());
 		res = this.classService.joinUserToClass(joinUserToClass.getClassCode(), joinUserToClass.getUserId());
 		api = getResponse(res);
-		data = extract(new HashMap<String, Object>(), api);
+		data = extract(classEntity, api);
 		
 		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, res.getStatusCode());
 		assertFalse(api.isStatus());
