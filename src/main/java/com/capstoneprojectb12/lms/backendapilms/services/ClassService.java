@@ -195,4 +195,14 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 	public ResponseEntity<?> joinUserToClass(String classCode, String userId) {
 		return this.joinUserToClass(JoinClass.builder().classCode(classCode).userId(userId).build());
 	}
+	
+	public ResponseEntity<?> findByUserId(String id) {
+		try {
+			var classes = this.classRepository.findByUsersId(id);
+			return ok(classes);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return err(e);
+		}
+	}
 }

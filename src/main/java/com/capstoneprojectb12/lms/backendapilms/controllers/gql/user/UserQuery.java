@@ -1,8 +1,10 @@
 package com.capstoneprojectb12.lms.backendapilms.controllers.gql.user;
 
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.base.BaseQuery;
+import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
+import com.capstoneprojectb12.lms.backendapilms.services.ClassService;
 import com.capstoneprojectb12.lms.backendapilms.services.UserService;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ import static com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationR
 public class UserQuery implements BaseQuery<User> {
 	private final UserRepository userRepository;
 	private final UserService userService;
+	private final ClassService classService;
 	
 	@Override
 	@SchemaMapping(field = "findAll")
@@ -41,6 +44,11 @@ public class UserQuery implements BaseQuery<User> {
 	@SchemaMapping(field = "findById")
 	public User findById(@Argument(name = "id") String id) {
 		return extract(new User(), getResponse(this.userService.findById(id))).orElse(null);
+	}
+	
+	@SchemaMapping(field = "findByClassByUserId")
+	public List<Class> findByClassByUserId(@Argument(name = "id") String userId) {
+		return extract(new ArrayList<Class>(), this.classService.findByUserId(userId)).orElse(null);
 	}
 	
 	@Override

@@ -15,4 +15,6 @@ public interface ClassRepository extends JpaRepository<Class, String> {
 	Optional<Class> findByCode(String code);
 	
 	Page<Class> findAll(Pageable pageable);
+	
+	List<Class> findByUsersId(String userId);
 }

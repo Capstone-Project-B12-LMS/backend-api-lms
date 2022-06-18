@@ -4,6 +4,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserLogin;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserNew;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
+import com.capstoneprojectb12.lms.backendapilms.services.ClassService;
 import com.capstoneprojectb12.lms.backendapilms.services.UserService;
 import com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse;
 import com.capstoneprojectb12.lms.backendapilms.utilities.ApiValidation;
@@ -32,6 +33,7 @@ import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.err
 public class UserController {
 	private final AuthenticationManager authenticationManager;
 	private final UserService userService;
+	private final ClassService classService;
 	private final UserRepository userRepository;
 	private final JwtUtils jwtUtils;
 	
@@ -97,5 +99,10 @@ public class UserController {
 			return ApiResponse.errorValidation(errors);
 		}
 		return this.userService.update(userId, request);
+	}
+	
+	@GetMapping(value = {"/users/class/{userId}"})
+	public ResponseEntity<?> getUserClassByUserId(@PathVariable(name = "userId") String userId) {
+		return this.classService.findByUserId(userId);
 	}
 }
