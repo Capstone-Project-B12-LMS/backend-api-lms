@@ -39,9 +39,9 @@ services:
 
     #    env_file:
     #      - ./app.env
-    depends_on:
-      - backend-api-db-postgresql
-      - backend-api-db-mongodb
+  #    depends_on:
+  #      - backend-api-db-postgresql
+  #      - backend-api-db-mongodb
   
   backend-api-lms-cc:
     image: irdaislakhuafa/backend-api-lms-cc:latest
