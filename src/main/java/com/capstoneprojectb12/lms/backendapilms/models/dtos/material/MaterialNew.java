@@ -49,7 +49,6 @@ public class MaterialNew {
 	@Schema(nullable = true, description = "Please use format dd/MM/yyyy HH:mm:ss to save deadline (ex. 22/12/2022 23:59:40)")
 	private String deadline;
 	
-	@NotNull(message = "cannot be null")
 	private Integer point;
 	
 	@NotNull(message = "cannot be null")
