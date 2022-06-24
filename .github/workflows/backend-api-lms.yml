@@ -164,12 +164,13 @@ jobs:
             me="irdaislakhuafa"
             baseDir="Apps/$me"
             appName="backend-api-lms"
+            
+            cd $baseDir/$appName/env
 
             dbIsRunning="$(docker ps | grep db)"
             if [ "$dbIsRunning" = "" ]; then
               docker-compose -f db-compose.yml up -d
             fi
             
-            cd $baseDir/$appName/env
             docker-compose -f docker-compose.yml up -d
 
