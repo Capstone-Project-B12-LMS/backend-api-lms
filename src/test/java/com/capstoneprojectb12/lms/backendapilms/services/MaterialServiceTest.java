@@ -1,13 +1,16 @@
 package com.capstoneprojectb12.lms.backendapilms.services;
 
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.material.MaterialNew;
+import com.capstoneprojectb12.lms.backendapilms.models.entities.Category;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Material;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.CategoryRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.MaterialRepository;
 import com.capstoneprojectb12.lms.backendapilms.utilities.DateUtils;
+import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.AnyException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.ClassNotFoundException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -158,6 +161,23 @@ public class MaterialServiceTest {
 //		failed
 		when(this.classRepository.findById(anyString())).thenReturn(Optional.empty());
 		assertThrows(ClassNotFoundException.class, () -> this.materialService.toEntity(materialNew));
+		reset(this.classRepository);
+
+//		create new category if not exists
+		when(this.categoryRepository.findByNameEqualsIgnoreCase(anyString())).thenReturn(Optional.empty());
+		when(this.classRepository.findById(anyString())).thenReturn(Optional.of(ClassServiceTest.classEntity));
+		when(this.categoryRepository.save(any(Category.class))).thenReturn(Category.builder().id("id").name(materialNew.getCategory()).build());
+		var material = this.materialService.toEntity(materialNew);
+		
+		assertNotNull(material);
+		assertEquals(materialNew.getClassId(), material.getClasses().getId());
+		assertEquals(materialNew.getPoint(), material.getPoint());
+		assertEquals(materialNew.getCategory(), material.getCategory().getName());
+		assertEquals(materialNew.getContent(), material.getContent());
+		assertEquals(materialNew.getDeadline(), new SimpleDateFormat(FinalVariable.DATE_FORMAT).format(material.getDeadline()));
+		assertEquals(materialNew.getFile(), material.getFileUrl());
+		assertEquals(materialNew.getTitle(), material.getTitle());
+		assertEquals(materialNew.getVideo(), material.getVideoUri());
 	}
 	
 	@Test
