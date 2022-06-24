@@ -20,6 +20,7 @@ import javax.validation.Valid;
 public class ClassMaterialController {
 	private final MaterialService materialService;
 	
+	//	TODO: only teacher can create material
 	@PostMapping
 	public ResponseEntity<?> save(@RequestBody @Valid MaterialNew request, @Parameter(hidden = true) Errors errors) {
 		log.info("entering endpoint to create new material");
@@ -29,6 +30,7 @@ public class ClassMaterialController {
 		return this.materialService.save(request);
 	}
 	
+	//	TODO: add sort by created at
 	@GetMapping(value = {"/class/{classId}"})
 	public ResponseEntity<?> findAllByClassId(@PathVariable(required = true, name = "classId") String classId) {
 		return this.materialService.findAllByClassId(classId);

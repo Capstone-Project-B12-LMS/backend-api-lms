@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.springframework.http.MediaType;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -36,16 +34,21 @@ public class MaterialNew {
 	
 	private String topicId;
 	
-	@Schema(nullable = true, type = MediaType.MULTIPART_FORM_DATA_VALUE)
-	private MultipartFile video;
+	@Schema(nullable = true)
+	private String video;
 	
-	@Schema(nullable = true, type = MediaType.MULTIPART_FORM_DATA_VALUE)
-	private MultipartFile file;
+	@Schema(nullable = true)
+	private String file;
+
+//	@Schema(nullable = true, type = MediaType.MULTIPART_FORM_DATA_VALUE)
+//	private MultipartFile video;
+//
+//	@Schema(nullable = true, type = MediaType.MULTIPART_FORM_DATA_VALUE)
+//	private MultipartFile file;
 	
 	@Schema(nullable = true, description = "Please use format dd/MM/yyyy HH:mm:ss to save deadline (ex. 22/12/2022 23:59:40)")
 	private String deadline;
 	
-	@NotNull(message = "cannot be null")
 	private Integer point;
 	
 	@NotNull(message = "cannot be null")
