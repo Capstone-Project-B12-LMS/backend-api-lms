@@ -1,21 +1,48 @@
 version: '3'
 
 services:
-  backend-api-lms: 
-   image: irdaislakhuafa/backend-api-lms:latest
-   container_name: backend-api-lms-app
-   restart: on-failure
-   ports:
-     - "80:8080"
-   networks:
-    - kelompok-b12
-   env_file:
-     - ./app.env
-   depends_on:
-     - backend-api-db-postgresql
-     - backend-api-db-mongodb
+  backend-api-lms:
+    image: irdaislakhuafa/backend-api-lms:latest
+    container_name: backend-api-lms-app
+    restart: on-failure
+    ports:
+      - "80:8080"
+    networks:
+      - kelompok-b12
+    environment:
+      # spring boot graphql configurations
+      - SPRING_GRAPHQL_GRAPHIQL_ENABLED=true
+      - SPRING_GRAPHQL_PATH=/gql/v1/graphql
+      - SPRING_GRAPHQL_GRAPHIQL_PATH=/gql/v1/graphiql
+      - SPRING_GRAPHQL_SCHEMA_LOCATIONS=classpath:graphqls/**
+      - SPRING_GRAPHQL_SCHEMA_FILE_EXTENSIONS=_graphqls,_gqls
+
+      # database config
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/study_space
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW_SQL=true
+      - SPRING_JPA_GENERATE_DDL=true
+
+      # jwt token config
+      - JWT_TOKEN_EXPIRED_IN_MINUTE=60
+      - JWT_SECRET_KEY=mysecret
+
+      # open api config
+      - SPRINGDOC_MODEL_AND_VIEW_ALLOWED=true
+      - SPRINGDOC_API_DOCS_ENABLED=true
+      - SPRINGDOC_API_DOCS_GROUPS_ENABLED=true
+      - SPRINGDOC_SWAGGER_UI_ENABLED=true
+      - SPRINGDOC_SWAGGER_UI_PATH=/restapi/v1/docs
+
+    #    env_file:
+    #      - ./app.env
+    depends_on:
+      - backend-api-db-postgresql
+      - backend-api-db-mongodb
   
-  backend-api-lms-cc: 
+  backend-api-lms-cc:
     image: irdaislakhuafa/backend-api-lms-cc:latest
     container_name: backend-api-lms-cc
     restart: on-failure
@@ -23,33 +50,33 @@ services:
       - "8081:80"
     networks:
       - kelompok-b12
-    
-  backend-api-db-postgresql:
-    image: postgres:latest
-    restart: on-failure
-    container_name: backend-api-lms-db-postgresql
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=study_space_db
-    networks:
-      - kelompok-b12
-  
-  backend-api-db-mongodb:
-    image: bitnami/mongodb:latest
-    restart: on-failure
-    container_name: backend-api-lms-db-mongodb
-    ports:
-      - "27017:20717"
-    networks:
-      - kelompok-b12
-    environment:
-      - MONGODB_USERNAME=mongo
-      - MONGODB_PASSWORD=mongo
-      - ALLOW_EMPTY_PASSWORD=yes
-      - MONGODB_DATABASE=study_space_db
+
+#  backend-api-db-postgresql:
+#    image: postgres:latest
+#    restart: on-failure
+#    container_name: backend-api-lms-db-postgresql
+#    ports:
+#      - "5432:5432"
+#    environment:
+#      - POSTGRES_PASSWORD=postgres
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_DB=study_space_db
+#    networks:
+#      - kelompok-b12
+#
+#  backend-api-db-mongodb:
+#    image: bitnami/mongodb:latest
+#    restart: on-failure
+#    container_name: backend-api-lms-db-mongodb
+#    ports:
+#      - "27017:20717"
+#    networks:
+#      - kelompok-b12
+#    environment:
+#      - MONGODB_USERNAME=mongo
+#      - MONGODB_PASSWORD=mongo
+#      - ALLOW_EMPTY_PASSWORD=yes
+#      - MONGODB_DATABASE=study_space_db
 
 networks:
-  kelompok-b12: {}
+  kelompok-b12: { }
