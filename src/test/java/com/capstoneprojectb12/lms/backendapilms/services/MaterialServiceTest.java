@@ -2,6 +2,7 @@ package com.capstoneprojectb12.lms.backendapilms.services;
 
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.material.MaterialNew;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Material;
+import com.capstoneprojectb12.lms.backendapilms.models.repositories.CategoryRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.MaterialRepository;
 import com.capstoneprojectb12.lms.backendapilms.utilities.DateUtils;
@@ -64,6 +65,9 @@ public class MaterialServiceTest {
 	@MockBean
 	private ClassRepository classRepository;
 	
+	@MockBean
+	private CategoryRepository categoryRepository;
+	
 	@Test
 	public void testNotNull() {
 		assertNotNull(materialRepository);
@@ -121,10 +125,16 @@ public class MaterialServiceTest {
 	public void testToEntity() {
 //		success
 		when(this.classRepository.findById(anyString())).thenReturn(Optional.of(ClassServiceTest.classEntity));
+		when(this.categoryRepository.findByNameEqualsIgnoreCase(anyString())).thenReturn(Optional.of(CategoryServiceTest.category));
 		var result = this.materialService.toEntity(materialNew);
 		assertNotNull(result);
 		assertEquals(materialNew.getClassId(), result.getClasses().getId());
 //		assertEquals(materialNew.getCategory(), result.getCategory()); // TODO: create category repo/service first
+//		assertEquals(materialNew.getTopicId(), result.getTopic().getId()); // TODO: create topic repo/service first
+//		assertEquals(materialNew.getFile().getOriginalFilename(), result.getFileUrl()); // TODO: create file service first
+//		assertEquals(materialNew.getVideo().getOriginalFilename(), result.getVideoUri()); // TODO: create file service first
+		
+		assertEquals(CategoryServiceTest.category.getName(), result.getCategory().getName()); // TODO: create category repo/service first
 //		assertEquals(materialNew.getTopicId(), result.getTopic().getId()); // TODO: create topic repo/service first
 //		assertEquals(materialNew.getFile().getOriginalFilename(), result.getFileUrl()); // TODO: create file service first
 //		assertEquals(materialNew.getVideo().getOriginalFilename(), result.getVideoUri()); // TODO: create file service first
