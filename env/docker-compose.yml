@@ -18,7 +18,7 @@ services:
       - SPRING_GRAPHQL_SCHEMA_FILE_EXTENSIONS=_graphqls,_gqls
 
       # database config
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/study_space
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/study_space_db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
