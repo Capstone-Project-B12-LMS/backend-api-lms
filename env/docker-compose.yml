@@ -15,7 +15,7 @@ services:
       - SPRING_GRAPHQL_PATH=/gql/v1/graphql
       - SPRING_GRAPHQL_GRAPHIQL_PATH=/gql/v1/graphiql
       - SPRING_GRAPHQL_SCHEMA_LOCATIONS=classpath:graphqls/**
-      - SPRING_GRAPHQL_SCHEMA_FILE_EXTENSIONS=_graphqls,_gqls
+      - SPRING_GRAPHQL_SCHEMA_FILE_EXTENSIONS=graphqls,gqls
 
       # database config
       - SPRING_DATASOURCE_URL=jdbc:postgresql://backend-api-db-postgresql:5432/study_space_db
