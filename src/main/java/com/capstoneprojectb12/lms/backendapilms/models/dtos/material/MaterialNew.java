@@ -1,14 +1,11 @@
 package com.capstoneprojectb12.lms.backendapilms.models.dtos.material;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.springframework.http.MediaType;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -37,16 +34,21 @@ public class MaterialNew {
 	
 	private String topicId;
 	
-	@Schema(nullable = true, type = MediaType.MULTIPART_FORM_DATA_VALUE)
-	private MultipartFile video;
-	
-	@Schema(nullable = true, type = MediaType.MULTIPART_FORM_DATA_VALUE)
-	private MultipartFile file;
+	@Schema(nullable = true)
+	private String video;
 	
 	@Schema(nullable = true)
-	private LocalDateTime deadline;
+	private String file;
+
+//	@Schema(nullable = true, type = MediaType.MULTIPART_FORM_DATA_VALUE)
+//	private MultipartFile video;
+//
+//	@Schema(nullable = true, type = MediaType.MULTIPART_FORM_DATA_VALUE)
+//	private MultipartFile file;
 	
-	@NotNull(message = "cannot be null")
+	@Schema(nullable = true, description = "Please use format dd/MM/yyyy HH:mm:ss to save deadline (ex. 22/12/2022 23:59:40)")
+	private String deadline;
+	
 	private Integer point;
 	
 	@NotNull(message = "cannot be null")

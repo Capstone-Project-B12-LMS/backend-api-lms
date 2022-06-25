@@ -1,14 +1,21 @@
 package com.capstoneprojectb12.lms.backendapilms.services;
 
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.material.MaterialNew;
+import com.capstoneprojectb12.lms.backendapilms.models.entities.Category;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Material;
+import com.capstoneprojectb12.lms.backendapilms.models.repositories.CategoryRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.MaterialRepository;
+import com.capstoneprojectb12.lms.backendapilms.utilities.DateUtils;
+import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.AnyException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.ClassNotFoundException;
-import java.time.LocalDateTime;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +25,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 
+import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.extract;
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.getResponse;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -25,12 +33,22 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@Slf4j
+@SpringBootTest(classes = {MaterialService.class})
 @ExtendWith(MockitoExtension.class)
 @Tag(value = "materialServiceTest")
 public class MaterialServiceTest {
-	
-	private static final LocalDateTime deadline = LocalDateTime.now();
+	public static final MaterialNew materialNew = MaterialNew.builder()
+			.classId("id")
+			.category("material category")
+			.content("material content")
+			.deadline("14/06/2022 22:34:50")
+			.point(100)
+//				.file(null) // TODO: create file service first
+//				.video(null) // TODO: create file service first
+			.title("material title")
+			.topicId("topicId")
+			.build();
 	public static final Material material = Material.builder()
 			.id("id")
 			.classes(ClassServiceTest.classEntity)
@@ -39,20 +57,9 @@ public class MaterialServiceTest {
 			.topic(null)
 			.videoUri("url")
 			.fileUrl("url")
-			.deadline(deadline)
+			.deadline(DateUtils.parse(materialNew.getDeadline()))
 			.point(100)
 			.category(null)
-			.build();
-	public static final MaterialNew materialNew = MaterialNew.builder()
-			.classId("id")
-			.category("material category")
-			.content("material content")
-			.deadline(deadline)
-			.point(100)
-//				.file(null) // TODO: create file service first
-//				.video(null) // TODO: create file service first
-			.title("material title")
-			.topicId("topicId")
 			.build();
 	@Autowired
 	private MaterialService materialService;
@@ -60,6 +67,9 @@ public class MaterialServiceTest {
 	private MaterialRepository materialRepository;
 	@MockBean
 	private ClassRepository classRepository;
+	
+	@MockBean
+	private CategoryRepository categoryRepository;
 	
 	@Test
 	public void testNotNull() {
@@ -118,6 +128,7 @@ public class MaterialServiceTest {
 	public void testToEntity() {
 //		success
 		when(this.classRepository.findById(anyString())).thenReturn(Optional.of(ClassServiceTest.classEntity));
+		when(this.categoryRepository.findByNameEqualsIgnoreCase(anyString())).thenReturn(Optional.of(CategoryServiceTest.category));
 		var result = this.materialService.toEntity(materialNew);
 		assertNotNull(result);
 		assertEquals(materialNew.getClassId(), result.getClasses().getId());
@@ -125,14 +136,169 @@ public class MaterialServiceTest {
 //		assertEquals(materialNew.getTopicId(), result.getTopic().getId()); // TODO: create topic repo/service first
 //		assertEquals(materialNew.getFile().getOriginalFilename(), result.getFileUrl()); // TODO: create file service first
 //		assertEquals(materialNew.getVideo().getOriginalFilename(), result.getVideoUri()); // TODO: create file service first
+		
+		assertEquals(CategoryServiceTest.category.getName(), result.getCategory().getName()); // TODO: create category repo/service first
+//		assertEquals(materialNew.getTopicId(), result.getTopic().getId()); // TODO: create topic repo/service first
+//		assertEquals(materialNew.getFile().getOriginalFilename(), result.getFileUrl()); // TODO: create file service first
+//		assertEquals(materialNew.getVideo().getOriginalFilename(), result.getVideoUri()); // TODO: create file service first
 		assertEquals(materialNew.getContent(), result.getContent());
-		assertEquals(materialNew.getDeadline(), result.getDeadline());
+		assertEquals(DateUtils.parse(materialNew.getDeadline()), result.getDeadline());
 		assertEquals(materialNew.getPoint(), result.getPoint());
 		assertEquals(materialNew.getTitle(), result.getTitle());
+
+//		test exception when parse string to date
+//		var materialFailed = MaterialNew.builder()
+//				.deadline("hd930")
+//				.classId("id")
+//				.build();
+		var tempDeadline = materialNew.getDeadline();
+		materialNew.setDeadline("anyy");
+		result = this.materialService.toEntity(materialNew);
+		materialNew.setDeadline(tempDeadline);
+		assertNull(result.getDeadline());
 		reset(this.classRepository);
 
 //		failed
 		when(this.classRepository.findById(anyString())).thenReturn(Optional.empty());
 		assertThrows(ClassNotFoundException.class, () -> this.materialService.toEntity(materialNew));
+		reset(this.classRepository);
+
+//		create new category if not exists
+		when(this.categoryRepository.findByNameEqualsIgnoreCase(anyString())).thenReturn(Optional.empty());
+		when(this.classRepository.findById(anyString())).thenReturn(Optional.of(ClassServiceTest.classEntity));
+		when(this.categoryRepository.save(any(Category.class))).thenReturn(Category.builder().id("id").name(materialNew.getCategory()).build());
+		var material = this.materialService.toEntity(materialNew);
+		
+		assertNotNull(material);
+		assertEquals(materialNew.getClassId(), material.getClasses().getId());
+		assertEquals(materialNew.getPoint(), material.getPoint());
+		assertEquals(materialNew.getCategory(), material.getCategory().getName());
+		assertEquals(materialNew.getContent(), material.getContent());
+		assertEquals(materialNew.getDeadline(), new SimpleDateFormat(FinalVariable.DATE_FORMAT).format(material.getDeadline()));
+		assertEquals(materialNew.getFile(), material.getFileUrl());
+		assertEquals(materialNew.getTitle(), material.getTitle());
+		assertEquals(materialNew.getVideo(), material.getVideoUri());
+	}
+	
+	@Test
+	public void testFindAllByClassId() {
+//		success
+		when(this.materialRepository.findByClassesId(anyString())).thenReturn(Optional.of(new ArrayList<>(List.of(material))));
+		var res = this.materialService.findAllByClassId("id");
+		var api = getResponse(res);
+		var materials = extract(new ArrayList<Material>(), api);
+		
+		assertNotNull(res);
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertNull(api.getErrors());
+		assertTrue(api.isStatus());
+		assertNotNull(api.getData());
+		assertInstanceOf(List.class, api.getData());
+		assertTrue(materials.isPresent());
+		assertEquals(1, materials.get().size());
+		assertEquals(material, materials.get().get(0));
+		reset(this.materialRepository, this.classRepository);
+
+//		failed
+		when(this.materialRepository.findByClassesId(anyString())).thenReturn(Optional.of(new ArrayList<>(List.of())));
+		res = this.materialService.findAllByClassId("id");
+		api = getResponse(res);
+		materials = extract(new ArrayList<Material>(), api);
+		
+		assertNotNull(res);
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertNull(api.getErrors());
+		assertTrue(api.isStatus());
+		assertNotNull(api.getData());
+		assertInstanceOf(List.class, api.getData());
+		assertTrue(materials.isPresent());
+		reset(this.materialRepository, this.classRepository);
+
+//		class not found
+		when(this.materialRepository.findByClassesId(anyString())).thenReturn(Optional.empty());
+		res = this.materialService.findAllByClassId("id");
+		api = getResponse(res);
+		materials = extract(new ArrayList<Material>(), api);
+		
+		assertNotNull(res);
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertNotNull(api.getErrors());
+		assertFalse(api.isStatus());
+		assertNull(api.getData());
+		assertTrue(materials.isEmpty());
+		reset(this.materialRepository, this.classRepository);
+
+//		internal server error
+		when(this.materialRepository.findByClassesId(anyString())).thenThrow(AnyException.class);
+		res = this.materialService.findAllByClassId("id");
+		api = getResponse(res);
+		materials = extract(new ArrayList<Material>(), api);
+		
+		assertNotNull(res);
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, res.getStatusCode());
+		assertNotNull(api.getErrors());
+		assertFalse(api.isStatus());
+		assertNull(api.getData());
+		assertTrue(materials.isEmpty());
+		reset(this.materialRepository, this.classRepository);
+	}
+	
+	@Test
+	public void testFindById() {
+//		success
+		when(this.materialRepository.findById(anyString())).thenReturn(Optional.of(material));
+		var res = this.materialService.findById("id");
+		var api = getResponse(res);
+		var data = extract(material, api);
+		
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertTrue(api.isStatus());
+		assertNull(api.getErrors());
+		assertNotNull(api.getData());
+		assertInstanceOf(Material.class, api.getData());
+		assertTrue(data.isPresent());
+		assertEquals(material.getId(), data.get().getId());
+		assertEquals(material.getTitle(), data.get().getTitle());
+		assertEquals(material.getDeadline(), data.get().getDeadline());
+		assertEquals(material.getContent(), data.get().getContent());
+		assertEquals(material.getClasses(), data.get().getClasses());
+		assertEquals(material.getCategory(), data.get().getCategory());
+		assertEquals(material.getVideoUri(), data.get().getVideoUri());
+		assertEquals(material.getFileUrl(), data.get().getFileUrl());
+		assertEquals(material.getCreatedBy(), data.get().getCreatedBy());
+		assertEquals(material.getCreatedAt(), data.get().getCreatedAt());
+		assertEquals(material.getUpdatedBy(), data.get().getUpdatedBy());
+		assertEquals(material.getUpdatedAt(), data.get().getUpdatedAt());
+		assertEquals(material.getIsDeleted(), data.get().getIsDeleted());
+		reset(this.materialRepository, this.classRepository);
+
+//		data not found
+		when(this.materialRepository.findById(anyString())).thenReturn(Optional.empty());
+		res = this.materialService.findById("id");
+		api = getResponse(res);
+		data = extract(material, api);
+		
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertFalse(api.isStatus());
+		assertNotNull(api.getErrors());
+		assertNull(api.getData());
+		assertTrue(data.isEmpty());
+		assertInstanceOf(HashMap.class, api.getErrors());
+		assertNotNull(((HashMap<String, Object>) api.getErrors()).get("message"));
+
+//		test any exception
+		when(this.materialRepository.findById(anyString())).thenThrow(AnyException.class);
+		res = this.materialService.findById("id");
+		api = getResponse(res);
+		data = extract(material, api);
+		
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, res.getStatusCode());
+		assertFalse(api.isStatus());
+		assertNotNull(api.getErrors());
+		assertNull(api.getData());
+		assertTrue(data.isEmpty());
+		assertInstanceOf(HashMap.class, api.getErrors());
+		assertNotNull(((HashMap<String, Object>) api.getErrors()).get("message"));
+		
 	}
 }

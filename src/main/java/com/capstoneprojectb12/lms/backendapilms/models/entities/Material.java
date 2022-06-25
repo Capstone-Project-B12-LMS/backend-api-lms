@@ -1,6 +1,6 @@
 package com.capstoneprojectb12.lms.backendapilms.models.entities;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,7 +41,7 @@ public class Material extends BaseEntity {
 	@Column(length = 1000)
 	private String fileUrl;
 	
-	private LocalDateTime deadline;
+	private Date deadline;
 	
 	@Column(length = 3, nullable = false)
 	private int point;

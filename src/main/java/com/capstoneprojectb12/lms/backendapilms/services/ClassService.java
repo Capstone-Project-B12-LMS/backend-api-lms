@@ -1,14 +1,22 @@
 package com.capstoneprojectb12.lms.backendapilms.services;
 
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassNew;
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassResponse;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassUpdate;
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.JoinClass;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
+import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
+import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.ClassStatus;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
+import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
 import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.ClassNotFoundException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.DataNotFoundException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.MethodNotImplementedException;
+import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.UserNotFoundException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +38,8 @@ import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.*;
 @RequiredArgsConstructor
 public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 	private final ClassRepository classRepository;
+	private final UserRepository userRepository;
+	private final UserService userService;
 	
 	
 	@Override
@@ -58,6 +68,13 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 	public ResponseEntity<?> save(ClassNew newEntity) {
 		try {
 			var classEntity = this.toEntity(newEntity);
+			var currentUserEmail = this.userService.getCurrentUser();
+			var currentUser = this.userRepository.findByEmailEqualsIgnoreCase(currentUserEmail).orElseThrow(UserNotFoundException :: new);
+			
+			classEntity.setUsers(new ArrayList<User>() {{
+				add(currentUser);
+			}});
+			
 			var savedClass = Optional.of(this.classRepository.save(classEntity));
 			log.info(FinalVariable.SAVE_SUCCESS);
 			return ok(savedClass.get());
@@ -88,7 +105,7 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 		try {
 			var value = this.classRepository.findById(id)
 					.orElseThrow(DataNotFoundException :: new);
-			return ok(value);
+			return ok(ClassResponse.parseFromClass(value));
 		} catch (DataNotFoundException e) {
 			log.warn(FinalVariable.DATA_NOT_FOUND);
 			return bad(FinalVariable.DATA_NOT_FOUND);
@@ -101,8 +118,10 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 	@Override
 	public ResponseEntity<?> findAll() {
 		try {
-			var values = this.classRepository.findAll();
-			return ok(values);
+			var classes = this.classRepository.findAll();
+			var responses = new ArrayList<ClassResponse>();
+			classes.forEach((c) -> responses.add(ClassResponse.parseFromClass(c)));
+			return ok(responses);
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			return err(e);
@@ -149,5 +168,43 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 				.name(classNew.getName())
 				.room(classNew.getRoom())
 				.build();
+	}
+	
+	public ResponseEntity<?> joinUserToClass(JoinClass request) {
+		try {
+			var classEntity = this.classRepository.findByCode(request.getClassCode()).orElseThrow(ClassNotFoundException :: new);
+			var user = this.userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException :: new);
+			
+			var users = new HashSet<>(classEntity.getUsers());
+			users.add(user);
+			classEntity.setUsers(new ArrayList<>(users));
+			classEntity = this.classRepository.save(classEntity);
+			return ok(classEntity);
+		} catch (ClassNotFoundException e) {
+			log.warn(e.getMessage());
+			return bad(e.getMessage());
+		} catch (UserNotFoundException e) {
+			log.warn(e.getMessage());
+			return bad(e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(e.getMessage());
+			return err(e);
+		}
+	}
+	
+	public ResponseEntity<?> joinUserToClass(String classCode, String userId) {
+		return this.joinUserToClass(JoinClass.builder().classCode(classCode).userId(userId).build());
+	}
+	
+	public ResponseEntity<?> findByUserId(String id, String status) {
+		try {
+			var classStatus = ClassStatus.valueOf(status.trim().toUpperCase());
+			var classes = this.classRepository.findByUsersIdAndStatus(id, classStatus);
+			return ok(classes);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return err(e);
+		}
 	}
 }

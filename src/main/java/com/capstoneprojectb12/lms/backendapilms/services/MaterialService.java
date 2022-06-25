@@ -2,9 +2,12 @@ package com.capstoneprojectb12.lms.backendapilms.services;
 
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.material.MaterialNew;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.material.MaterialUpdate;
+import com.capstoneprojectb12.lms.backendapilms.models.entities.Category;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Material;
+import com.capstoneprojectb12.lms.backendapilms.models.repositories.CategoryRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.MaterialRepository;
+import com.capstoneprojectb12.lms.backendapilms.utilities.DateUtils;
 import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.ClassNotFoundException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.DataNotFoundException;
@@ -30,6 +33,7 @@ import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.*;
 public class MaterialService implements BaseService<Material, MaterialNew, MaterialUpdate> {
 	private final MaterialRepository materialRepository;
 	private final ClassRepository classRepository;
+	private final CategoryRepository categoryRepository;
 	
 	@Override
 	public ResponseEntity<?> save(MaterialNew newEntity) {
@@ -152,10 +156,33 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 //				.category() // TODO: create when category not found
 //				.topic(materialNew.getTopicId()) // TODO: find topic by id or maybe create new topic if not exists
 //				.fileUrl() // TODO: save file first
+				.category(this.categoryRepository.findByNameEqualsIgnoreCase(materialNew.getCategory()).orElseGet(() -> {
+					var category = Category.builder()
+							.name(materialNew.getCategory())
+							.description("-")
+							.build();
+					return this.categoryRepository.save(category);
+				})) // TODO: create when category not found
+//				.topic(materialNew.getTopicId()) // TODO: find topic by id or maybe create new topic if not exists
+				.fileUrl(materialNew.getFile()) // TODO: save file first
+				.videoUri(materialNew.getVideo()) // TODO: save file first
 				.content(materialNew.getContent())
 				.point(materialNew.getPoint())
-				.deadline(materialNew.getDeadline())
+				.deadline(DateUtils.parse(materialNew.getDeadline()))
 				.title(materialNew.getTitle())
 				.build();
+	}
+	
+	public ResponseEntity<?> findAllByClassId(String classId) {
+		try {
+			var materials = this.materialRepository.findByClassesId(classId).orElseThrow(ClassNotFoundException :: new);
+			return ok(materials);
+		} catch (ClassNotFoundException e) {
+			log.warn(e.getMessage());
+			return bad(e.getMessage());
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return err(e);
+		}
 	}
 }
