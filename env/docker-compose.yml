@@ -37,12 +37,6 @@ services:
       - SPRINGDOC_SWAGGER_UI_ENABLED=true
       - SPRINGDOC_SWAGGER_UI_PATH=/restapi/v1/docs
 
-    #    env_file:
-    #      - ./app.env
-  #    depends_on:
-  #      - backend-api-db-postgresql
-  #      - backend-api-db-mongodb
-  
   backend-api-lms-cc:
     image: irdaislakhuafa/backend-api-lms-cc:latest
     container_name: backend-api-lms-cc
