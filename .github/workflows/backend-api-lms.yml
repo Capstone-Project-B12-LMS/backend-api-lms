@@ -120,21 +120,16 @@ jobs:
                mkdir -pv "$appDir"
             else 
                cd $appDir/env
-               docker-compose down
-               docker rmi $me/$appName:latest $me/$appName-cc:latest
+               docker-compose -f docker-compose.yml down --rmi all
+            
+               dbIsRunning="$(docker ps | grep db)"
+               if [ "$dbIsRunning" = "" ]; then
+                 docker-compose -f db-compose.yml up -d
+               fi
+                           
                rm -rfv * 
                cd
             fi
-
-            #  appCcName="$appName-cc"
-            #  appCcImage="$me/$appCcName:latest"
-            #  appCcCondition="$(docker image ls | grep $appCcName)"
-
-            #  if [ "$appCcCondition" != "" ]; then
-            #     docker rmi $appCcImage
-            #  fi
-
-
 
       - name: Copy app file configuration to server
         uses: appleboy/scp-action@master
@@ -166,11 +161,5 @@ jobs:
             appName="backend-api-lms"
             
             cd $baseDir/$appName/env
-
-            dbIsRunning="$(docker ps | grep db)"
-            if [ "$dbIsRunning" = "" ]; then
-              docker-compose -f db-compose.yml up -d
-            fi
-            
             docker-compose -f docker-compose.yml up -d
 
