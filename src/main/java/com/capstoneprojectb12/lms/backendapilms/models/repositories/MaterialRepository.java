@@ -8,5 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MaterialRepository extends JpaRepository<Material, String> {
-	Optional<List<Material>> findByClassesId(String classId);
+//	Optional<List<Material>> findByClassesId(String classId);
+	
+	Optional<List<Material>> findByClassesIdOrderByCreatedAtAsc(String classId);
 }

@@ -44,8 +44,8 @@ public class MaterialServiceTest {
 			.content("material content")
 			.deadline("14/06/2022 22:34:50")
 			.point(100)
-//				.file(null) // TODO: create file service first
-//				.video(null) // TODO: create file service first
+			.file("url") // TODO: create file service first
+			.video("url") // TODO: create file service first
 			.title("material title")
 			.topicId("topicId")
 			.build();
@@ -55,7 +55,7 @@ public class MaterialServiceTest {
 			.title("material title")
 			.content("material content")
 			.topic(null)
-			.videoUri("url")
+			.videoUrl("url")
 			.fileUrl("url")
 			.deadline(DateUtils.parse(materialNew.getDeadline()))
 			.point(100)
@@ -91,6 +91,8 @@ public class MaterialServiceTest {
 		assertNull(api.getErrors());
 		assertTrue(api.isStatus());
 		assertEquals(material.getId(), materialData.getId());
+		assertEquals(material.getFileUrl(), materialData.getFileUrl());
+		assertEquals(material.getVideoUrl(), materialData.getVideoUrl());
 		reset(this.classRepository, this.materialRepository);
 
 //		class with {classId} nto found
@@ -135,13 +137,15 @@ public class MaterialServiceTest {
 //		assertEquals(materialNew.getCategory(), result.getCategory()); // TODO: create category repo/service first
 //		assertEquals(materialNew.getTopicId(), result.getTopic().getId()); // TODO: create topic repo/service first
 //		assertEquals(materialNew.getFile().getOriginalFilename(), result.getFileUrl()); // TODO: create file service first
-//		assertEquals(materialNew.getVideo().getOriginalFilename(), result.getVideoUri()); // TODO: create file service first
+//		assertEquals(materialNew.getVideo().getOriginalFilename(), result.getVideoUrl()); // TODO: create file service first
 		
 		assertEquals(CategoryServiceTest.category.getName(), result.getCategory().getName()); // TODO: create category repo/service first
 //		assertEquals(materialNew.getTopicId(), result.getTopic().getId()); // TODO: create topic repo/service first
 //		assertEquals(materialNew.getFile().getOriginalFilename(), result.getFileUrl()); // TODO: create file service first
-//		assertEquals(materialNew.getVideo().getOriginalFilename(), result.getVideoUri()); // TODO: create file service first
+//		assertEquals(materialNew.getVideo().getOriginalFilename(), result.getVideoUrl()); // TODO: create file service first
 		assertEquals(materialNew.getContent(), result.getContent());
+		assertEquals(materialNew.getVideo(), result.getVideoUrl());
+		assertEquals(materialNew.getFile(), result.getFileUrl());
 		assertEquals(DateUtils.parse(materialNew.getDeadline()), result.getDeadline());
 		assertEquals(materialNew.getPoint(), result.getPoint());
 		assertEquals(materialNew.getTitle(), result.getTitle());
@@ -177,13 +181,13 @@ public class MaterialServiceTest {
 		assertEquals(materialNew.getDeadline(), new SimpleDateFormat(FinalVariable.DATE_FORMAT).format(material.getDeadline()));
 		assertEquals(materialNew.getFile(), material.getFileUrl());
 		assertEquals(materialNew.getTitle(), material.getTitle());
-		assertEquals(materialNew.getVideo(), material.getVideoUri());
+		assertEquals(materialNew.getVideo(), material.getVideoUrl());
 	}
 	
 	@Test
 	public void testFindAllByClassId() {
 //		success
-		when(this.materialRepository.findByClassesId(anyString())).thenReturn(Optional.of(new ArrayList<>(List.of(material))));
+		when(this.materialRepository.findByClassesIdOrderByCreatedAtAsc(anyString())).thenReturn(Optional.of(new ArrayList<>(List.of(material))));
 		var res = this.materialService.findAllByClassId("id");
 		var api = getResponse(res);
 		var materials = extract(new ArrayList<Material>(), api);
@@ -200,7 +204,7 @@ public class MaterialServiceTest {
 		reset(this.materialRepository, this.classRepository);
 
 //		failed
-		when(this.materialRepository.findByClassesId(anyString())).thenReturn(Optional.of(new ArrayList<>(List.of())));
+		when(this.materialRepository.findByClassesIdOrderByCreatedAtAsc(anyString())).thenReturn(Optional.of(new ArrayList<>(List.of())));
 		res = this.materialService.findAllByClassId("id");
 		api = getResponse(res);
 		materials = extract(new ArrayList<Material>(), api);
@@ -215,7 +219,7 @@ public class MaterialServiceTest {
 		reset(this.materialRepository, this.classRepository);
 
 //		class not found
-		when(this.materialRepository.findByClassesId(anyString())).thenReturn(Optional.empty());
+		when(this.materialRepository.findByClassesIdOrderByCreatedAtAsc(anyString())).thenReturn(Optional.empty());
 		res = this.materialService.findAllByClassId("id");
 		api = getResponse(res);
 		materials = extract(new ArrayList<Material>(), api);
@@ -229,7 +233,7 @@ public class MaterialServiceTest {
 		reset(this.materialRepository, this.classRepository);
 
 //		internal server error
-		when(this.materialRepository.findByClassesId(anyString())).thenThrow(AnyException.class);
+		when(this.materialRepository.findByClassesIdOrderByCreatedAtAsc(anyString())).thenThrow(AnyException.class);
 		res = this.materialService.findAllByClassId("id");
 		api = getResponse(res);
 		materials = extract(new ArrayList<Material>(), api);
@@ -263,7 +267,7 @@ public class MaterialServiceTest {
 		assertEquals(material.getContent(), data.get().getContent());
 		assertEquals(material.getClasses(), data.get().getClasses());
 		assertEquals(material.getCategory(), data.get().getCategory());
-		assertEquals(material.getVideoUri(), data.get().getVideoUri());
+		assertEquals(material.getVideoUrl(), data.get().getVideoUrl());
 		assertEquals(material.getFileUrl(), data.get().getFileUrl());
 		assertEquals(material.getCreatedBy(), data.get().getCreatedBy());
 		assertEquals(material.getCreatedAt(), data.get().getCreatedAt());
