@@ -165,7 +165,7 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 				})) // TODO: create when category not found
 //				.topic(materialNew.getTopicId()) // TODO: find topic by id or maybe create new topic if not exists
 				.fileUrl(materialNew.getFile()) // TODO: save file first
-				.videoUri(materialNew.getVideo()) // TODO: save file first
+				.videoUrl(materialNew.getVideo()) // TODO: save file first
 				.content(materialNew.getContent())
 				.point(materialNew.getPoint())
 				.deadline(DateUtils.parse(materialNew.getDeadline()))
@@ -175,7 +175,7 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 	
 	public ResponseEntity<?> findAllByClassId(String classId) {
 		try {
-			var materials = this.materialRepository.findByClassesId(classId).orElseThrow(ClassNotFoundException :: new);
+			var materials = this.materialRepository.findByClassesIdOrderByCreatedAtAsc(classId).orElseThrow(ClassNotFoundException :: new);
 			return ok(materials);
 		} catch (ClassNotFoundException e) {
 			log.warn(e.getMessage());

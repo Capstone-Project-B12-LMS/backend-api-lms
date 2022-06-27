@@ -36,7 +36,7 @@ public class Material extends BaseEntity {
 	private Topic topic;
 	
 	@Column(length = 1000)
-	private String videoUri;
+	private String videoUrl;
 	
 	@Column(length = 1000)
 	private String fileUrl;
