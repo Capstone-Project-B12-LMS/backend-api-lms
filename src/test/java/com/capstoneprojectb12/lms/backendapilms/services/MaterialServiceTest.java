@@ -55,7 +55,7 @@ public class MaterialServiceTest {
 			.title("material title")
 			.content("material content")
 			.topic(null)
-			.videoUri("url")
+			.videoUrl("url")
 			.fileUrl("url")
 			.deadline(DateUtils.parse(materialNew.getDeadline()))
 			.point(100)
@@ -92,7 +92,7 @@ public class MaterialServiceTest {
 		assertTrue(api.isStatus());
 		assertEquals(material.getId(), materialData.getId());
 		assertEquals(material.getFileUrl(), materialData.getFileUrl());
-		assertEquals(material.getVideoUri(), materialData.getVideoUri());
+		assertEquals(material.getVideoUrl(), materialData.getVideoUrl());
 		reset(this.classRepository, this.materialRepository);
 
 //		class with {classId} nto found
@@ -137,14 +137,14 @@ public class MaterialServiceTest {
 //		assertEquals(materialNew.getCategory(), result.getCategory()); // TODO: create category repo/service first
 //		assertEquals(materialNew.getTopicId(), result.getTopic().getId()); // TODO: create topic repo/service first
 //		assertEquals(materialNew.getFile().getOriginalFilename(), result.getFileUrl()); // TODO: create file service first
-//		assertEquals(materialNew.getVideo().getOriginalFilename(), result.getVideoUri()); // TODO: create file service first
+//		assertEquals(materialNew.getVideo().getOriginalFilename(), result.getVideoUrl()); // TODO: create file service first
 		
 		assertEquals(CategoryServiceTest.category.getName(), result.getCategory().getName()); // TODO: create category repo/service first
 //		assertEquals(materialNew.getTopicId(), result.getTopic().getId()); // TODO: create topic repo/service first
 //		assertEquals(materialNew.getFile().getOriginalFilename(), result.getFileUrl()); // TODO: create file service first
-//		assertEquals(materialNew.getVideo().getOriginalFilename(), result.getVideoUri()); // TODO: create file service first
+//		assertEquals(materialNew.getVideo().getOriginalFilename(), result.getVideoUrl()); // TODO: create file service first
 		assertEquals(materialNew.getContent(), result.getContent());
-		assertEquals(materialNew.getVideo(), result.getVideoUri());
+		assertEquals(materialNew.getVideo(), result.getVideoUrl());
 		assertEquals(materialNew.getFile(), result.getFileUrl());
 		assertEquals(DateUtils.parse(materialNew.getDeadline()), result.getDeadline());
 		assertEquals(materialNew.getPoint(), result.getPoint());
@@ -181,7 +181,7 @@ public class MaterialServiceTest {
 		assertEquals(materialNew.getDeadline(), new SimpleDateFormat(FinalVariable.DATE_FORMAT).format(material.getDeadline()));
 		assertEquals(materialNew.getFile(), material.getFileUrl());
 		assertEquals(materialNew.getTitle(), material.getTitle());
-		assertEquals(materialNew.getVideo(), material.getVideoUri());
+		assertEquals(materialNew.getVideo(), material.getVideoUrl());
 	}
 	
 	@Test
@@ -267,7 +267,7 @@ public class MaterialServiceTest {
 		assertEquals(material.getContent(), data.get().getContent());
 		assertEquals(material.getClasses(), data.get().getClasses());
 		assertEquals(material.getCategory(), data.get().getCategory());
-		assertEquals(material.getVideoUri(), data.get().getVideoUri());
+		assertEquals(material.getVideoUrl(), data.get().getVideoUrl());
 		assertEquals(material.getFileUrl(), data.get().getFileUrl());
 		assertEquals(material.getCreatedBy(), data.get().getCreatedBy());
 		assertEquals(material.getCreatedAt(), data.get().getCreatedAt());

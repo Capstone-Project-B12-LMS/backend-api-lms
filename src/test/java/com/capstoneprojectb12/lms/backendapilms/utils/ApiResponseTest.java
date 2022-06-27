@@ -22,7 +22,7 @@ public class ApiResponseTest {
 			assertTrue(data.isPresent());
 			assertEquals(MaterialServiceTest.material.getId(), data.get().getId());
 			assertEquals(MaterialServiceTest.material.getTitle(), data.get().getTitle());
-			assertEquals(MaterialServiceTest.material.getVideoUri(), data.get().getVideoUri());
+			assertEquals(MaterialServiceTest.material.getVideoUrl(), data.get().getVideoUrl());
 			assertEquals(MaterialServiceTest.material.getFileUrl(), data.get().getFileUrl());
 			assertEquals(MaterialServiceTest.material.getPoint(), data.get().getPoint());
 			assertEquals(MaterialServiceTest.material.getDeadline(), data.get().getDeadline());

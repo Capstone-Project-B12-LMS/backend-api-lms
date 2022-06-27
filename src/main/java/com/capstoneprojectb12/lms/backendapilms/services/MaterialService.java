@@ -165,7 +165,7 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 				})) // TODO: create when category not found
 //				.topic(materialNew.getTopicId()) // TODO: find topic by id or maybe create new topic if not exists
 				.fileUrl(materialNew.getFile()) // TODO: save file first
-				.videoUri(materialNew.getVideo()) // TODO: save file first
+				.videoUrl(materialNew.getVideo()) // TODO: save file first
 				.content(materialNew.getContent())
 				.point(materialNew.getPoint())
 				.deadline(DateUtils.parse(materialNew.getDeadline()))
