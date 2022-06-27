@@ -183,7 +183,7 @@ public class MaterialServiceTest {
 	@Test
 	public void testFindAllByClassId() {
 //		success
-		when(this.materialRepository.findByClassesId(anyString())).thenReturn(Optional.of(new ArrayList<>(List.of(material))));
+		when(this.materialRepository.findByClassesIdOrderByCreatedAtAsc(anyString())).thenReturn(Optional.of(new ArrayList<>(List.of(material))));
 		var res = this.materialService.findAllByClassId("id");
 		var api = getResponse(res);
 		var materials = extract(new ArrayList<Material>(), api);
@@ -200,7 +200,7 @@ public class MaterialServiceTest {
 		reset(this.materialRepository, this.classRepository);
 
 //		failed
-		when(this.materialRepository.findByClassesId(anyString())).thenReturn(Optional.of(new ArrayList<>(List.of())));
+		when(this.materialRepository.findByClassesIdOrderByCreatedAtAsc(anyString())).thenReturn(Optional.of(new ArrayList<>(List.of())));
 		res = this.materialService.findAllByClassId("id");
 		api = getResponse(res);
 		materials = extract(new ArrayList<Material>(), api);
@@ -215,7 +215,7 @@ public class MaterialServiceTest {
 		reset(this.materialRepository, this.classRepository);
 
 //		class not found
-		when(this.materialRepository.findByClassesId(anyString())).thenReturn(Optional.empty());
+		when(this.materialRepository.findByClassesIdOrderByCreatedAtAsc(anyString())).thenReturn(Optional.empty());
 		res = this.materialService.findAllByClassId("id");
 		api = getResponse(res);
 		materials = extract(new ArrayList<Material>(), api);
@@ -229,7 +229,7 @@ public class MaterialServiceTest {
 		reset(this.materialRepository, this.classRepository);
 
 //		internal server error
-		when(this.materialRepository.findByClassesId(anyString())).thenThrow(AnyException.class);
+		when(this.materialRepository.findByClassesIdOrderByCreatedAtAsc(anyString())).thenThrow(AnyException.class);
 		res = this.materialService.findAllByClassId("id");
 		api = getResponse(res);
 		materials = extract(new ArrayList<Material>(), api);

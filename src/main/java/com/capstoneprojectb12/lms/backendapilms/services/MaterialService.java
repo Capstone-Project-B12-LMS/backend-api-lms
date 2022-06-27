@@ -175,7 +175,7 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 	
 	public ResponseEntity<?> findAllByClassId(String classId) {
 		try {
-			var materials = this.materialRepository.findByClassesId(classId).orElseThrow(ClassNotFoundException :: new);
+			var materials = this.materialRepository.findByClassesIdOrderByCreatedAtAsc(classId).orElseThrow(ClassNotFoundException :: new);
 			return ok(materials);
 		} catch (ClassNotFoundException e) {
 			log.warn(e.getMessage());
