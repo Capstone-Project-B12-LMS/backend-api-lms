@@ -25,13 +25,13 @@ input MaterialNew {
     topicId: String
 
     # TODO: learn how to get uploaded file in graphql first
-    video: Object
+    video: String
 
     # TODO: learn how to get uploaded file in graphql first
-    file: Object
+    file: String
 
     #  please use format dd/MM/yyyy HH:mm:ss to insert deadline, example 30/12/2022 23:59:00
-    deadline: Object
+    deadline: String
     point: Int!
 }
 
