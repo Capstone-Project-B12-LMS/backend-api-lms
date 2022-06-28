@@ -93,6 +93,21 @@ public class ApiResponse<T> implements Serializable {
 		return notFound(FinalVariable.DATA_NOT_FOUND);
 	}
 	
+	public static ApiResponse<?> accessDenied() {
+		return accessDenied("You are not allowed to access this endpoint");
+	}
+	
+	public static ApiResponse<?> accessDenied(String caused) {
+		return ApiResponse.builder()
+				.data(null)
+				.errors(new HashMap<String, Object>() {{
+					put("message", "access denied");
+					put("caused", caused);
+				}})
+				.status(false)
+				.build();
+	}
+	
 	@Deprecated
 	public static ResponseDelete gqlResponseDelete(ResponseEntity<?> response) {
 		var apiRes = (ApiResponse<?>) response.getBody();
