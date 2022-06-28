@@ -1,11 +1,14 @@
 package com.capstoneprojectb12.lms.backendapilms.filters;
 
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
+import com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse;
+import com.capstoneprojectb12.lms.backendapilms.utilities.JSON;
 import com.capstoneprojectb12.lms.backendapilms.utilities.jwt.JwtUtils;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -60,7 +63,12 @@ public class JwtFilter extends OncePerRequestFilter {
 				}
 			} catch (Exception e) {
 				log.error("Invalid jwt token : " + e.getMessage());
+				response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+				response.getWriter().println(JSON.create(ApiResponse.accessDenied(e.getMessage())));
+				return;
 			}
+		} else {
+			log.info("Authorization header is null");
 		}
 		
 		log.info("Do next filter");
