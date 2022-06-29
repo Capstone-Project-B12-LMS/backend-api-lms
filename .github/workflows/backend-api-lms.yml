@@ -122,10 +122,10 @@ jobs:
                cd $appDir/env
                docker-compose -f docker-compose.yml down --rmi all
             
-               dbIsRunning="$(docker ps | grep db)"
-               if [ "$dbIsRunning" = "" ]; then
-                 docker-compose -f db-compose.yml up -d
-               fi
+              #  dbIsRunning="$(docker ps | grep db)"
+              #  if [ "$dbIsRunning" = "" ]; then
+              #    docker-compose -f db-compose.yml up -d
+              #  fi
                            
                rm -rfv * 
                cd
