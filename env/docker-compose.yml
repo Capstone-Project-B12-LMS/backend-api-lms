@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   backend-api-lms:
@@ -18,13 +18,17 @@ services:
       - SPRING_GRAPHQL_SCHEMA_FILE_EXTENSIONS=graphqls,gqls
 
       # database config
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://backend-api-db-postgresql:5432/study_space_db
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
+      # - SPRING_DATASOURCE_URL=jdbc:postgresql://backend-api-db-postgresql:5432/study_space_db
+      # - SPRING_DATASOURCE_USERNAME=postgres
+      # - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ec2-44-198-82-71.compute-1.amazonaws.com:5432/dbg9hco2i8d7u3
+      - SPRING_DATASOURCE_USERNAME=hawmsvscxkjgey
+      - SPRING_DATASOURCE_PASSWORD=87a9a6fee01d8658fefed4f53c9c4b5101a419ffb7eec55f96b19841be779d92
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - SPRING_JPA_SHOW_SQL=true
       - SPRING_JPA_GENERATE_DDL=true
-      - SPRING_DATA_MONGODB_URI=mongodb://backend-api-db-mongodb:27017/study_space_db
+      # - SPRING_DATA_MONGODB_URI=mongodb://backend-api-db-mongodb:27017/study_space_db
+      - SPRING_DATA_MONGODB_URI=mongodb://unifdiiqla2f0n72njva:3tic6Au0rESivW7kG9P5@n1-c2-mongodb-clevercloud-customers.services.clever-cloud.com:27017,n2-c2-mongodb-clevercloud-customers.services.clever-cloud.com:27017/bmzjnxbalucs7jb?replicaSet=rs0
 
       # jwt token config
       - JWT_TOKEN_EXPIRED_IN_MINUTE=60
@@ -37,14 +41,14 @@ services:
       - SPRINGDOC_SWAGGER_UI_ENABLED=true
       - SPRINGDOC_SWAGGER_UI_PATH=/restapi/v1/docs
 
-  backend-api-lms-cc:
-    image: irdaislakhuafa/backend-api-lms-cc:latest
-    container_name: backend-api-lms-cc
-    restart: on-failure
-    ports:
-      - "8081:80"
-    networks:
-      - kelompok-b12
+  # backend-api-lms-cc:
+  #   image: irdaislakhuafa/backend-api-lms-cc:latest
+  #   container_name: backend-api-lms-cc
+  #   restart: on-failure
+  #   ports:
+  #     - "8081:80"
+  #   networks:
+  #     - kelompok-b12
 
 #  backend-api-db-postgresql:
 #    image: postgres:latest
@@ -74,4 +78,4 @@ services:
 #      - MONGODB_DATABASE=study_space_db
 
 networks:
-  kelompok-b12: { }
+  kelompok-b12: {}
