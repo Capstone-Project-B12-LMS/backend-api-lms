@@ -29,7 +29,7 @@ public class Guidance extends BaseEntity {
 	
 	@ManyToOne
 	@JoinColumn(name = "class")
-	private Class className;
+	private Class classEntity;
 	
 	@Enumerated(value = EnumType.STRING)
 	private GuidanceStatus status;

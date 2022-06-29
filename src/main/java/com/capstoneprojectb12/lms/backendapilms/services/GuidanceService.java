@@ -83,10 +83,12 @@ public class GuidanceService implements BaseService<Guidance, GuidanceNew, Guida
 	public Guidance toEntity(GuidanceNew newEntity) {
 		return Guidance.builder()
 				.topic(newEntity.getTopic())
-				.user(this.userRepository.findById(newEntity.getUserId()).orElseThrow(UserNotFoundException :: new))
-				.className(this.classRepository.findById(newEntity.getClassId()).orElseThrow(ClassNotFoundException :: new))
+				.user(this.userRepository.findById(newEntity.getUserId())
+						.orElseThrow(UserNotFoundException :: new))
+				.classEntity(this.classRepository.findById(newEntity.getClassId())
+						.orElseThrow(ClassNotFoundException :: new))
 				.content(newEntity.getContent())
-				.status(GuidanceStatus.valueOf(newEntity.getStatus()))
+				.status(GuidanceStatus.valueOf(newEntity.getStatus().toUpperCase()))
 				.build();
 	}
 }
