@@ -35,13 +35,13 @@ Here we have 2 mode of API
 
 - `Rest FULL API`
 
-    - On Rest FULL API you can see documentation in `http://localhost:8080/restapi/docs/swagger-ui/index.html#/` after
-      app running.
+  - On Rest FULL API you can see documentation in `http://localhost:8080/restapi/docs/swagger-ui/index.html#/` after
+    app running.
 
 - `GraphQL API`
 
-    - On GraphQL API you can access `http://localhost:8080/gql/v1/graphiql?path=/graphql` to use `GraphQL` in browser
-      and you can send your `GraphQL Query` in `http://localhost:8080/gql/v1/graphql`
+  - On GraphQL API you can access `http://localhost:8080/gql/v1/graphiql?path=/graphql` to use `GraphQL` in browser
+    and you can send your `GraphQL Query` in `http://localhost:8080/gql/v1/graphql`
 
 # Using Deployed App
 
@@ -50,14 +50,14 @@ Use resource bellow to use it.
 
 - `Rest FULL API`
 
-    - API Docs : http://ec2-35-89-26-59.us-west-2.compute.amazonaws.com/restapi/v1/docs
+  - API Docs : http://ec2-34.219.136.154.us-west-2.compute.amazonaws.com/restapi/v1/docs
 
 - `GraphQL API`
 
-    - GraphiQL to test graphql in browser with simple
-      documentation : http://ec2-35-89-26-59.us-west-2.compute.amazonaws.com/gql/v1/graphiql?path=/gql/v1/graphql
+  - GraphiQL to test graphql in browser with simple
+    documentation : http://ec2-34.219.136.154.us-west-2.compute.amazonaws.com/gql/v1/graphiql?path=/gql/v1/graphql
 
-    - GraphQL url : http://ec2-35-89-26-59.us-west-2.compute.amazonaws.com/gql/v1/graphql
+  - GraphQL url : http://ec2-34.219.136.154.us-west-2.compute.amazonaws.com/gql/v1/graphql
 
 # Note :
 
@@ -66,15 +66,18 @@ Use resource bellow to use it.
   will have the `Token` as response, you can use it to access all endpoints. Follow format bellow to access protected
   endpoints.
 
-    - Using `Authorization` Header
-    ```json
-      {
-        "Authorization": "Bearer <Paste Your Token Here>"
-      }
-   ```
+  - Using `Authorization` Header
+
+  ```json
+  {
+    "Authorization": "Bearer <Paste Your Token Here>"
+  }
+  ```
+
   and later it will look like this
-   ```json
-      {
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiVVNFUiJ9XSwiZXhwIjoxNjU0ODMzODE4LCJ1c2VySWQiOiI5ZDRhMDU1ZC0xNDNmLTRmNTEtOWJmYS02MTg5YjU1YTlkMDMiLCJpYXQiOjE2NTQ4MzAyMTh9.9CG4JCyKqrzgOq3a89zkhaMLVSf7W-WnYQSxAJwhrOk"
-      } 
-   ```
+
+  ```json
+  {
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiVVNFUiJ9XSwiZXhwIjoxNjU0ODMzODE4LCJ1c2VySWQiOiI5ZDRhMDU1ZC0xNDNmLTRmNTEtOWJmYS02MTg5YjU1YTlkMDMiLCJpYXQiOjE2NTQ4MzAyMTh9.9CG4JCyKqrzgOq3a89zkhaMLVSf7W-WnYQSxAJwhrOk"
+  }
+  ```
