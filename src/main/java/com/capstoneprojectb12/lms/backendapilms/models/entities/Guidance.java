@@ -25,6 +25,9 @@ public class Guidance extends BaseEntity {
 	private String content;
 	
 	@ManyToOne
+	private User user;
+	
+	@ManyToOne
 	@JoinColumn(name = "class")
 	private Class className;
 	
