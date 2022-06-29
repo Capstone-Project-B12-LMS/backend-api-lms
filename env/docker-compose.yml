@@ -28,6 +28,7 @@ services:
       - SPRING_JPA_SHOW_SQL=true
       - SPRING_JPA_GENERATE_DDL=true
       # - SPRING_DATA_MONGODB_URI=mongodb://backend-api-db-mongodb:27017/study_space_db
+      - SPRING_DATA_MONGODB_URI=mongodb://unifdiiqla2f0n72njva:3tic6Au0rESivW7kG9P5@n1-c2-mongodb-clevercloud-customers.services.clever-cloud.com:27017,n2-c2-mongodb-clevercloud-customers.services.clever-cloud.com:27017/bmzjnxbalucs7jb?replicaSet=rs0
 
       # jwt token config
       - JWT_TOKEN_EXPIRED_IN_MINUTE=60
