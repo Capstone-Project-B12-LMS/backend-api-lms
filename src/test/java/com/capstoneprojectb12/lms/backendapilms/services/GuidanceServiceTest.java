@@ -79,4 +79,9 @@ public class GuidanceServiceTest {
 		when(this.classRepository.findById(anyString())).thenReturn(Optional.empty());
 		assertThrows(ClassNotFoundException.class, () -> this.guidanceService.toEntity(guidanceNew));
 	}
+	
+	@Test
+	public void testSave() {
+//		success
+	}
 }
