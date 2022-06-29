@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.*;
+
 @Slf4j
 @Service
 @Transactional
@@ -32,11 +34,19 @@ public class GuidanceService implements BaseService<Guidance, GuidanceNew, Guida
 	@Override
 	public ResponseEntity<?> save(GuidanceNew newEntity) {
 		try {
-		
+			var guidance = this.toEntity(newEntity);
+			guidance = this.guidanceRepository.save(guidance);
+			return ok(guidance);
+		} catch (UserNotFoundException e) {
+			log.error(e.getMessage());
+			return bad(e.getMessage());
+		} catch (ClassNotFoundException e) {
+			log.error(e.getMessage());
+			return bad(e.getMessage());
 		} catch (Exception e) {
 			log.error(e.getMessage());
+			return err(e);
 		}
-		return null;
 	}
 	
 	@Override
