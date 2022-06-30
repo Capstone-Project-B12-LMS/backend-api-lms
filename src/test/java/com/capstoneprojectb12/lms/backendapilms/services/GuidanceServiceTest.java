@@ -39,7 +39,7 @@ public class GuidanceServiceTest {
 			.content("this is content")
 			.user(UserServiceTest.user)
 			.classEntity(ClassServiceTest.classEntity)
-			.status(GuidanceStatus.ACCEPTED)
+			.status(GuidanceStatus.SENDED)
 			.build();
 	
 	public static final GuidanceNew guidanceNew = GuidanceNew.builder()
@@ -47,7 +47,6 @@ public class GuidanceServiceTest {
 			.content("this is content")
 			.classId(ClassServiceTest.classEntity.getId())
 			.userId(UserServiceTest.user.getId())
-			.status("ACCEPTED")
 			.build();
 	
 	@MockBean
@@ -70,7 +69,6 @@ public class GuidanceServiceTest {
 		assertEquals(guidance.getContent(), result.getContent());
 		assertEquals(guidance.getUser().getEmail(), result.getUser().getEmail());
 		assertEquals(guidance.getClassEntity().getId(), result.getClassEntity().getId());
-		assertEquals(GuidanceStatus.ACCEPTED, result.getStatus());
 		reset(this.classRepository, this.userRepository, this.guidanceRepository);
 
 //		user not found
@@ -107,6 +105,7 @@ public class GuidanceServiceTest {
 		assertEquals(guidance.getClass(), data.get().getClass());
 		assertEquals(guidance.getContent(), data.get().getContent());
 		assertEquals(guidance.getTopic(), data.get().getTopic());
+		assertEquals(GuidanceStatus.SENDED, data.get().getStatus());
 		reset(this.classRepository, this.guidanceRepository, this.userRepository);
 
 //		user not found

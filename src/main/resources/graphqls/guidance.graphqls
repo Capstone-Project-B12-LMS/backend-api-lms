@@ -1,0 +1,26 @@
+enum GuidanceStatus {
+    ACCEPTED
+    DECLINE
+    SENDED
+}
+type Guidance implements BaseSchema {
+    id: ID!
+    content: String!
+    user: User!
+    topic: String
+    classEntity: Class!
+    status: GuidanceStatus!
+
+    createdBy: String!
+    createdAt: String!
+    updatedBy: String
+    updatedAt: String
+    isDeleted: Boolean!
+}
+
+input GuidanceNew {
+    topic: String
+    content: String!
+    userId: String!
+    classId: String!
+}
