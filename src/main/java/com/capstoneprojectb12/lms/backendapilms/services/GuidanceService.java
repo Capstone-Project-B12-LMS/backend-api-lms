@@ -3,7 +3,6 @@ package com.capstoneprojectb12.lms.backendapilms.services;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.guidance.GuidanceNew;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.guidance.GuidanceUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Guidance;
-import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.GuidanceStatus;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.GuidanceRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
@@ -98,7 +97,6 @@ public class GuidanceService implements BaseService<Guidance, GuidanceNew, Guida
 				.classEntity(this.classRepository.findById(newEntity.getClassId())
 						.orElseThrow(ClassNotFoundException :: new))
 				.content(newEntity.getContent())
-				.status(GuidanceStatus.valueOf(newEntity.getStatus().toUpperCase()))
 				.build();
 	}
 }

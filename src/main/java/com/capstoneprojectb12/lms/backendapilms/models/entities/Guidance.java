@@ -34,4 +34,9 @@ public class Guidance extends BaseEntity {
 	@Enumerated(value = EnumType.STRING)
 	private GuidanceStatus status;
 	
+	@PrePersist
+	public void onInsertGuidance() {
+		this.status = GuidanceStatus.SENDED;
+	}
+	
 }
