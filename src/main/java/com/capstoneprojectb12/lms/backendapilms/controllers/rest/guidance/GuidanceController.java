@@ -6,15 +6,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.errorValidation;
 
+@CrossOrigin
 @Slf4j
 @RestController
 @RequestMapping(value = {"/restapi/v1/guidances"})
@@ -28,5 +26,10 @@ public class GuidanceController {
 			return errorValidation(errors);
 		}
 		return this.guidanceService.save(request);
+	}
+	
+	@GetMapping(value = {"/class/{classId}"})
+	public ResponseEntity<?> findAllByClassId(@PathVariable(required = true, name = "classId") String classId) {
+		return this.guidanceService.findAllByClassId(classId);
 	}
 }

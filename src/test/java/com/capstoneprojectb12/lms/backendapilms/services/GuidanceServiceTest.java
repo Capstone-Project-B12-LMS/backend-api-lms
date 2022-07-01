@@ -9,6 +9,9 @@ import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserReposito
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.AnyException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.ClassNotFoundException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.UserNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Tag;
@@ -149,5 +152,57 @@ public class GuidanceServiceTest {
 		assertFalse(api.isStatus());
 		assertTrue(data.isEmpty());
 		reset(this.classRepository, this.guidanceRepository, this.userRepository);
+	}
+	
+	@Test
+	public void testFindAllByClassId() {
+//		success
+		when(this.guidanceRepository.findByClassEntityId(anyString())).thenReturn(new ArrayList<>(List.of(guidance)));
+		var res = this.guidanceService.findAllByClassId("id");
+		var api = getResponse(res);
+		var data = extract(new ArrayList<>(List.of(guidance)), api);
+		assertNotNull(res);
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertNotNull(api);
+		assertNotNull(data);
+		assertTrue(api.isStatus());
+		assertNull(api.getErrors());
+		assertTrue(data.isPresent());
+		assertEquals(guidance, data.get().get(0));
+		assertEquals(guidance.getId(), data.get().get(0).getId());
+		assertEquals(guidance.getStatus(), data.get().get(0).getStatus());
+		assertEquals(guidance.getTopic(), data.get().get(0).getTopic());
+		assertEquals(guidance.getContent(), data.get().get(0).getContent());
+		assertEquals(guidance.getClassEntity().getCode(), data.get().get(0).getClassEntity().getCode());
+		assertEquals(guidance.getUser().getEmail(), data.get().get(0).getUser().getEmail());
+		reset(this.guidanceRepository);
+
+//		data empty
+		when(this.guidanceRepository.findByClassEntityId(anyString())).thenReturn(new ArrayList<>());
+		res = this.guidanceService.findAllByClassId("id");
+		api = getResponse(res);
+		data = extract(new ArrayList<>(), api);
+		assertNotNull(res);
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertNotNull(api);
+		assertNotNull(data);
+		assertTrue(api.isStatus());
+		assertNull(api.getErrors());
+		assertTrue(data.isPresent());
+		reset(this.guidanceRepository);
+
+//		any exception
+		when(this.guidanceRepository.findByClassEntityId(anyString())).thenThrow(AnyException.class);
+		res = this.guidanceService.findAllByClassId("id");
+		api = getResponse(res);
+		data = extract(new ArrayList<>(), api);
+		assertNotNull(res);
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, res.getStatusCode());
+		assertNotNull(api);
+		assertFalse(api.isStatus());
+		assertNotNull(api.getErrors());
+		assertFalse(data.isPresent());
+		assertInstanceOf(HashMap.class, api.getErrors());
+		reset(this.guidanceRepository);
 	}
 }

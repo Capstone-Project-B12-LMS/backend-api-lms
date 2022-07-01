@@ -46,15 +46,16 @@ type ResponseDeleteGuidance implements ResponseDelete {
 }
 
 type GuidanceQuery {
-    findAll: [Guidance!]!
-    findAllWithPageable(page: Int!, size: Int!): GuidancePagination!
-    findAllDeleted: [Guidance!]!
-    findAllDeletedWithPageable(page: Int!, size: Int!): GuidancePagination!
-    findById(id: ID!): User
+    #    findAll: [Guidance!]!
+    #    findAllWithPageable(page: Int!, size: Int!): GuidancePagination!
+    #    findAllDeleted: [Guidance!]!
+    #    findAllDeletedWithPageable(page: Int!, size: Int!): GuidancePagination!
+    #    findById(id: ID!): Guidance
+    findByClassId(classId: ID!): [Guidance!]
 }
 
 type GuidanceMutation{
     save(request: GuidanceNew!): Guidance
-    update(id: ID!, request: GuidanceNew!): Guidance
-    deleteById(id: ID!): ResponseDeleteGuidance!
+    #    update(id: ID!, request: GuidanceNew!): Guidance
+    #    deleteById(id: ID!): ResponseDeleteGuidance!
 }

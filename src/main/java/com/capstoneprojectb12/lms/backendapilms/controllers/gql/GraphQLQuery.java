@@ -1,6 +1,7 @@
 package com.capstoneprojectb12.lms.backendapilms.controllers.gql;
 
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.classes.ClassQuery;
+import com.capstoneprojectb12.lms.backendapilms.controllers.gql.guidance.GuidanceQuery;
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.hello.HelloQuery;
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.material.MaterialQuery;
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.role.RoleQuery;
@@ -8,17 +9,19 @@ import com.capstoneprojectb12.lms.backendapilms.controllers.gql.user.UserQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Controller
 @SchemaMapping(typeName = "Query")
 @RequiredArgsConstructor
-// @CrossOrigin(allowCredentials = "true")
+@CrossOrigin
 public class GraphQLQuery {
 	private final HelloQuery helloQuery;
 	private final RoleQuery roleQuery;
 	private final UserQuery userQuery;
 	private final ClassQuery classQuery;
 	private final MaterialQuery materialQuery;
+	private final GuidanceQuery guidanceQuery;
 	
 	@SchemaMapping(field = "hello")
 	public HelloQuery helloQuery() {
@@ -47,5 +50,10 @@ public class GraphQLQuery {
 	@SchemaMapping(field = "material")
 	public MaterialQuery materialQuery() {
 		return this.materialQuery;
+	}
+	
+	@SchemaMapping(field = "guidance")
+	public GuidanceQuery guidanceQuery() {
+		return this.guidanceQuery;
 	}
 }
