@@ -5,6 +5,7 @@ type Query {
     user: UserQuery!
     class: ClassQuery!
     material: MaterialQuery!
+    guidance: GuidanceQuery!
 }
 
 type Mutation {
@@ -13,4 +14,5 @@ type Mutation {
     user: UserMutation!
     class: ClassMutation!
     material: MaterialMutation!
+    guidance: GuidanceMutation!
 }

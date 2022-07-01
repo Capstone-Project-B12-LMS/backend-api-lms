@@ -1,6 +1,5 @@
 package com.capstoneprojectb12.lms.backendapilms.models.dtos.guidance;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,10 +33,4 @@ public class GuidanceNew {
 	@NotBlank(message = "cannot be blank")
 	@NotEmpty(message = "cannot be empty")
 	private String content;
-	
-	@Schema(description = "Only values ACCEPTED, DECLINE, SENDED can be allowed")
-	@NotNull(message = "cannot be null")
-	@NotBlank(message = "cannot be blank")
-	@NotEmpty(message = "cannot be empty")
-	private String status;
 }
