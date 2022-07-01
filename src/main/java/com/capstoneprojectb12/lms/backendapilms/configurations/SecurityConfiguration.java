@@ -70,7 +70,12 @@ public class SecurityConfiguration {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry cors) {
-				cors.addMapping("/**").allowedOrigins("*");
+				cors.addMapping("/**")
+						.allowedOrigins("*")
+						.allowCredentials(true)
+						.allowedHeaders("*")
+						.allowedMethods("*")
+						.allowedOriginPatterns("*", "**");
 			}
 		};
 	}
