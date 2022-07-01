@@ -14,11 +14,10 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController
-@CrossOrigin
 //@PreAuthorize(value = "hasAnyAuthority('USER')") // TODO: enable security
 @RequestMapping(value = {"/restapi/v1/material"})
 @RequiredArgsConstructor
-public class ClassMaterialController {
+public class MaterialController {
 	private final MaterialService materialService;
 	
 	//	TODO: only teacher can create material
