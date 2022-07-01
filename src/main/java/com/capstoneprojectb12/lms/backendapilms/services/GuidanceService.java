@@ -99,4 +99,14 @@ public class GuidanceService implements BaseService<Guidance, GuidanceNew, Guida
 				.content(newEntity.getContent())
 				.build();
 	}
+	
+	public ResponseEntity<?> findAllByClassId(String classId) {
+		try {
+			var guidance = this.guidanceRepository.findByClassEntityId(classId);
+			return ok(guidance);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return err(e);
+		}
+	}
 }
