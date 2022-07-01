@@ -15,6 +15,7 @@ import javax.validation.Valid;
 
 
 @RestController
+@CrossOrigin
 @RequestMapping(value = {"/restapi/v1"})
 public class InitRestFullAPI {
 	@GetMapping
