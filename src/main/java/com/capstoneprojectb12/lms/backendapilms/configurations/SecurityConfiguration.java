@@ -72,7 +72,6 @@ public class SecurityConfiguration {
 			public void addCorsMappings(CorsRegistry cors) {
 				cors.addMapping("/**")
 						.allowedOrigins("*")
-						.allowCredentials(true)
 						.allowedHeaders("*")
 						.allowedMethods("*")
 						.allowedOriginPatterns("*", "**");
