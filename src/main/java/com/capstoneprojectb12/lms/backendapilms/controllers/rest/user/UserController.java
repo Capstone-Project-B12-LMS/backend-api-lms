@@ -27,7 +27,6 @@ import javax.validation.Valid;
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.bad;
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.err;
 
-@CrossOrigin
 @Slf4j
 @RestController
 @RequestMapping(value = {"/restapi/v1"})

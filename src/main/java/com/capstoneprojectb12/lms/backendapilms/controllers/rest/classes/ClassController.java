@@ -17,7 +17,6 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController
-@CrossOrigin
 @RequestMapping(value = {"/restapi/v1/class"})
 @RequiredArgsConstructor
 @PreAuthorize(value = "hasAnyAuthority('USER')") // TODO: enable security
