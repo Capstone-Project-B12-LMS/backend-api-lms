@@ -12,6 +12,7 @@ import javax.validation.Valid;
 
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.errorValidation;
 
+@CrossOrigin
 @Slf4j
 @RestController
 @RequestMapping(value = {"/restapi/v1/guidances"})

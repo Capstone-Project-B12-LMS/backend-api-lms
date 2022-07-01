@@ -9,11 +9,12 @@ import com.capstoneprojectb12.lms.backendapilms.controllers.gql.user.UserQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Controller
 @SchemaMapping(typeName = "Query")
 @RequiredArgsConstructor
-// @CrossOrigin(allowCredentials = "true")
+@CrossOrigin
 public class GraphQLQuery {
 	private final HelloQuery helloQuery;
 	private final RoleQuery roleQuery;
