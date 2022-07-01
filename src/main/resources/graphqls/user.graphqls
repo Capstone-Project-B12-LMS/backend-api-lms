@@ -47,8 +47,8 @@ type ResponseDeleteUser implements ResponseDelete{
 type UserQuery {
     findAll: [User!]!
     findAllWithPageable(page: Int!, size: Int!): UserPagination!
-    findAllDeleted: [User!]!
-    findAllDeletedWithPageable(page: Int!, size: Int!): UserPagination!
+    #    findAllDeleted: [User!]!
+    #    findAllDeletedWithPageable(page: Int!, size: Int!): UserPagination!
     findById(id: ID!): User
     findByClassByUserId(id: ID!, classStatus: ClassStatus!): [Class!]
 }
@@ -56,6 +56,6 @@ type UserQuery {
 type UserMutation {
     register(request: UserNew!): User
     login(request: UserLogin!): ResponseToken!
-    deleteById(id: ID!): ResponseDeleteUser!
+    #    deleteById(id: ID!): ResponseDeleteUser!
     updateById(id: ID!, request: UserUpdate!): User
 }
