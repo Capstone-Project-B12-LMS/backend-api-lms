@@ -23,7 +23,7 @@ public class Feedback extends BaseEntity {
 	
 	@ManyToOne
 	@JoinColumn(name = "class")
-	private Class classes;
+	private Class classEntity;
 	
 	@ManyToOne
 	private User user;
