@@ -51,6 +51,7 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 			classEntity.setName(classUpdate.getName());
 			classEntity.setRoom(classUpdate.getRoom());
 			classEntity.setStatus(classUpdate.getStatus());
+			classEntity.setReportUrl(classUpdate.getReportUrl());
 			
 			classEntity = this.classRepository.save(classEntity);
 			log.info(FinalVariable.UPDATE_SUCCESS);

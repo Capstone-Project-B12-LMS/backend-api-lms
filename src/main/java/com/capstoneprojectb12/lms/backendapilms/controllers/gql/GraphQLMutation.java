@@ -1,6 +1,7 @@
 package com.capstoneprojectb12.lms.backendapilms.controllers.gql;
 
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.classes.ClassMutation;
+import com.capstoneprojectb12.lms.backendapilms.controllers.gql.feedback.FeedbackMutation;
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.guidance.GuidanceMutation;
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.hello.HelloMutation;
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.material.MaterialMutation;
@@ -21,6 +22,7 @@ public class GraphQLMutation {
 	private final ClassMutation classMutation;
 	private final MaterialMutation materialMutation;
 	private final GuidanceMutation guidanceMutation;
+	private final FeedbackMutation feedbackMutation;
 	
 	@SchemaMapping(field = "hello")
 	public HelloMutation helloMutation() {
@@ -54,5 +56,10 @@ public class GraphQLMutation {
 	@SchemaMapping(field = "guidance")
 	public GuidanceMutation guidanceMutation() {
 		return this.guidanceMutation;
+	}
+	
+	@SchemaMapping(field = "feedback")
+	public FeedbackMutation feedbackMutation() {
+		return this.feedbackMutation;
 	}
 }

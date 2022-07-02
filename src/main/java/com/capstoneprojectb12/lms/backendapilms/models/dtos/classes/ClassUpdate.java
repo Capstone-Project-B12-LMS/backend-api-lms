@@ -19,4 +19,5 @@ public class ClassUpdate extends ClassNew {
 	@NotNull(message = "cannot be null")
 	@Schema(allowableValues = "you can use ACTIVE, INACTIVE, or WILL_END")
 	private ClassStatus status;
+	private String reportUrl;
 }
