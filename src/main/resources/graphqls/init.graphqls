@@ -6,6 +6,7 @@ type Query {
     class: ClassQuery!
     material: MaterialQuery!
     guidance: GuidanceQuery!
+    feedback: FeedbackQuery!
 }
 
 type Mutation {
@@ -15,4 +16,5 @@ type Mutation {
     class: ClassMutation!
     material: MaterialMutation!
     guidance: GuidanceMutation!
+    feedback: FeedbackMutation!
 }

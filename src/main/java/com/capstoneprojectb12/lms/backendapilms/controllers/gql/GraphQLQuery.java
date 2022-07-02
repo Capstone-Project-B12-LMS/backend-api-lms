@@ -1,6 +1,7 @@
 package com.capstoneprojectb12.lms.backendapilms.controllers.gql;
 
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.classes.ClassQuery;
+import com.capstoneprojectb12.lms.backendapilms.controllers.gql.feedback.FeedbackQuery;
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.guidance.GuidanceQuery;
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.hello.HelloQuery;
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.material.MaterialQuery;
@@ -20,6 +21,7 @@ public class GraphQLQuery {
 	private final ClassQuery classQuery;
 	private final MaterialQuery materialQuery;
 	private final GuidanceQuery guidanceQuery;
+	private final FeedbackQuery feedbackQuery;
 	
 	@SchemaMapping(field = "hello")
 	public HelloQuery helloQuery() {
@@ -53,5 +55,10 @@ public class GraphQLQuery {
 	@SchemaMapping(field = "guidance")
 	public GuidanceQuery guidanceQuery() {
 		return this.guidanceQuery;
+	}
+	
+	@SchemaMapping(field = "feedback")
+	public FeedbackQuery feedbackQuery() {
+		return this.feedbackQuery;
 	}
 }
