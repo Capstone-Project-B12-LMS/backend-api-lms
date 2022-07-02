@@ -6,6 +6,8 @@ import com.capstoneprojectb12.lms.backendapilms.models.entities.Feedback;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.FeedbackRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
+import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.ClassNotFoundException;
+import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.UserNotFoundException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -74,7 +76,9 @@ public class FeedbackService implements BaseService<Feedback, FeedbackNew, Feedb
 	@Override
 	public Feedback toEntity(FeedbackNew newEntity) {
 		return Feedback.builder()
-				.classEntity()
+				.classEntity(this.classRepository.findById(newEntity.getClassId()).orElseThrow(ClassNotFoundException :: new))
+				.user(this.userRepository.findById(newEntity.getUserId()).orElseThrow(UserNotFoundException :: new))
+				.content(newEntity.getContent().trim())
 				.build();
 	}
 }
