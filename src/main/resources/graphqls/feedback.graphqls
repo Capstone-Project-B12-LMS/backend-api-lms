@@ -29,7 +29,7 @@ type FeedbackQuery {
     #    findAllDeleted: [Guidance!]!
     #    findAllDeletedWithPageable(page: Int!, size: Int!): GuidancePagination!
     #    findById(id: ID!): Guidance
-    findByClassId(classId: ID!): [Guidance!]
+    findByClassId(classId: ID!): [Feedback!]
 }
 
 type FeedbackMutation {
