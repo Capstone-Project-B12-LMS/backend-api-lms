@@ -11,6 +11,7 @@ type Class implements BaseSchema {
     code: String!
     status: ClassStatus!
     users: [UserClassResponse!]
+    reportUrl: String
 
     createdBy: String!
     createdAt: String!
@@ -36,6 +37,7 @@ input ClassUpdate {
     name: String!
     room: String
     status: ClassStatus!
+    reportUrl: String
 }
 
 type UserClassResponse {

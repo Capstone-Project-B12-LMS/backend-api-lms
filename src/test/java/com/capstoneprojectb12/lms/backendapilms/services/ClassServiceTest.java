@@ -38,9 +38,9 @@ import static org.mockito.Mockito.when;
 @Tag(value = "classServiceTest")
 public class ClassServiceTest {
 	
-	public static final Class classEntity = Class.builder().id("id").name("my class").room("my room").code("wkwkwk").status(ClassStatus.ACTIVE).users(new ArrayList<>()).build();
-	private final Class classEntity2 = Class.builder().id("id").name("ny class").room("my room").code("wkwkwk").status(ClassStatus.ACTIVE).users(new ArrayList<>()).build();
-	private final ClassUpdate classUpdate = ClassUpdate.builder().name("updated class").room("updated room").status(ClassStatus.WILL_END).build();
+	public static final Class classEntity = Class.builder().id("id").name("my class").room("my room").code("wkwkwk").reportUrl("report url here").status(ClassStatus.ACTIVE).users(new ArrayList<>()).build();
+	private final Class classEntity2 = Class.builder().id("id").name("ny class").room("my room").code("wkwkwk").reportUrl("report url here").status(ClassStatus.ACTIVE).users(new ArrayList<>()).build();
+	private final ClassUpdate classUpdate = ClassUpdate.builder().name("updated class").room("updated room").reportUrl("report url here").status(ClassStatus.WILL_END).build();
 	private final Class updatedClass = Class.builder().id("updated id").name(classUpdate.getName()).room(classUpdate.getRoom()).status(classUpdate.getStatus()).code(classEntity.getCode()).users(classEntity.getUsers()).build();
 	
 	private final ClassNew classNew = ClassNew.builder().name(classEntity.getName()).room(classEntity.getRoom()).build();
@@ -106,6 +106,7 @@ public class ClassServiceTest {
 		assertEquals(classEntity.getName(), data.getName());
 		assertEquals(classEntity.getRoom(), data.getRoom());
 		assertEquals(classEntity.getStatus(), data.getStatus());
+		assertEquals(classEntity.getReportUrl(), data.getReportUrl());
 		reset(this.classRepository);
 		
 		// failed
