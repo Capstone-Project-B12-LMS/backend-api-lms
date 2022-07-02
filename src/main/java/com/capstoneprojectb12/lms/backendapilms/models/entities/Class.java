@@ -28,6 +28,7 @@ public class Class extends BaseEntity {
 	private String name;
 	
 	private String room;
+	private String reportUrl;
 	
 	@Column(length = 10, nullable = false, unique = true)
 	private String code;

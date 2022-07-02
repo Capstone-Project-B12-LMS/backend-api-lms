@@ -45,7 +45,7 @@ public class ClassController {
 	}
 	
 	@GetMapping(value = {"/{id}"})
-	public ResponseEntity<?> finfById(@PathVariable(name = "id") String id) {
+	public ResponseEntity<?> findById(@PathVariable(name = "id") String id) {
 		return this.classService.findById(id);
 	}
 	
