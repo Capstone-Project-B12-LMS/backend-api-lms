@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.*;
+
 @Slf4j
 @Service
 @Transactional
@@ -30,7 +32,20 @@ public class FeedbackService implements BaseService<Feedback, FeedbackNew, Feedb
 	
 	@Override
 	public ResponseEntity<?> save(FeedbackNew newEntity) {
-		return null;
+		try {
+			var feedback = this.toEntity(newEntity);
+			feedback = this.feedbackRepository.save(feedback);
+			return ok(feedback);
+		} catch (ClassNotFoundException e) {
+			log.error(e.getMessage());
+			return bad(e.getMessage());
+		} catch (UserNotFoundException e) {
+			log.error(e.getMessage());
+			return bad(e.getMessage());
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return err(e);
+		}
 	}
 	
 	@Override
