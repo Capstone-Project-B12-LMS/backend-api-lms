@@ -6,6 +6,8 @@ import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassReposit
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.FeedbackRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.AnyException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -133,5 +135,34 @@ public class FeedbackServiceTest {
 		assertNull(api.getData());
 		assertTrue(data.isEmpty());
 		reset(this.feedbackRepository, this.classRepository, this.userRepository);
+	}
+	
+	@Test
+	public void testFindAllByClassId() {
+//		success
+		when(this.feedbackRepository.findByClassEntityId(anyString())).thenReturn(new ArrayList<>(List.of(feedback)));
+		var res = this.feedbackService.findAllByClassId("id");
+		var api = getResponse(res);
+		var data = extract(new ArrayList<Feedback>(), api);
+		assertNotNull(res);
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertNotNull(api);
+		assertNull(api.getErrors());
+		assertTrue(api.isStatus());
+		assertTrue(data.isPresent());
+		assertEquals(feedback.getId(), data.get().get(0).getId());
+		reset(this.feedbackRepository);
+
+//		any exception
+		when(this.feedbackRepository.findByClassEntityId(anyString())).thenThrow(AnyException.class);
+		res = this.feedbackService.findAllByClassId("id");
+		api = getResponse(res);
+		data = extract(new ArrayList<Feedback>(), api);
+		assertNotNull(res);
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, res.getStatusCode());
+		assertNotNull(api);
+		assertNotNull(api.getErrors());
+		assertFalse(api.isStatus());
+		assertTrue(data.isEmpty());
 	}
 }

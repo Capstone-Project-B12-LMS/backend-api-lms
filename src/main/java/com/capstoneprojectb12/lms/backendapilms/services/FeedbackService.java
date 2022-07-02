@@ -96,4 +96,14 @@ public class FeedbackService implements BaseService<Feedback, FeedbackNew, Feedb
 				.content(newEntity.getContent().trim())
 				.build();
 	}
+	
+	public ResponseEntity<?> findAllByClassId(String classId) {
+		try {
+			var feedbacks = this.feedbackRepository.findByClassEntityId(classId);
+			return ok(feedbacks);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return err(e);
+		}
+	}
 }
