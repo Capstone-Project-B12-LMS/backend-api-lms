@@ -32,8 +32,7 @@ import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.get
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @Slf4j
 @SpringBootTest(classes = {MaterialService.class})
@@ -256,6 +255,13 @@ public class MaterialServiceTest {
 		assertTrue(data.isEmpty());
 		reset(this.materialRepository, this.categoryRepository, this.classRepository);
 		
+	}
+	
+	@Test
+	public void testDeleteById() {
+//		success
+		when(this.materialRepository.findById(anyString())).thenReturn(Optional.of(material));
+		doNothing().when(this.materialRepository).deleteById(anyString());
 	}
 	
 	@Test
