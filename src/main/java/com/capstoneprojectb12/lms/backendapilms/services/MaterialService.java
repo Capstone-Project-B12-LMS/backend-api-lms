@@ -56,17 +56,21 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 			var temp = this.toEntity(updateEntity);
 			var material = this.materialRepository.findById(entityId).orElseThrow(DataNotFoundException :: new);
 			
-			material.setClasses(temp.getClasses());
+			material.setClassEntity(temp.getClassEntity());
 			material.setContent(temp.getContent());
 			material.setPoint(temp.getPoint());
 			material.setDeadline(temp.getDeadline());
 			material.setTitle(temp.getTitle());
-//			material.setVideoUri(); // TODO: create file service first
-//			material.setFileUrl(); // TODO: create file service first
-//			material.setTopic(); // TODO: create topic repo/service first
+			material.setVideoUrl(temp.getVideoUrl()); // TODO: create file service first
+			material.setFileUrl(temp.getFileUrl()); // TODO: create file service first
+			material.setTopic(temp.getTopic()); // TODO: create topic repo/service first
+			material.setCategory(temp.getCategory());
 			
 			material = this.materialRepository.save(material);
 			return ok(material);
+		} catch (DataNotFoundException e) {
+			log.error(e.getMessage());
+			return bad(e.getMessage());
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			return err(e);
@@ -152,8 +156,8 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 	@Override
 	public Material toEntity(MaterialNew materialNew) {
 		return Material.builder()
-				.classes(this.classRepository.findById(materialNew.getClassId()).orElseThrow(ClassNotFoundException :: new))
-//				.category() // TODO: create when category not found
+				.classEntity(this.classRepository.findById(materialNew.getClassId()).orElseThrow(ClassNotFoundException :: new))
+//				.category(materialNew.getVideo()) // TODO: create when category not found
 //				.topic(materialNew.getTopicId()) // TODO: find topic by id or maybe create new topic if not exists
 //				.fileUrl() // TODO: save file first
 				.category(this.categoryRepository.findByNameEqualsIgnoreCase(materialNew.getCategory()).orElseGet(() -> {
@@ -175,7 +179,7 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 	
 	public ResponseEntity<?> findAllByClassId(String classId) {
 		try {
-			var materials = this.materialRepository.findByClassesIdOrderByCreatedAtAsc(classId).orElseThrow(ClassNotFoundException :: new);
+			var materials = this.materialRepository.findByClassEntityIdOrderByCreatedAtAsc(classId).orElseThrow(ClassNotFoundException :: new);
 			return ok(materials);
 		} catch (ClassNotFoundException e) {
 			log.warn(e.getMessage());

@@ -21,7 +21,7 @@ input MaterialNew {
     classId: ID!
     title: String!
     content: String!
-    category: String
+    #    category: String # create category CRUD first
     topicId: String
 
     # TODO: learn how to get uploaded file in graphql first
@@ -60,6 +60,6 @@ type MaterialQuery {
 
 type MaterialMutation {
     save(request: MaterialNew!): Material
-    #    update(id: ID!, request: MaterialNew!): Material
+    update(id: ID!, request: MaterialNew!): Material
     #    deleteById(id: ID!): ResponseDeleteMaterial!
 }

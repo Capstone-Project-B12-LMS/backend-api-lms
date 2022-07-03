@@ -24,7 +24,7 @@ public class Material extends BaseEntity {
 	
 	@ManyToOne
 	@JoinColumn(name = "class", nullable = false)
-	private Class classes;
+	private Class classEntity;
 	
 	@Column(nullable = false)
 	private String title;

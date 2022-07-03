@@ -28,7 +28,7 @@ public class ApiResponseTest {
 			assertEquals(MaterialServiceTest.material.getDeadline(), data.get().getDeadline());
 			assertEquals(MaterialServiceTest.material.getContent(), data.get().getContent());
 			assertEquals(MaterialServiceTest.material.getCategory(), data.get().getCategory());
-			assertEquals(MaterialServiceTest.material.getClasses(), data.get().getClasses());
+			assertEquals(MaterialServiceTest.material.getClassEntity(), data.get().getClassEntity());
 			assertEquals(MaterialServiceTest.material.getIsDeleted(), data.get().getIsDeleted());
 		}
 		
