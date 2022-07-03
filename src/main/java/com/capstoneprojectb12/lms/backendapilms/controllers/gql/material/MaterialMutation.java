@@ -26,9 +26,9 @@ public class MaterialMutation implements BaseMutation<Material, MaterialNew, Mat
 	}
 	
 	@Override
-	public Material update(String id, MaterialUpdate request) {
-//		TODO: implement update material
-		return null;
+	@SchemaMapping(field = "update")
+	public Material update(@Argument(name = "id") String id, @Argument(name = "request") MaterialUpdate request) {
+		return extract(new Material(), this.materialService.update(id, request)).orElse(null);
 	}
 	
 	@Override
