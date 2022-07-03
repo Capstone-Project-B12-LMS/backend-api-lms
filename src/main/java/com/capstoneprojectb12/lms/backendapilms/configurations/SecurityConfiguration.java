@@ -71,7 +71,7 @@ public class SecurityConfiguration {
 			@Override
 			public void addCorsMappings(CorsRegistry cors) {
 				cors.addMapping("/**")
-						.allowedOrigins("*", "http://localhost:3000/*", "http://localhost:3000/**")
+						.allowedOrigins("*")
 						.allowedHeaders("*")
 						.allowedMethods("*")
 						.allowedOriginPatterns("*", "**");
