@@ -103,7 +103,8 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
     public ResponseEntity<?> deleteUserById(String classId, String userId) {
         try {
             var classEntity = this.classRepository.findById(classId).orElseThrow(ClassNotFoundException::new);
-            if (!classEntity.getUsers().removeIf((u) -> u.getId().equals(userId))) {
+            final var teacher = classEntity.getCreatedBy();
+            if (!classEntity.getUsers().removeIf((u) -> u.getId().equals(userId) && (!teacher.equalsIgnoreCase(u.getEmail())))) {
                 return bad("user not found");
             }
             classEntity = this.classRepository.save(classEntity);

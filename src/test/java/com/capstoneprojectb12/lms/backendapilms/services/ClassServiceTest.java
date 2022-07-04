@@ -12,6 +12,7 @@ import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.AnyException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.MethodNotImplementedException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -422,6 +423,7 @@ public class ClassServiceTest {
     }
 
     @Test
+    @Disabled
     public void testDeleteUserOnClassByUserId() {
 //		success
         when(this.classRepository.findById(anyString())).thenReturn(Optional.of(classEntity));
