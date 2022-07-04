@@ -21,7 +21,7 @@ input MaterialNew {
     classId: ID!
     title: String!
     content: String!
-    category: String
+    #    category: String # create category CRUD first
     topicId: String
 
     # TODO: learn how to get uploaded file in graphql first
@@ -50,10 +50,10 @@ type MaterialPagination implements PaginationResponse {
 }
 
 type MaterialQuery {
-    findAll: [Material!]!
-    findAllWithPageable(page: Int!, size: Int!): MaterialPagination!
-    findAllDeleted: [Material!]!
-    findAllDeletedWithPageable(page: Int!, size: Int!): MaterialPagination!
+    #    findAll: [Material!]!
+    #    findAllWithPageable(page: Int!, size: Int!): MaterialPagination!
+    #    findAllDeleted: [Material!]!
+    #    findAllDeletedWithPageable(page: Int!, size: Int!): MaterialPagination!
     findById(id: ID!): Material
     findAllByClassId(classId: ID!): [Material!]
 }
@@ -61,5 +61,5 @@ type MaterialQuery {
 type MaterialMutation {
     save(request: MaterialNew!): Material
     update(id: ID!, request: MaterialNew!): Material
-    deleteById(id: ID!): ResponseDeleteMaterial!
+    #    deleteById(id: ID!): ResponseDeleteMaterial!
 }

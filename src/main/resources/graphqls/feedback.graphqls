@@ -1,0 +1,39 @@
+type Feedback implements BaseSchema{
+    id: ID!
+    classEntity: Class!
+    user: User!
+    content: String!
+
+    createdBy: String!
+    createdAt: String!
+    updatedBy: String
+    updatedAt: String
+    isDeleted: Boolean!
+}
+
+input FeedbackNew {
+    classId: String!
+    userId: String!
+    content: String!
+}
+
+input FeedbackUpdate {
+    classId: String!
+    userId: String!
+    content: String!
+}
+
+type FeedbackQuery {
+    #    findAll: [Guidance!]!
+    #    findAllWithPageable(page: Int!, size: Int!): GuidancePagination!
+    #    findAllDeleted: [Guidance!]!
+    #    findAllDeletedWithPageable(page: Int!, size: Int!): GuidancePagination!
+    #    findById(id: ID!): Guidance
+    findByClassId(classId: ID!): [Feedback!]
+}
+
+type FeedbackMutation {
+    save(request: FeedbackNew!): Feedback
+    #    update(id: ID!, request: GuidanceNew!): Guidance
+    #    deleteById(id: ID!): ResponseDeleteGuidance!
+}

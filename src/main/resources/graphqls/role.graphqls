@@ -32,11 +32,12 @@ type ResponseDeleteRole implements ResponseDelete{
 type RoleQuery {
     findAll: [Role!]!
     findAllWithPageable(page: Int!, size: Int!): RolePagination!
-    findAllDeleted: [Role!]!
-    findAllDeletedWithPageable(page: Int!, size: Int!): RolePagination!
+    #    findAllDeleted: [Role!]!
+    #    findAllDeletedWithPageable(page: Int!, size: Int!): RolePagination!
+    #    findById(id: ID!): Role
 }
 type RoleMutation {
     save(request: RoleNew!): Role
-    update(id: ID!, request: RoleNew!): Role
-    deleteById(id: ID!): ResponseDeleteRole!
+    #    update(id: ID!, request: RoleNew!): Role
+    #    deleteById(id: ID!): ResponseDeleteRole!
 }

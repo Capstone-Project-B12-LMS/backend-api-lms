@@ -1,6 +1,5 @@
 package com.capstoneprojectb12.lms.backendapilms.models.entities;
 
-import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,40 +12,23 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-@Entity(name = "materials")
+@Entity(name = "comments")
 @Getter
 @Setter
+@SQLDelete(sql = "UPDATE comments SET is_deleted = true WHERE id = ?")
 @NoArgsConstructor
 @AllArgsConstructor
-@SQLDelete(sql = "UPDATE materials SET is_deleted = true WHERE id = ?")
 @SuperBuilder
-public class Material extends BaseEntity {
+public class Feedback extends BaseEntity {
 	
 	@ManyToOne
-	@JoinColumn(name = "class", nullable = false)
+	@JoinColumn(name = "class")
 	private Class classEntity;
 	
-	@Column(nullable = false)
-	private String title;
+	@ManyToOne
+	private User user;
 	
 	@Column(length = 1000, nullable = false)
 	private String content;
-	
-	@ManyToOne
-	private Topic topic;
-	
-	@Column(length = 1000)
-	private String videoUrl;
-	
-	@Column(length = 1000)
-	private String fileUrl;
-	
-	private Date deadline;
-	
-	@Column(length = 3, nullable = false)
-	private int point;
-	
-	@ManyToOne
-	private Category category;
 	
 }

@@ -51,8 +51,8 @@ public class MaterialNew {
 	
 	private Integer point;
 	
-	@NotNull(message = "cannot be null")
-	@NotBlank(message = "cannot be blank")
-	@NotEmpty(message = "cannot be empty")
+	//	@NotNull(message = "cannot be null")
+//	@NotBlank(message = "cannot be blank")
+//	@NotEmpty(message = "cannot be empty")
 	private String category;
 }

@@ -1,6 +1,7 @@
 package com.capstoneprojectb12.lms.backendapilms.controllers.gql;
 
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.classes.ClassMutation;
+import com.capstoneprojectb12.lms.backendapilms.controllers.gql.feedback.FeedbackMutation;
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.guidance.GuidanceMutation;
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.hello.HelloMutation;
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.material.MaterialMutation;
@@ -10,11 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Controller
 @SchemaMapping(typeName = "Mutation")
-@CrossOrigin
 @RequiredArgsConstructor
 public class GraphQLMutation {
 	private final HelloMutation helloMutation;
@@ -23,6 +22,7 @@ public class GraphQLMutation {
 	private final ClassMutation classMutation;
 	private final MaterialMutation materialMutation;
 	private final GuidanceMutation guidanceMutation;
+	private final FeedbackMutation feedbackMutation;
 	
 	@SchemaMapping(field = "hello")
 	public HelloMutation helloMutation() {
@@ -56,5 +56,10 @@ public class GraphQLMutation {
 	@SchemaMapping(field = "guidance")
 	public GuidanceMutation guidanceMutation() {
 		return this.guidanceMutation;
+	}
+	
+	@SchemaMapping(field = "feedback")
+	public FeedbackMutation feedbackMutation() {
+		return this.feedbackMutation;
 	}
 }

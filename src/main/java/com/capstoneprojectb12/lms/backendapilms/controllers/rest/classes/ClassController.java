@@ -17,7 +17,6 @@ import javax.validation.Valid;
 
 @Slf4j
 @RestController
-@CrossOrigin
 @RequestMapping(value = {"/restapi/v1/class"})
 @RequiredArgsConstructor
 @PreAuthorize(value = "hasAnyAuthority('USER')") // TODO: enable security
@@ -46,7 +45,7 @@ public class ClassController {
 	}
 	
 	@GetMapping(value = {"/{id}"})
-	public ResponseEntity<?> finfById(@PathVariable(name = "id") String id) {
+	public ResponseEntity<?> findById(@PathVariable(name = "id") String id) {
 		return this.classService.findById(id);
 	}
 	
