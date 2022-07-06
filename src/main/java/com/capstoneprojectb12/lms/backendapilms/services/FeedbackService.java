@@ -34,6 +34,7 @@ public class FeedbackService implements BaseService<Feedback, FeedbackNew, Feedb
     public ResponseEntity<?> save(FeedbackNew newEntity) {
         try {
             if (this.feedbackRepository.existsByUserId(newEntity.getUserId())) {
+                log.error("Already created feedback");
                 return bad("Already created feedback");
             }
             var feedback = this.toEntity(newEntity);
