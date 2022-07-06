@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GuidanceRepository extends JpaRepository<Guidance, String> {
 	List<Guidance> findByClassEntityId(String classEntityId);
+	
+	List<Guidance> findByUserId(String userId);
 }

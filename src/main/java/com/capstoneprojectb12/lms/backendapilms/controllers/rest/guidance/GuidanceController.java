@@ -18,7 +18,7 @@ import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.err
 @RequiredArgsConstructor
 public class GuidanceController {
 	private final GuidanceService guidanceService;
-	
+
 	@PostMapping
 	public ResponseEntity<?> save(@RequestBody @Valid GuidanceNew request, Errors errors) {
 		if (errors.hasErrors()) {
@@ -26,9 +26,14 @@ public class GuidanceController {
 		}
 		return this.guidanceService.save(request);
 	}
-	
+
 	@GetMapping(value = {"/class/{classId}"})
 	public ResponseEntity<?> findAllByClassId(@PathVariable(required = true, name = "classId") String classId) {
 		return this.guidanceService.findAllByClassId(classId);
+	}
+
+	@DeleteMapping(value = {"/{id}"})
+	public ResponseEntity<?> deleteById(@PathVariable(name = "id") String id) {
+		return this.guidanceService.deleteById(id);
 	}
 }
