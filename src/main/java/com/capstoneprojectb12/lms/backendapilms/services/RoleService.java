@@ -4,6 +4,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.role.RoleNew;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.role.RoleUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Role;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.RoleRepository;
+import com.capstoneprojectb12.lms.backendapilms.services.mongodb.ActivityHistoryService;
 import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.DataNotFoundException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.MethodNotImplementedException;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.*;
+import static com.capstoneprojectb12.lms.backendapilms.utilities.histories.ActivityHistoryUtils.youAreSuccessfully;
 
 @Slf4j
 @Service
@@ -32,12 +34,16 @@ import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.*;
 @RequiredArgsConstructor
 public class RoleService implements BaseService<Role, RoleNew, RoleUpdate> {
 	private final RoleRepository roleRepository;
+	private final ActivityHistoryService history;
 	
 	@Override
 	public ResponseEntity<?> save(RoleNew newEntity) {
 		try {
 			var role = this.toEntity(newEntity);
 			role = this.roleRepository.save(role);
+			
+			new Thread(() -> history.save(youAreSuccessfully("created new Role " + newEntity.getName()))).start();
+			
 			return ok(role);
 		} catch (DataIntegrityViolationException e) {
 			log.warn(e.getMessage());
@@ -57,6 +63,9 @@ public class RoleService implements BaseService<Role, RoleNew, RoleUpdate> {
 			role.setDescription(updateEntity.getDescription());
 			
 			role = this.roleRepository.save(role);
+			
+			new Thread(() -> history.save(youAreSuccessfully("update Role " + updateEntity.getName()))).start();
+			
 			return ok(role);
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -71,6 +80,9 @@ public class RoleService implements BaseService<Role, RoleNew, RoleUpdate> {
 			if (role.isPresent() && ! role.get().getIsDeleted()) {
 				this.roleRepository.deleteById(id);
 				log.info(FinalVariable.DELETE_SUCCESS);
+				
+				new Thread(() -> history.save(youAreSuccessfully("delete Role " + role.get().getName()))).start();
+				
 				return ok(role.get());
 			}
 			log.warn(FinalVariable.DATA_NOT_FOUND);

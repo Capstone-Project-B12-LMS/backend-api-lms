@@ -7,6 +7,7 @@ type Query {
     material: MaterialQuery!
     guidance: GuidanceQuery!
     feedback: FeedbackQuery!
+    activityHistory: ActivityHistoryQuery!
 }
 
 type Mutation {
@@ -17,4 +18,5 @@ type Mutation {
     material: MaterialMutation!
     guidance: GuidanceMutation!
     feedback: FeedbackMutation!
+    #    activityHistory: ActivityHistoryMutation!
 }

@@ -1,5 +1,6 @@
 package com.capstoneprojectb12.lms.backendapilms.controllers.gql;
 
+import com.capstoneprojectb12.lms.backendapilms.controllers.gql.activityhistory.ActivityHistoryQuery;
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.classes.ClassQuery;
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.feedback.FeedbackQuery;
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.guidance.GuidanceQuery;
@@ -22,6 +23,7 @@ public class GraphQLQuery {
 	private final MaterialQuery materialQuery;
 	private final GuidanceQuery guidanceQuery;
 	private final FeedbackQuery feedbackQuery;
+	private final ActivityHistoryQuery activityHistoryQuery;
 	
 	@SchemaMapping(field = "hello")
 	public HelloQuery helloQuery() {
@@ -60,5 +62,10 @@ public class GraphQLQuery {
 	@SchemaMapping(field = "feedback")
 	public FeedbackQuery feedbackQuery() {
 		return this.feedbackQuery;
+	}
+	
+	@SchemaMapping(field = "activityHistory")
+	public ActivityHistoryQuery activityHistoryQuery() {
+		return this.activityHistoryQuery;
 	}
 }

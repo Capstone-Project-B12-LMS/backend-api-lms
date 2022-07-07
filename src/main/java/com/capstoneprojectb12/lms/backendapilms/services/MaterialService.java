@@ -7,6 +7,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.entities.Material;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.CategoryRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.MaterialRepository;
+import com.capstoneprojectb12.lms.backendapilms.services.mongodb.ActivityHistoryService;
 import com.capstoneprojectb12.lms.backendapilms.utilities.DateUtils;
 import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.ClassNotFoundException;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.*;
+import static com.capstoneprojectb12.lms.backendapilms.utilities.histories.ActivityHistoryUtils.youAreSuccessfully;
 
 @Slf4j
 @Service
@@ -34,12 +36,16 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 	private final MaterialRepository materialRepository;
 	private final ClassRepository classRepository;
 	private final CategoryRepository categoryRepository;
+	private final ActivityHistoryService history;
 	
 	@Override
 	public ResponseEntity<?> save(MaterialNew newEntity) {
 		try {
 			var material = this.toEntity(newEntity);
 			material = this.materialRepository.save(material);
+			
+			new Thread(() -> history.save(youAreSuccessfully("created Material " + newEntity.getTitle()))).start();
+			
 			return ok(material);
 		} catch (ClassNotFoundException e) {
 			log.warn(FinalVariable.DATA_NOT_FOUND);
@@ -67,6 +73,9 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 			material.setCategory(temp.getCategory());
 			
 			material = this.materialRepository.save(material);
+			
+			new Thread(() -> history.save(youAreSuccessfully("updated Material " + updateEntity.getTitle()))).start();
+			
 			return ok(material);
 		} catch (DataNotFoundException e) {
 			log.error(e.getMessage());
@@ -87,6 +96,9 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 			}
 			this.classRepository.deleteById(id);
 			log.info(FinalVariable.DELETE_SUCCESS);
+			
+			new Thread(() -> history.save(youAreSuccessfully("deleted Material " + this.materialRepository.findById(id).get().getTitle()))).start();
+			
 			return ok(material.get());
 		} catch (Exception e) {
 			log.error(e.getMessage());
