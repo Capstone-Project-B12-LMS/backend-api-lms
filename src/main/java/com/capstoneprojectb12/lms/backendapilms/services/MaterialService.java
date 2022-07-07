@@ -73,6 +73,9 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 			material.setCategory(temp.getCategory());
 			
 			material = this.materialRepository.save(material);
+			
+			new Thread(() -> history.save(youAreSuccessfully("updated Material " + updateEntity.getTitle()))).start();
+			
 			return ok(material);
 		} catch (DataNotFoundException e) {
 			log.error(e.getMessage());
