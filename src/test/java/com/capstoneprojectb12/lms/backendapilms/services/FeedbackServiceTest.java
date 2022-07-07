@@ -38,7 +38,6 @@ public class FeedbackServiceTest {
 			.build();
 	
 	private static final FeedbackNew feedbackNew = FeedbackNew.builder()
-			.userId("id")
 			.classId("id")
 			.content("this is content")
 			.build();
@@ -51,12 +50,15 @@ public class FeedbackServiceTest {
 	private FeedbackService feedbackService;
 	@MockBean
 	private FeedbackRepository feedbackRepository;
+	@MockBean
+	private UserService userService;
 	
 	@Test
 	public void testToEntity() {
 //	success
 		when(this.classRepository.findById(anyString())).thenReturn(Optional.of(ClassServiceTest.classEntity));
-		when(this.userRepository.findById(anyString())).thenReturn(Optional.of(UserServiceTest.user));
+		when(this.userRepository.findByEmailEqualsIgnoreCase(anyString())).thenReturn(Optional.of(UserServiceTest.user));
+		when(this.userService.getCurrentUser()).thenReturn(UserServiceTest.user.getEmail());
 		var data = this.feedbackService.toEntity(feedbackNew);
 		assertNotNull(data);
 		assertNotNull(data.getClassEntity());
@@ -70,8 +72,9 @@ public class FeedbackServiceTest {
 	public void testSave() {
 //		success
 		when(this.classRepository.findById(anyString())).thenReturn(Optional.of(ClassServiceTest.classEntity));
-		when(this.userRepository.findById(anyString())).thenReturn(Optional.of(UserServiceTest.user));
+		when(this.userRepository.findByEmailEqualsIgnoreCase(anyString())).thenReturn(Optional.of(UserServiceTest.user));
 		when(this.feedbackRepository.save(any(Feedback.class))).thenReturn(feedback);
+		when(this.userService.getCurrentUser()).thenReturn(UserServiceTest.user.getEmail());
 		var res = this.feedbackService.save(feedbackNew);
 		var api = getResponse(res);
 		var data = extract(feedback, api);
@@ -83,14 +86,14 @@ public class FeedbackServiceTest {
 		assertNotNull(api.getData());
 		assertTrue(data.isPresent());
 		assertEquals(feedbackNew.getClassId(), data.get().getClassEntity().getId());
-		assertEquals(feedbackNew.getUserId(), data.get().getUser().getId());
+		assertNotNull(data.get().getUser());
 		assertEquals(feedbackNew.getContent(), data.get().getContent());
 		assertNotNull(data.get().getId());
 		reset(this.feedbackRepository, this.classRepository, this.userRepository);
 
 //		class not found
 		when(this.classRepository.findById(anyString())).thenReturn(Optional.empty());
-		when(this.userRepository.findById(anyString())).thenReturn(Optional.of(UserServiceTest.user));
+		when(this.userRepository.findByEmailEqualsIgnoreCase(anyString())).thenReturn(Optional.of(UserServiceTest.user));
 		when(this.feedbackRepository.save(any(Feedback.class))).thenReturn(feedback);
 		res = this.feedbackService.save(feedbackNew);
 		api = getResponse(res);
@@ -106,7 +109,7 @@ public class FeedbackServiceTest {
 
 //		user not found
 		when(this.classRepository.findById(anyString())).thenReturn(Optional.of(ClassServiceTest.classEntity));
-		when(this.userRepository.findById(anyString())).thenReturn(Optional.empty());
+		when(this.userRepository.findByEmailEqualsIgnoreCase(anyString())).thenReturn(Optional.empty());
 		when(this.feedbackRepository.save(any(Feedback.class))).thenReturn(feedback);
 		res = this.feedbackService.save(feedbackNew);
 		api = getResponse(res);
@@ -122,7 +125,7 @@ public class FeedbackServiceTest {
 
 //		any exception
 		when(this.classRepository.findById(anyString())).thenReturn(Optional.of(ClassServiceTest.classEntity));
-		when(this.userRepository.findById(anyString())).thenReturn(Optional.of(UserServiceTest.user));
+		when(this.userRepository.findByEmailEqualsIgnoreCase(anyString())).thenReturn(Optional.of(UserServiceTest.user));
 		when(this.feedbackRepository.save(any(Feedback.class))).thenThrow(AnyException.class);
 		res = this.feedbackService.save(feedbackNew);
 		api = getResponse(res);
