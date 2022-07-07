@@ -63,6 +63,9 @@ public class RoleService implements BaseService<Role, RoleNew, RoleUpdate> {
 			role.setDescription(updateEntity.getDescription());
 			
 			role = this.roleRepository.save(role);
+			
+			new Thread(() -> history.save(youAreSuccessfully("created new Role " + updateEntity.getName()))).start();
+			
 			return ok(role);
 		} catch (Exception e) {
 			log.error(e.getMessage());
