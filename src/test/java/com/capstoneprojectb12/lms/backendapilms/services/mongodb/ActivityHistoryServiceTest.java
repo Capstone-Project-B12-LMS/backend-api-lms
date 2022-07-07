@@ -5,6 +5,8 @@ import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserReposito
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.mongodb.ActivityHistoryRepository;
 import com.capstoneprojectb12.lms.backendapilms.services.UserService;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.AnyException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Tag;
@@ -14,8 +16,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 
 import static com.capstoneprojectb12.lms.backendapilms.services.UserServiceTest.user;
+import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.extract;
+import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.getResponse;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.reset;
@@ -54,5 +60,28 @@ public class ActivityHistoryServiceTest {
 //		any exception
 		when(this.userService.getCurrentUser()).thenThrow(AnyException.class);
 		this.activityHistoryService.save("This is something");
+		reset(this.userService);
+	}
+	
+	@Test
+	public void testFindByUserId() {
+//		success
+		when(this.activityHistoryRepository.findByUserId(anyString())).thenReturn(new ArrayList<>(List.of(activityHistory)));
+		var res = this.activityHistoryService.findByUserId("id");
+		var api = getResponse(res);
+		var data = extract(new ArrayList<ActivityHistory>(), res);
+		
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertNotNull(api);
+		assertInstanceOf(ArrayList.class, api.getData());
+		assertInstanceOf(ActivityHistory.class, data.get().get(0));
+		reset(this.activityHistoryRepository);
+
+//		any errors
+		when(this.activityHistoryRepository.findByUserId(anyString())).thenThrow(AnyException.class);
+		res = this.activityHistoryService.findByUserId("id");
+		api = getResponse(res);
+		data = extract(new ArrayList<>(), res);
+		assertEquals(HttpStatus.OK, res.getStatusCode());
 	}
 }
