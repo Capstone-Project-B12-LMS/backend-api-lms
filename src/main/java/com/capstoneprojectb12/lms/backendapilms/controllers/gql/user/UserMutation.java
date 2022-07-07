@@ -5,8 +5,12 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserNew;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.user.UserUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
 import com.capstoneprojectb12.lms.backendapilms.services.UserService;
+import com.capstoneprojectb12.lms.backendapilms.services.mongodb.ActivityHistoryService;
+import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
 import com.capstoneprojectb12.lms.backendapilms.utilities.ResponseToken;
 import com.capstoneprojectb12.lms.backendapilms.utilities.jwt.JwtUtils;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -17,6 +21,7 @@ import org.springframework.stereotype.Controller;
 
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.extract;
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.getResponse;
+import static com.capstoneprojectb12.lms.backendapilms.utilities.histories.ActivityHistoryUtils.youAreSuccessfully;
 
 @Slf4j
 @Controller
@@ -26,6 +31,7 @@ public class UserMutation {
 	private final UserService userService;
 	private final AuthenticationManager authenticationManager;
 	private final JwtUtils jwtUtils;
+	private final ActivityHistoryService history;
 	
 	@SchemaMapping(field = "register")
 	public User register(@Argument(name = "request") UserNew request) {
@@ -47,6 +53,9 @@ public class UserMutation {
 			authenticationManager.authenticate(authUser);
 			
 			var tokenString = jwtUtils.generateTokenString(user.get());
+			
+			new Thread(() -> history.save(youAreSuccessfully("login at " + new SimpleDateFormat(FinalVariable.DATE_FORMAT).format(new Date())))).start();
+			
 			return ResponseToken.builder()
 					.error(null)
 					.token(tokenString)
@@ -54,6 +63,9 @@ public class UserMutation {
 			
 		} catch (Exception e) {
 			log.error("login failed", e);
+			
+			new Thread(() -> history.save("Login failed at " + new SimpleDateFormat(FinalVariable.DATE_FORMAT).format(new Date()))).start();
+			
 			return ResponseToken.builder()
 					.error(e.getMessage())
 					.token(null)
