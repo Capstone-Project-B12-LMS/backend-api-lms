@@ -82,6 +82,6 @@ public class ActivityHistoryServiceTest {
 		res = this.activityHistoryService.findByUserId("id");
 		api = getResponse(res);
 		data = extract(new ArrayList<>(), res);
-		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, res.getStatusCode());
 	}
 }
