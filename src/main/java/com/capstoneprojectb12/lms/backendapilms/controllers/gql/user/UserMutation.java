@@ -36,6 +36,7 @@ public class UserMutation {
 	@SchemaMapping(field = "register")
 	public User register(@Argument(name = "request") UserNew request) {
 		log.info("Entering method to save new role");
+		new Thread(() -> history.save(youAreSuccessfully("register at " + new SimpleDateFormat(FinalVariable.DATE_FORMAT).format(new Date())))).start();
 		return extract(new User(), getResponse(this.userService.save(request))).orElse(null);
 	}
 	
