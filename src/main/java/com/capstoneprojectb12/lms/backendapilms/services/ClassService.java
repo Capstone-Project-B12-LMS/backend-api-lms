@@ -213,6 +213,10 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 			users.add(user);
 			classEntity.setUsers(new ArrayList<>(users));
 			classEntity = this.classRepository.save(classEntity);
+			
+			final var className = classEntity.getName();
+			new Thread(() -> history.save(youAreSuccessfully("joined to Class " + className))).start();
+			
 			return ok(classEntity);
 		} catch (ClassNotFoundException e) {
 			log.warn(e.getMessage());
