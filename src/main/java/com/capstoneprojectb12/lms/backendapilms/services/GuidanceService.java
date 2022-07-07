@@ -65,6 +65,10 @@ public class GuidanceService implements BaseService<Guidance, GuidanceNew, Guida
 		try {
 			var guidance = this.guidanceRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Guidance not found"));
 			this.guidanceRepository.deleteById(id);
+			
+			final var guidanceTopic = guidance.getTopic();
+			new Thread(() -> history.save(youAreSuccessfully("delete Guidance " + guidanceTopic))).start();
+			
 			return ok(guidance);
 		} catch (NoSuchElementException e) {
 			log.error(e.getMessage());
