@@ -44,7 +44,7 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 			var material = this.toEntity(newEntity);
 			material = this.materialRepository.save(material);
 			
-			new Thread(() -> history.save(youAreSuccessfully("created Material " + newEntity.getTitle()))).start();
+			history.save(youAreSuccessfully(String.format("created Material \"%s\"", newEntity.getTitle())));
 			
 			return ok(material);
 		} catch (ClassNotFoundException e) {
