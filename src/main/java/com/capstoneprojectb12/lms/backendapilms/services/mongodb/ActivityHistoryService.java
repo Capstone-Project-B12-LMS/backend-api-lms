@@ -6,7 +6,6 @@ import com.capstoneprojectb12.lms.backendapilms.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,12 +19,12 @@ import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.ok;
 public class ActivityHistoryService {
 	private final ActivityHistoryRepository activityHistoryRepository;
 	private final UserService userService;
-	// private final UserRepository userRepository;
+//	 private final UserRepository userRepository;
 	
 	public void save(String content) {
 		try {
 			var activityHostory = ActivityHistory.builder()
-					.userEmail(SecurityContextHolder.getContext().getAuthentication().getName())
+					.userEmail(this.userService.getCurrentUser())
 					.content(content)
 					.build();
 			new Thread(() -> this.activityHistoryRepository.save(activityHostory)).start();
