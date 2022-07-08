@@ -74,7 +74,7 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 			
 			material = this.materialRepository.save(material);
 			
-			new Thread(() -> history.save(youAreSuccessfully("updated Material " + updateEntity.getTitle()))).start();
+			history.save(youAreSuccessfully(String.format("updated Material \"%s\" ", updateEntity.getTitle())));
 			
 			return ok(material);
 		} catch (DataNotFoundException e) {
