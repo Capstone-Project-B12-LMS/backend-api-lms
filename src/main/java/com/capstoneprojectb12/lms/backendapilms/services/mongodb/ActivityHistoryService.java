@@ -34,6 +34,7 @@ public class ActivityHistoryService {
 		}
 	}
 	
+	//	TODO: change to findByUserId
 	public ResponseEntity<?> findByUserEmail(String userId) {
 		try {
 			var activities = this.activityHistoryRepository.findByUserEmailEqualsIgnoreCase(userId);
