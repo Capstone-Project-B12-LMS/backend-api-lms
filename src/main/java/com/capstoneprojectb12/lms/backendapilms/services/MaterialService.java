@@ -97,7 +97,7 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 			this.classRepository.deleteById(id);
 			log.info(FinalVariable.DELETE_SUCCESS);
 			
-			new Thread(() -> history.save(youAreSuccessfully("deleted Material " + this.materialRepository.findById(id).get().getTitle()))).start();
+			history.save(youAreSuccessfully(String.format("deleted Material \"%s\"", this.materialRepository.findById(id).get().getTitle())));
 			
 			return ok(material.get());
 		} catch (Exception e) {
