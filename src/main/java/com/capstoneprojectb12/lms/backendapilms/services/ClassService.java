@@ -117,17 +117,13 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 		try {
 			var classEntity = this.classRepository.findById(classId).orElseThrow(ClassNotFoundException :: new);
 			final var teacher = classEntity.getCreatedBy();
-			if (! classEntity.getUsers()
-					.removeIf((u) -> u.getId().equals(userId) && (! teacher.equalsIgnoreCase(u.getEmail())))) {
+			if (! classEntity.getUsers().removeIf((u) -> u.getId().equals(userId) && (! teacher.equalsIgnoreCase(u.getEmail())))) {
 				return bad("user not found");
 			}
 			classEntity = this.classRepository.save(classEntity);
 			
 			final var className = classEntity.getName();
-			new Thread(() -> history.save(youAreSuccessfully(
-					"deleted " + this.userRepository.findById(userId).get().getEmail() + " on Class " + className)))
-					.start();
-			
+			history.save(youAreSuccessfully(String.format("deleted %s on Class \"%s\"", this.userRepository.findById(userId).get().getEmail(), className)));
 			return ok(classEntity);
 		} catch (ClassNotFoundException e) {
 			log.error(e.getMessage());
