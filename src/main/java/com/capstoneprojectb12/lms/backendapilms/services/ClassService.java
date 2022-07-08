@@ -207,8 +207,7 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 	
 	public ResponseEntity<?> joinUserToClass(JoinClass request) {
 		try {
-			var classEntity = this.classRepository.findByCode(request.getClassCode())
-					.orElseThrow(ClassNotFoundException :: new);
+			var classEntity = this.classRepository.findByCode(request.getClassCode()).orElseThrow(ClassNotFoundException :: new);
 			var user = this.userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException :: new);
 			
 			var users = new HashSet<>(classEntity.getUsers());
@@ -217,7 +216,7 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 			classEntity = this.classRepository.save(classEntity);
 			
 			final var className = classEntity.getName();
-			new Thread(() -> history.save(youAreSuccessfully("joined to Class " + className))).start();
+			history.save(youAreSuccessfully(String.format("joined to Class \"%s\"", className)));
 			
 			return ok(classEntity);
 		} catch (ClassNotFoundException e) {
