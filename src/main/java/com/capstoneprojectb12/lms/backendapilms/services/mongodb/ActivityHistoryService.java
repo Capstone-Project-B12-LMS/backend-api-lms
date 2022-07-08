@@ -34,9 +34,9 @@ public class ActivityHistoryService {
 		}
 	}
 	
-	public ResponseEntity<?> findByUserId(String userId) {
+	public ResponseEntity<?> findByUserEmail(String userId) {
 		try {
-			var activities = this.activityHistoryRepository.findByUserEmail(userId);
+			var activities = this.activityHistoryRepository.findByUserEmailEqualsIgnoreCase(userId);
 			return ok(activities);
 		} catch (Exception e) {
 			log.error(e.getMessage());

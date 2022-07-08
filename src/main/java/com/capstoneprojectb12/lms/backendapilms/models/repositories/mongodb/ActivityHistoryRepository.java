@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ActivityHistoryRepository extends MongoRepository<ActivityHistory, String> {
-	List<ActivityHistory> findByUserEmail(String userEmail);
+	List<ActivityHistory> findByUserEmailEqualsIgnoreCase(String userEmail);
 }

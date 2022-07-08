@@ -19,8 +19,8 @@ import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.ext
 public class ActivityHistoryQuery {
 	private final ActivityHistoryService activityHistoryService;
 	
-	@SchemaMapping(field = "findByUserId")
-	public List<ActivityHistory> findByUserId(@Argument(name = "userId") String userId) {
-		return extract(new ArrayList<ActivityHistory>(), this.activityHistoryService.findByUserId(userId)).orElse(new ArrayList<>());
+	@SchemaMapping(field = "findByUserEmail")
+	public List<ActivityHistory> findByUserEmail(@Argument(name = "email") String email) {
+		return extract(new ArrayList<ActivityHistory>(), this.activityHistoryService.findByUserEmail(email)).orElse(new ArrayList<>());
 	}
 }

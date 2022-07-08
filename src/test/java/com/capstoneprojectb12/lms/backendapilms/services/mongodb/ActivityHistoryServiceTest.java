@@ -30,24 +30,24 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 @Slf4j
 @Tag(value = "activityHistoryTest")
-@ExtendWith(value = { MockitoExtension.class })
+@ExtendWith(value = {MockitoExtension.class})
 public class ActivityHistoryServiceTest {
 	public static final ActivityHistory activityHistory = ActivityHistory.builder()
 			.id("id")
 			.userEmail(user.getEmail())
 			.content("This is something")
 			.build();
-
+	
 	@MockBean
 	private ActivityHistoryRepository activityHistoryRepository;
 	@MockBean
 	private UserRepository userRepository;
 	@MockBean
 	private UserService userService;
-
+	
 	@Autowired
 	private ActivityHistoryService activityHistoryService;
-
+	
 	@Test
 	public void testSave() {
 		// success
@@ -56,31 +56,30 @@ public class ActivityHistoryServiceTest {
 		when(this.activityHistoryRepository.save(any(ActivityHistory.class))).thenReturn(activityHistory);
 		this.activityHistoryService.save("This is something");
 		reset(this.userRepository, this.userService, this.activityHistoryRepository);
-
+		
 		// any exception
 		when(this.userService.getCurrentUser()).thenThrow(AnyException.class);
 		this.activityHistoryService.save("This is something");
 		reset(this.userService);
 	}
-
+	
 	@Test
-	public void testFindByUserId() {
+	public void testFindByUserEmail() {
 		// success
-		when(this.activityHistoryRepository.findByUserEmail(anyString()))
-				.thenReturn(new ArrayList<>(List.of(activityHistory)));
-		var res = this.activityHistoryService.findByUserId("id");
+		when(this.activityHistoryRepository.findByUserEmailEqualsIgnoreCase(anyString())).thenReturn(new ArrayList<>(List.of(activityHistory)));
+		var res = this.activityHistoryService.findByUserEmail("email");
 		var api = getResponse(res);
 		var data = extract(new ArrayList<ActivityHistory>(), res);
-
+		
 		assertEquals(HttpStatus.OK, res.getStatusCode());
 		assertNotNull(api);
 		assertInstanceOf(ArrayList.class, api.getData());
 		assertInstanceOf(ActivityHistory.class, data.get().get(0));
 		reset(this.activityHistoryRepository);
-
+		
 		// any errors
-		when(this.activityHistoryRepository.findByUserEmail(anyString())).thenThrow(AnyException.class);
-		res = this.activityHistoryService.findByUserId("id");
+		when(this.activityHistoryRepository.findByUserEmailEqualsIgnoreCase(anyString())).thenThrow(AnyException.class);
+		res = this.activityHistoryService.findByUserEmail("email");
 		api = getResponse(res);
 		data = extract(new ArrayList<>(), res);
 		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, res.getStatusCode());

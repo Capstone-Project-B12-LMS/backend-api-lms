@@ -5,7 +5,7 @@ type ActivityHistory {
 }
 
 type ActivityHistoryQuery {
-    findByUserId(userId: String!): [ActivityHistory!]
+    findByUserEmail(email: String!): [ActivityHistory!]
 }
 
 #type ActivityHistoryMutation {
