@@ -44,7 +44,7 @@ public class FeedbackService implements BaseService<Feedback, FeedbackNew, Feedb
 			var feedback = this.toEntity(newEntity);
 			feedback = this.feedbackRepository.save(feedback);
 			
-			new Thread(() -> history.save(youAreSuccessfully("create Feedback for Class " + this.classRepository.findById(newEntity.getClassId()).get().getName()))).start();
+			history.save(youAreSuccessfully(String.format("create Feedback for Class \"%s\"", this.classRepository.findById(newEntity.getClassId()).get().getName())));
 			
 			return ok(feedback);
 		} catch (ClassNotFoundException e) {
