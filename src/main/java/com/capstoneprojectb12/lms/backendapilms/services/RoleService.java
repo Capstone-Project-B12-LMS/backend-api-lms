@@ -81,7 +81,7 @@ public class RoleService implements BaseService<Role, RoleNew, RoleUpdate> {
 				this.roleRepository.deleteById(id);
 				log.info(FinalVariable.DELETE_SUCCESS);
 				
-				new Thread(() -> history.save(youAreSuccessfully("delete Role " + role.get().getName()))).start();
+				history.save(youAreSuccessfully(String.format("delete Role \"%s\"", role.get().getName())));
 				
 				return ok(role.get());
 			}
