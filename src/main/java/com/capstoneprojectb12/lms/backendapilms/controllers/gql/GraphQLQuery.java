@@ -34,19 +34,16 @@ public class GraphQLQuery {
 		return this.helloQuery;
 	}
 
-	// @PreAuthorize(value = "hasAnyAuthority('USER')") // TODO: enable security
 	@SchemaMapping(field = "role")
 	public RoleQuery roleQuery() {
 		return this.roleQuery;
 	}
 
-	// @PreAuthorize(value = "hasAnyAuthority('USER')") // TODO: enable security
 	@SchemaMapping(field = "user")
 	public UserQuery userQuery() {
 		return this.userQuery;
 	}
 
-	// @PreAuthorize(value = "hasAnyAuthority('USER')") // TODO: enable security
 	@SchemaMapping(value = "class")
 	public ClassQuery classQuery() {
 		return this.classQuery;

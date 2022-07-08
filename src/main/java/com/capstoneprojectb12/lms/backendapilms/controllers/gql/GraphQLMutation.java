@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @SchemaMapping(typeName = "Mutation")
 @RequiredArgsConstructor
-@PreAuthorize(value = "hasAnyAuthority('USER')")
 public class GraphQLMutation {
 	private final HelloMutation helloMutation;
 	private final RoleMutation roleMutation;
@@ -32,35 +31,36 @@ public class GraphQLMutation {
 		return this.helloMutation;
 	}
 
-	// @PreAuthorize(value = "hasAnyAuthority('USER')") // TODO: enable security
+	@PreAuthorize(value = "hasAnyAuthority('USER')")
 	@SchemaMapping(field = "role")
 	public RoleMutation roleMutation() {
 		return this.roleMutation;
 	}
 
-	// @PreAuthorize(value = "hasAnyAuthority('USER')") // TODO: enable security
 	@SchemaMapping(field = "user")
 	public UserMutation userMutation() {
 		return this.userMutation;
 	}
 
-	@PreAuthorize(value = "hasAnyAuthority('USER')") // TODO: enable security
+	@PreAuthorize(value = "hasAnyAuthority('USER')") 
 	@SchemaMapping(field = "class")
 	public ClassMutation classMutation() {
 		return this.classMutation;
 	}
 
-	// @PreAuthorize(value = "hasAnyAuthority('USER')") // TODO: enable security
+	@PreAuthorize(value = "hasAnyAuthority('USER')")
 	@SchemaMapping(field = "material")
 	public MaterialMutation materialMutation() {
 		return this.materialMutation;
 	}
-
+	
+	@PreAuthorize(value = "hasAnyAuthority('USER')")
 	@SchemaMapping(field = "guidance")
 	public GuidanceMutation guidanceMutation() {
 		return this.guidanceMutation;
 	}
-
+	
+	@PreAuthorize(value = "hasAnyAuthority('USER')")
 	@SchemaMapping(field = "feedback")
 	public FeedbackMutation feedbackMutation() {
 		return this.feedbackMutation;
