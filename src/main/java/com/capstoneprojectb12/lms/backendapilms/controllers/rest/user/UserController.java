@@ -25,7 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@PreAuthorize(value = "hasAnyAuthority('USER')")
 @RequestMapping(value = { "/restapi/v1" })
 @RequiredArgsConstructor
 public class UserController {
@@ -83,14 +82,14 @@ public class UserController {
 		return this.userService.save(request);
 	}
 
-	// @PreAuthorize(value = "hasAnyAuthority('USER')") // TODO: enable scurity
+	@PreAuthorize(value = "hasAnyAuthority('USER')")
 	@GetMapping(value = { "/users/{id}" })
 	public ResponseEntity<?> findById(@PathVariable(name = "id") String id) {
 		log.info("entering endpoint to find user by id");
 		return this.userService.findById(id);
 	}
 
-	// @PreAuthorize(value = "hasAnyAuthority('USER')") // TODO: enable security
+	@PreAuthorize(value = "hasAnyAuthority('USER')")
 	@PutMapping(value = { "/users/{id}" })
 	public ResponseEntity<?> updateById(@PathVariable(name = "id") String userId,
 			@RequestBody @Valid UserUpdate request, @Parameter(hidden = true) Errors errors) {
@@ -100,6 +99,7 @@ public class UserController {
 		return this.userService.update(userId, request);
 	}
 
+	@PreAuthorize(value = "hasAnyAuthority('USER')")
 	@GetMapping(value = { "/users/class/{userId}/{classStatus}" })
 	public ResponseEntity<?> getUserClassByUserId(@PathVariable(name = "userId") String userId,
 			@PathVariable(name = "classStatus") ClassStatus classStatus) {
