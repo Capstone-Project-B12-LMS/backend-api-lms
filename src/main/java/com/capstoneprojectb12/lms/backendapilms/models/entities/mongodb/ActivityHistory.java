@@ -1,12 +1,13 @@
 package com.capstoneprojectb12.lms.backendapilms.models.entities.mongodb;
 
+import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
-
-import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
-
-import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 @Document(value = "activity_history")
 @Getter
@@ -17,6 +18,6 @@ import lombok.experimental.SuperBuilder;
 public class ActivityHistory {
 	@MongoId
 	private String id;
-	private String userEmail;
+	private User user;
 	private String content;
 }

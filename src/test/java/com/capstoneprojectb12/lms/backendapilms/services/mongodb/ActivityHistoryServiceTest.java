@@ -34,7 +34,7 @@ import static org.mockito.Mockito.when;
 public class ActivityHistoryServiceTest {
 	public static final ActivityHistory activityHistory = ActivityHistory.builder()
 			.id("id")
-			.userEmail(user.getEmail())
+			.user(user)
 			.content("This is something")
 			.build();
 	
@@ -66,8 +66,8 @@ public class ActivityHistoryServiceTest {
 	@Test
 	public void testFindByUserEmail() {
 		// success
-		when(this.activityHistoryRepository.findByUserEmailEqualsIgnoreCase(anyString())).thenReturn(new ArrayList<>(List.of(activityHistory)));
-		var res = this.activityHistoryService.findByUserEmail("email");
+		when(this.activityHistoryRepository.findByUserId(anyString())).thenReturn(new ArrayList<>(List.of(activityHistory)));
+		var res = this.activityHistoryService.findByUserId("id");
 		var api = getResponse(res);
 		var data = extract(new ArrayList<ActivityHistory>(), res);
 		
@@ -78,8 +78,8 @@ public class ActivityHistoryServiceTest {
 		reset(this.activityHistoryRepository);
 		
 		// any errors
-		when(this.activityHistoryRepository.findByUserEmailEqualsIgnoreCase(anyString())).thenThrow(AnyException.class);
-		res = this.activityHistoryService.findByUserEmail("email");
+		when(this.activityHistoryRepository.findByUserId(anyString())).thenThrow(AnyException.class);
+		res = this.activityHistoryService.findByUserId("id");
 		api = getResponse(res);
 		data = extract(new ArrayList<>(), res);
 		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, res.getStatusCode());
