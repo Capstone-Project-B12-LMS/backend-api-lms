@@ -22,7 +22,7 @@ public class ActivityHistoryService {
 	private final ActivityHistoryRepository activityHistoryRepository;
 	private final UserService userService;
 	private final UserRepository userRepository;
-	
+
 	public void save(String content) {
 		try {
 			var user = this.userRepository
@@ -32,13 +32,13 @@ public class ActivityHistoryService {
 					.user(user)
 					.content(content)
 					.build();
-			var savedActivityHistory = this.activityHistoryRepository.save(activityHostory);
+			this.activityHistoryRepository.save(activityHostory);
 			log.info("Record activity history");
 		} catch (Exception e) {
 			log.error(e.getMessage());
 		}
 	}
-	
+
 	public ResponseEntity<?> findByUserId(String userId) {
 		try {
 			var activities = this.activityHistoryRepository.findByUserId(userId);
