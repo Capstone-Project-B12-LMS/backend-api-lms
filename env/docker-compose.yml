@@ -25,7 +25,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=uzsbppdcwsvj2w6dnxif
       - SPRING_DATASOURCE_PASSWORD=FXeAvuucSiuOYPYD7h69
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      # - SPRING_JPA_SHOW_SQL=true
+      - SPRING_JPA_SHOW_SQL=false
       - SPRING_JPA_GENERATE_DDL=true
       # - SPRING_DATA_MONGODB_URI=mongodb://backend-api-db-mongodb:27017/study_space_db
       - SPRING_DATA_MONGODB_URI=mongodb://unifdiiqla2f0n72njva:3tic6Au0rESivW7kG9P5@n1-c2-mongodb-clevercloud-customers.services.clever-cloud.com:27017,n2-c2-mongodb-clevercloud-customers.services.clever-cloud.com:27017/bmzjnxbalucs7jb?replicaSet=rs0
@@ -79,4 +79,4 @@ services:
 #      - MONGODB_DATABASE=study_space_db
 
 networks:
-  kelompok-b12: {}
+  kelompok-b12: { }

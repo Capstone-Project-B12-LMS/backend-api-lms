@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class ActivityHistoryController {
 	private final ActivityHistoryService activityHistoryService;
 	
-	@GetMapping(value = {"/user/{email}"})
-	public ResponseEntity<?> findByUserEmail(@PathVariable(name = "email") String email) {
-		return this.activityHistoryService.findByUserEmail(email);
+	@GetMapping(value = {"/user/{userId}"})
+	public ResponseEntity<?> findByUserId(@PathVariable(name = "userId") String userId) {
+		return this.activityHistoryService.findByUserId(userId);
 	}
 }
