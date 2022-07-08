@@ -17,6 +17,6 @@ import lombok.experimental.SuperBuilder;
 public class ActivityHistory {
 	@MongoId
 	private String id;
-	private User user;
+	private String userEmail;
 	private String content;
 }

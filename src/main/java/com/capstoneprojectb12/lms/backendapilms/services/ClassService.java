@@ -44,7 +44,6 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 	private final UserService userService;
 	private final ActivityHistoryService history;
 	
-	
 	@Override
 	public ResponseEntity<?> update(String entityId, ClassUpdate classUpdate) {
 		try {
@@ -77,16 +76,19 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 		try {
 			var classEntity = this.toEntity(newEntity);
 			var currentUserEmail = this.userService.getCurrentUser();
-			var currentUser = this.userRepository.findByEmailEqualsIgnoreCase(currentUserEmail).orElseThrow(UserNotFoundException :: new);
+			var currentUser = this.userRepository.findByEmailEqualsIgnoreCase(currentUserEmail)
+					.orElseThrow(UserNotFoundException :: new);
 			
-			classEntity.setUsers(new ArrayList<User>() {{
-				add(currentUser);
-			}});
+			classEntity.setUsers(new ArrayList<User>() {
+				{
+					add(currentUser);
+				}
+			});
 			
 			var savedClass = Optional.of(this.classRepository.save(classEntity));
 			log.info(FinalVariable.SAVE_SUCCESS);
 			
-			new Thread(() -> history.save(youAreSuccessfully("create new Class " + savedClass.get().getName()))).start();
+			history.save(youAreSuccessfully(String.format("created new Class \"%s\"", savedClass.get().getName())));
 			
 			return ok(savedClass.get());
 		} catch (Exception e) {
@@ -102,7 +104,7 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 			if (value.isPresent()) {
 				this.classRepository.deleteById(id);
 				log.info(FinalVariable.DELETE_SUCCESS);
-				new Thread(() -> history.save(youAreSuccessfully("deleted Class " + value.get().getName()))).start();
+				history.save(youAreSuccessfully(String.format("deleted Class \"%s\"", value.get().getName())));
 			}
 			return (value.isPresent()) ? ok(value.get()) : bad(FinalVariable.DATA_NOT_FOUND);
 		} catch (Exception e) {
@@ -115,23 +117,26 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 		try {
 			var classEntity = this.classRepository.findById(classId).orElseThrow(ClassNotFoundException :: new);
 			final var teacher = classEntity.getCreatedBy();
-			if (! classEntity.getUsers().removeIf((u) -> u.getId().equals(userId) && (! teacher.equalsIgnoreCase(u.getEmail())))) {
+			if (! classEntity.getUsers()
+					.removeIf((u) -> u.getId().equals(userId) && (! teacher.equalsIgnoreCase(u.getEmail())))) {
 				return bad("user not found");
 			}
 			classEntity = this.classRepository.save(classEntity);
 			
 			final var className = classEntity.getName();
-			new Thread(() -> history.save(youAreSuccessfully("deleted " + this.userRepository.findById(userId).get().getEmail() + " on Class " + className))).start();
+			new Thread(() -> history.save(youAreSuccessfully(
+					"deleted " + this.userRepository.findById(userId).get().getEmail() + " on Class " + className)))
+					.start();
 			
 			return ok(classEntity);
 		} catch (ClassNotFoundException e) {
 			log.error(e.getMessage());
 			return bad(e.getMessage());
 		}
-//        catch (Exception e) {
-//            log.error(e.getMessage());
-//            return err(e);
-//        }
+		// catch (Exception e) {
+		// log.error(e.getMessage());
+		// return err(e);
+		// }
 	}
 	
 	@Override
@@ -206,7 +211,8 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 	
 	public ResponseEntity<?> joinUserToClass(JoinClass request) {
 		try {
-			var classEntity = this.classRepository.findByCode(request.getClassCode()).orElseThrow(ClassNotFoundException :: new);
+			var classEntity = this.classRepository.findByCode(request.getClassCode())
+					.orElseThrow(ClassNotFoundException :: new);
 			var user = this.userRepository.findById(request.getUserId()).orElseThrow(UserNotFoundException :: new);
 			
 			var users = new HashSet<>(classEntity.getUsers());
