@@ -1,0 +1,13 @@
+type ActivityHistory {
+    id: ID!
+    userEmail: String!
+    content: String!
+}
+
+type ActivityHistoryQuery {
+    findByUserEmail(email: String!): [ActivityHistory!]
+}
+
+#type ActivityHistoryMutation {
+#    save()
+#}
