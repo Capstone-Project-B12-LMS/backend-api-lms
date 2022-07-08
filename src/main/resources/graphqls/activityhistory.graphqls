@@ -1,6 +1,6 @@
 type ActivityHistory {
     id: ID!
-    user: User!
+    userEmail: String!
     content: String!
 }
 
