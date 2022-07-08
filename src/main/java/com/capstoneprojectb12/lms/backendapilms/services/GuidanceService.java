@@ -67,7 +67,7 @@ public class GuidanceService implements BaseService<Guidance, GuidanceNew, Guida
 			this.guidanceRepository.deleteById(id);
 			
 			final var guidanceTopic = guidance.getTopic();
-			new Thread(() -> history.save(youAreSuccessfully("delete Guidance " + guidanceTopic))).start();
+			history.save(youAreSuccessfully(String.format("delete Guidance \"%s\"", guidanceTopic)));
 			
 			return ok(guidance);
 		} catch (NoSuchElementException e) {
