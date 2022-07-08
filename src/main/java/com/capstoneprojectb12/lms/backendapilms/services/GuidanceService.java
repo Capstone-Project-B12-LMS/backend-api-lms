@@ -40,7 +40,7 @@ public class GuidanceService implements BaseService<Guidance, GuidanceNew, Guida
 			var guidance = this.toEntity(newEntity);
 			guidance = this.guidanceRepository.save(guidance);
 			
-			new Thread(() -> history.save(youAreSuccessfully("create new Guidance on Class " + this.classRepository.findById(newEntity.getClassId()).get().getName()))).start();
+			history.save(youAreSuccessfully(String.format("create new Guidance on Class \"%s\"", this.classRepository.findById(newEntity.getClassId()).get().getName())));
 			
 			return ok(guidance);
 		} catch (UserNotFoundException e) {
