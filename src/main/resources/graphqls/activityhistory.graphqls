@@ -1,11 +1,11 @@
 type ActivityHistory {
     id: ID!
-    userEmail: String!
+    user: User!
     content: String!
 }
 
 type ActivityHistoryQuery {
-    findByUserEmail(email: String!): [ActivityHistory!]
+    findByUserId(userId: String!): [ActivityHistory!]
 }
 
 #type ActivityHistoryMutation {
