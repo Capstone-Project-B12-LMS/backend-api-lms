@@ -265,6 +265,40 @@ public class MaterialServiceTest {
 //		success
 		when(this.materialRepository.findById(anyString())).thenReturn(Optional.of(material));
 		doNothing().when(this.materialRepository).deleteById(anyString());
+		var res = this.materialService.deleteById("id");
+		var api = getResponse(res);
+		var data = extract(material, api);
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertNull(api.getErrors());
+		assertTrue(api.isStatus());
+		assertInstanceOf(Material.class, api.getData());
+		assertTrue(data.isPresent());
+		reset(this.materialRepository);
+
+//		material not found
+		when(this.materialRepository.findById(anyString())).thenReturn(Optional.empty());
+		doNothing().when(this.materialRepository).deleteById(anyString());
+		res = this.materialService.deleteById("id");
+		api = getResponse(res);
+		data = extract(material, api);
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertNotNull(api.getErrors());
+		assertFalse(api.isStatus());
+		assertTrue(data.isEmpty());
+		reset(this.materialRepository);
+
+//		any exception
+		when(this.materialRepository.findById(anyString())).thenThrow(AnyException.class);
+		doThrow(NullPointerException.class).when(this.materialRepository).deleteById(anyString());
+		res = this.materialService.deleteById("id");
+		api = getResponse(res);
+		data = extract(material, api);
+		assertNull(api.getData());
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, res.getStatusCode());
+		assertNotNull(api.getErrors());
+		assertFalse(api.isStatus());
+		assertTrue(data.isEmpty());
+		reset(this.materialRepository);
 	}
 	
 	@Test
