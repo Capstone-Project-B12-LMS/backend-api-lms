@@ -59,7 +59,7 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 			log.info(FinalVariable.UPDATE_SUCCESS);
 			
 			final var className = classEntity.getName();
-			new Thread(() -> history.save(youAreSuccessfully("updated Class " + className))).start();
+			history.save(youAreSuccessfully("updated Class " + className));
 			
 			return ok(classEntity);
 		} catch (ClassNotFoundException e) {
