@@ -1,6 +1,6 @@
 type Material implements BaseSchema {
     id: ID!
-    class: Class
+    classEntity: Class
     title: String!
     content: String!
     #    category: Category # TODO: create category schema graohql and CRUD category first
@@ -32,7 +32,7 @@ input MaterialNew {
 
     #  please use format dd/MM/yyyy HH:mm:ss to insert deadline, example 30/12/2022 23:59:00
     deadline: String
-    point: Int!
+    point: Int
 }
 
 type ResponseDeleteMaterial implements ResponseDelete {

@@ -21,17 +21,18 @@ services:
       # - SPRING_DATASOURCE_URL=jdbc:postgresql://backend-api-db-postgresql:5432/study_space_db
       # - SPRING_DATASOURCE_USERNAME=postgres
       # - SPRING_DATASOURCE_PASSWORD=postgres
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://ec2-44-198-82-71.compute-1.amazonaws.com:5432/dbg9hco2i8d7u3
-      - SPRING_DATASOURCE_USERNAME=hawmsvscxkjgey
-      - SPRING_DATASOURCE_PASSWORD=87a9a6fee01d8658fefed4f53c9c4b5101a419ffb7eec55f96b19841be779d92
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://bonvbes6xjnwjilggdij-postgresql.services.clever-cloud.com:5432/bonvbes6xjnwjilggdij
+      - SPRING_DATASOURCE_USERNAME=uzsbppdcwsvj2w6dnxif
+      - SPRING_DATASOURCE_PASSWORD=FXeAvuucSiuOYPYD7h69
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - SPRING_JPA_SHOW_SQL=true
+      - SPRING_JPA_SHOW_SQL=false
       - SPRING_JPA_GENERATE_DDL=true
       # - SPRING_DATA_MONGODB_URI=mongodb://backend-api-db-mongodb:27017/study_space_db
       - SPRING_DATA_MONGODB_URI=mongodb://unifdiiqla2f0n72njva:3tic6Au0rESivW7kG9P5@n1-c2-mongodb-clevercloud-customers.services.clever-cloud.com:27017,n2-c2-mongodb-clevercloud-customers.services.clever-cloud.com:27017/bmzjnxbalucs7jb?replicaSet=rs0
+      # - SPRING_DATA_MONGODB_URI=mongodb://unifdiiqla2f0n72njva:3tic6Au0rESivW7kG9P5@n1-c2-mongodb-clevercloud-customers.services.clever-cloud.com:27017/bmzjnxbalucs7jb
 
       # jwt token config
-      - JWT_TOKEN_EXPIRED_IN_MINUTE=60
+      - JWT_TOKEN_EXPIRED_IN_MINUTE=43200
       - JWT_SECRET_KEY=mysecret
 
       # open api config
@@ -78,4 +79,4 @@ services:
 #      - MONGODB_DATABASE=study_space_db
 
 networks:
-  kelompok-b12: {}
+  kelompok-b12: { }

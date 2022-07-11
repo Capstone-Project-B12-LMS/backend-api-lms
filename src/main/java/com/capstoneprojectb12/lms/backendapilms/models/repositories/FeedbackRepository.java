@@ -10,4 +10,6 @@ public interface FeedbackRepository extends JpaRepository<Feedback, String> {
 	List<Feedback> findByClassEntityId(String classId);
 	
 	List<Feedback> findByUserId(String classId);
+	
+	boolean existsByUserEmailEqualsIgnoreCase(String userEmail);
 }

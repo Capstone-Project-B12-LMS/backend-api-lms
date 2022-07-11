@@ -9,6 +9,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.ClassStatus;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
+import com.capstoneprojectb12.lms.backendapilms.services.mongodb.ActivityHistoryService;
 import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.ClassNotFoundException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.DataNotFoundException;
@@ -31,6 +32,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.*;
+import static com.capstoneprojectb12.lms.backendapilms.utilities.histories.ActivityHistoryUtils.youAreSuccessfully;
 
 @Slf4j
 @Service
@@ -40,7 +42,7 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 	private final ClassRepository classRepository;
 	private final UserRepository userRepository;
 	private final UserService userService;
-	
+	private final ActivityHistoryService history;
 	
 	@Override
 	public ResponseEntity<?> update(String entityId, ClassUpdate classUpdate) {
@@ -55,6 +57,10 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 			
 			classEntity = this.classRepository.save(classEntity);
 			log.info(FinalVariable.UPDATE_SUCCESS);
+			
+			final var className = classEntity.getName();
+			new Thread(() -> history.save(youAreSuccessfully("updated Class " + className))).start();
+			
 			return ok(classEntity);
 		} catch (ClassNotFoundException e) {
 			log.error(e.getMessage());
@@ -70,14 +76,20 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 		try {
 			var classEntity = this.toEntity(newEntity);
 			var currentUserEmail = this.userService.getCurrentUser();
-			var currentUser = this.userRepository.findByEmailEqualsIgnoreCase(currentUserEmail).orElseThrow(UserNotFoundException :: new);
+			var currentUser = this.userRepository.findByEmailEqualsIgnoreCase(currentUserEmail)
+					.orElseThrow(UserNotFoundException :: new);
 			
-			classEntity.setUsers(new ArrayList<User>() {{
-				add(currentUser);
-			}});
+			classEntity.setUsers(new ArrayList<User>() {
+				{
+					add(currentUser);
+				}
+			});
 			
 			var savedClass = Optional.of(this.classRepository.save(classEntity));
 			log.info(FinalVariable.SAVE_SUCCESS);
+			
+			history.save(youAreSuccessfully(String.format("created new Class \"%s\"", savedClass.get().getName())));
+			
 			return ok(savedClass.get());
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -92,6 +104,7 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 			if (value.isPresent()) {
 				this.classRepository.deleteById(id);
 				log.info(FinalVariable.DELETE_SUCCESS);
+				history.save(youAreSuccessfully(String.format("deleted Class \"%s\"", value.get().getName())));
 			}
 			return (value.isPresent()) ? ok(value.get()) : bad(FinalVariable.DATA_NOT_FOUND);
 		} catch (Exception e) {
@@ -100,6 +113,27 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 		}
 	}
 	
+	public ResponseEntity<?> deleteUserById(String classId, String userId) {
+		try {
+			var classEntity = this.classRepository.findById(classId).orElseThrow(ClassNotFoundException :: new);
+			final var teacher = classEntity.getCreatedBy();
+			if (! classEntity.getUsers().removeIf((u) -> u.getId().equals(userId) && (! teacher.equalsIgnoreCase(u.getEmail())))) {
+				return bad("user not found");
+			}
+			classEntity = this.classRepository.save(classEntity);
+			
+			final var className = classEntity.getName();
+			history.save(youAreSuccessfully(String.format("deleted %s on Class \"%s\"", this.userRepository.findById(userId).get().getEmail(), className)));
+			return ok(classEntity);
+		} catch (ClassNotFoundException e) {
+			log.error(e.getMessage());
+			return bad(e.getMessage());
+		}
+		// catch (Exception e) {
+		// log.error(e.getMessage());
+		// return err(e);
+		// }
+	}
 	
 	@Override
 	public ResponseEntity<?> findById(String id) {
@@ -180,6 +214,10 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 			users.add(user);
 			classEntity.setUsers(new ArrayList<>(users));
 			classEntity = this.classRepository.save(classEntity);
+			
+			final var className = classEntity.getName();
+			history.save(youAreSuccessfully(String.format("joined to Class \"%s\"", className)));
+			
 			return ok(classEntity);
 		} catch (ClassNotFoundException e) {
 			log.warn(e.getMessage());

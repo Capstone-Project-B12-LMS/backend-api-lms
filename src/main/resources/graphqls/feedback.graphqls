@@ -13,7 +13,6 @@ type Feedback implements BaseSchema{
 
 input FeedbackNew {
     classId: String!
-    userId: String!
     content: String!
 }
 

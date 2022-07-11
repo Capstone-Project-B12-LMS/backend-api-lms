@@ -6,6 +6,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.entities.Feedback;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.FeedbackRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
+import com.capstoneprojectb12.lms.backendapilms.services.mongodb.ActivityHistoryService;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.ClassNotFoundException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.UserNotFoundException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.*;
+import static com.capstoneprojectb12.lms.backendapilms.utilities.histories.ActivityHistoryUtils.youAreSuccessfully;
 
 @Slf4j
 @Service
@@ -29,12 +31,21 @@ public class FeedbackService implements BaseService<Feedback, FeedbackNew, Feedb
 	private final ClassRepository classRepository;
 	private final UserRepository userRepository;
 	private final FeedbackRepository feedbackRepository;
+	private final ActivityHistoryService history;
+	private final UserService userService;
 	
 	@Override
 	public ResponseEntity<?> save(FeedbackNew newEntity) {
 		try {
+			if (this.feedbackRepository.existsByUserEmailEqualsIgnoreCase(this.userService.getCurrentUser())) {
+				log.error("Already created feedback");
+				return bad("Already created feedback");
+			}
 			var feedback = this.toEntity(newEntity);
 			feedback = this.feedbackRepository.save(feedback);
+			
+			history.save(youAreSuccessfully(String.format("create Feedback for Class \"%s\"", this.classRepository.findById(newEntity.getClassId()).get().getName())));
+			
 			return ok(feedback);
 		} catch (ClassNotFoundException e) {
 			log.error(e.getMessage());
@@ -92,7 +103,7 @@ public class FeedbackService implements BaseService<Feedback, FeedbackNew, Feedb
 	public Feedback toEntity(FeedbackNew newEntity) {
 		return Feedback.builder()
 				.classEntity(this.classRepository.findById(newEntity.getClassId()).orElseThrow(ClassNotFoundException :: new))
-				.user(this.userRepository.findById(newEntity.getUserId()).orElseThrow(UserNotFoundException :: new))
+				.user(this.userRepository.findByEmailEqualsIgnoreCase(this.userService.getCurrentUser()).orElseThrow(UserNotFoundException :: new))
 				.content(newEntity.getContent().trim())
 				.build();
 	}

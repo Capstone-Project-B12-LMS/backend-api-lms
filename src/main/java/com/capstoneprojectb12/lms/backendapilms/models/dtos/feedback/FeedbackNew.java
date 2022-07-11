@@ -24,10 +24,5 @@ public class FeedbackNew {
 	@NotNull(message = "cannot be null")
 	@NotBlank(message = "cannot be blank")
 	@NotEmpty(message = "cannot be empty")
-	private String userId;
-	
-	@NotNull(message = "cannot be null")
-	@NotBlank(message = "cannot be blank")
-	@NotEmpty(message = "cannot be empty")
 	private String content;
 }

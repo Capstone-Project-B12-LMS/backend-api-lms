@@ -7,6 +7,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.entities.Material;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.CategoryRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.MaterialRepository;
+import com.capstoneprojectb12.lms.backendapilms.services.mongodb.ActivityHistoryService;
 import com.capstoneprojectb12.lms.backendapilms.utilities.DateUtils;
 import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.AnyException;
@@ -80,6 +81,8 @@ public class MaterialServiceTest {
 	private MaterialRepository materialRepository;
 	@MockBean
 	private ClassRepository classRepository;
+	@MockBean
+	private ActivityHistoryService activityHistoryService;
 	
 	@MockBean
 	private CategoryRepository categoryRepository;

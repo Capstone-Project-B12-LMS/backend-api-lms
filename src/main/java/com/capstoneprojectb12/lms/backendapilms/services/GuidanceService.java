@@ -6,10 +6,12 @@ import com.capstoneprojectb12.lms.backendapilms.models.entities.Guidance;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.GuidanceRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
+import com.capstoneprojectb12.lms.backendapilms.services.mongodb.ActivityHistoryService;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.ClassNotFoundException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.UserNotFoundException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
 import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.*;
+import static com.capstoneprojectb12.lms.backendapilms.utilities.histories.ActivityHistoryUtils.youAreSuccessfully;
 
 @Slf4j
 @Service
@@ -29,12 +32,16 @@ public class GuidanceService implements BaseService<Guidance, GuidanceNew, Guida
 	private final GuidanceRepository guidanceRepository;
 	private final UserRepository userRepository;
 	private final ClassRepository classRepository;
+	private final ActivityHistoryService history;
 	
 	@Override
 	public ResponseEntity<?> save(GuidanceNew newEntity) {
 		try {
 			var guidance = this.toEntity(newEntity);
 			guidance = this.guidanceRepository.save(guidance);
+			
+			history.save(youAreSuccessfully(String.format("create new Guidance on Class \"%s\"", this.classRepository.findById(newEntity.getClassId()).get().getName())));
+			
 			return ok(guidance);
 		} catch (UserNotFoundException e) {
 			log.error(e.getMessage());
@@ -55,7 +62,21 @@ public class GuidanceService implements BaseService<Guidance, GuidanceNew, Guida
 	
 	@Override
 	public ResponseEntity<?> deleteById(String id) {
-		return null;
+		try {
+			var guidance = this.guidanceRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Guidance not found"));
+			this.guidanceRepository.deleteById(id);
+			
+			final var guidanceTopic = guidance.getTopic();
+			history.save(youAreSuccessfully(String.format("delete Guidance \"%s\"", guidanceTopic)));
+			
+			return ok(guidance);
+		} catch (NoSuchElementException e) {
+			log.error(e.getMessage());
+			return bad(e.getMessage());
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return err(e);
+		}
 	}
 	
 	@Override
