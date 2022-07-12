@@ -1,5 +1,6 @@
 package com.capstoneprojectb12.lms.backendapilms.services;
 
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.base.ResponseDelete;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.material.MaterialNew;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.material.MaterialUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Category;
@@ -27,6 +28,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 
+import static com.capstoneprojectb12.lms.backendapilms.models.dtos.base.ResponseDelete.deleted;
 import static com.capstoneprojectb12.lms.backendapilms.services.CategoryServiceTest.category;
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.extract;
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.getResponse;
@@ -267,11 +269,11 @@ public class MaterialServiceTest {
 		doNothing().when(this.materialRepository).deleteById(anyString());
 		var res = this.materialService.deleteById("id");
 		var api = getResponse(res);
-		var data = extract(material, api);
+		var data = extract(deleted(material), api);
 		assertEquals(HttpStatus.OK, res.getStatusCode());
 		assertNull(api.getErrors());
 		assertTrue(api.isStatus());
-		assertInstanceOf(Material.class, api.getData());
+		assertInstanceOf(ResponseDelete.class, api.getData());
 		assertTrue(data.isPresent());
 		reset(this.materialRepository);
 
@@ -280,7 +282,7 @@ public class MaterialServiceTest {
 		doNothing().when(this.materialRepository).deleteById(anyString());
 		res = this.materialService.deleteById("id");
 		api = getResponse(res);
-		data = extract(material, api);
+		data = extract(deleted(material), api);
 		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
 		assertNotNull(api.getErrors());
 		assertFalse(api.isStatus());
@@ -292,7 +294,7 @@ public class MaterialServiceTest {
 		doThrow(NullPointerException.class).when(this.materialRepository).deleteById(anyString());
 		res = this.materialService.deleteById("id");
 		api = getResponse(res);
-		data = extract(material, api);
+		data = extract(deleted(material), api);
 		assertNull(api.getData());
 		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, res.getStatusCode());
 		assertNotNull(api.getErrors());
