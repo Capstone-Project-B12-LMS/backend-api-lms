@@ -106,6 +106,7 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
             if (value.isPresent()) {
                 this.classRepository.deleteById(id);
                 log.info(FinalVariable.DELETE_SUCCESS);
+                value.get().setIsDeleted(true);
                 history.save(youAreSuccessfully(String.format("deleted Class \"%s\"", value.get().getName())));
             }
             return (value.isPresent()) ? ok(deleted(value.get())) : bad(FinalVariable.DATA_NOT_FOUND);
