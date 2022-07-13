@@ -1,5 +1,6 @@
 package com.capstoneprojectb12.lms.backendapilms.services;
 
+import com.capstoneprojectb12.lms.backendapilms.models.dtos.base.ResponseDelete;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.material.MaterialNew;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.material.MaterialUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Category;
@@ -27,14 +28,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 
+import static com.capstoneprojectb12.lms.backendapilms.models.dtos.base.ResponseDelete.deleted;
 import static com.capstoneprojectb12.lms.backendapilms.services.CategoryServiceTest.category;
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.extract;
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.getResponse;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @Slf4j
 @SpringBootTest(classes = {MaterialService.class})
@@ -259,6 +260,47 @@ public class MaterialServiceTest {
 		assertTrue(data.isEmpty());
 		reset(this.materialRepository, this.categoryRepository, this.classRepository);
 		
+	}
+	
+	@Test
+	public void testDeleteById() {
+//		success
+		when(this.materialRepository.findById(anyString())).thenReturn(Optional.of(material));
+		doNothing().when(this.materialRepository).deleteById(anyString());
+		var res = this.materialService.deleteById("id");
+		var api = getResponse(res);
+		var data = extract(deleted(material), api);
+		assertEquals(HttpStatus.OK, res.getStatusCode());
+		assertNull(api.getErrors());
+		assertTrue(api.isStatus());
+		assertInstanceOf(ResponseDelete.class, api.getData());
+		assertTrue(data.isPresent());
+		reset(this.materialRepository);
+
+//		material not found
+		when(this.materialRepository.findById(anyString())).thenReturn(Optional.empty());
+		doNothing().when(this.materialRepository).deleteById(anyString());
+		res = this.materialService.deleteById("id");
+		api = getResponse(res);
+		data = extract(deleted(material), api);
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertNotNull(api.getErrors());
+		assertFalse(api.isStatus());
+		assertTrue(data.isEmpty());
+		reset(this.materialRepository);
+
+//		any exception
+		when(this.materialRepository.findById(anyString())).thenThrow(AnyException.class);
+		doThrow(NullPointerException.class).when(this.materialRepository).deleteById(anyString());
+		res = this.materialService.deleteById("id");
+		api = getResponse(res);
+		data = extract(deleted(material), api);
+		assertNull(api.getData());
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, res.getStatusCode());
+		assertNotNull(api.getErrors());
+		assertFalse(api.isStatus());
+		assertTrue(data.isEmpty());
+		reset(this.materialRepository);
 	}
 	
 	@Test

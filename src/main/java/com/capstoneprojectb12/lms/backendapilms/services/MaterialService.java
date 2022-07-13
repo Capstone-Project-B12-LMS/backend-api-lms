@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+import static com.capstoneprojectb12.lms.backendapilms.models.dtos.base.ResponseDelete.deleted;
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.*;
 import static com.capstoneprojectb12.lms.backendapilms.utilities.histories.ActivityHistoryUtils.youAreSuccessfully;
 
@@ -99,7 +100,7 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 			
 			history.save(youAreSuccessfully(String.format("deleted Material \"%s\"", this.materialRepository.findById(id).get().getTitle())));
 			
-			return ok(material.get());
+			return ok(deleted(material.get()));
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			return err(e);

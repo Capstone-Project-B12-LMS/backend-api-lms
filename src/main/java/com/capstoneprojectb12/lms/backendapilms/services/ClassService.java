@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+import static com.capstoneprojectb12.lms.backendapilms.models.dtos.base.ResponseDelete.deleted;
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.*;
 import static com.capstoneprojectb12.lms.backendapilms.utilities.histories.ActivityHistoryUtils.youAreSuccessfully;
 
@@ -59,7 +60,7 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 			log.info(FinalVariable.UPDATE_SUCCESS);
 			
 			final var className = classEntity.getName();
-			new Thread(() -> history.save(youAreSuccessfully("updated Class " + className))).start();
+			history.save(youAreSuccessfully("updated Class " + className));
 			
 			return ok(classEntity);
 		} catch (ClassNotFoundException e) {
@@ -106,7 +107,7 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 				log.info(FinalVariable.DELETE_SUCCESS);
 				history.save(youAreSuccessfully(String.format("deleted Class \"%s\"", value.get().getName())));
 			}
-			return (value.isPresent()) ? ok(value.get()) : bad(FinalVariable.DATA_NOT_FOUND);
+			return (value.isPresent()) ? ok(deleted(value.get())) : bad(FinalVariable.DATA_NOT_FOUND);
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			return err(e);
