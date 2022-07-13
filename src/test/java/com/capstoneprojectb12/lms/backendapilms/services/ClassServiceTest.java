@@ -11,7 +11,6 @@ import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassReposit
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
 import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.AnyException;
-import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.MethodNotImplementedException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
@@ -263,8 +262,22 @@ public class ClassServiceTest {
 
     @Test
     public void testFindAllDeleted() {
-//		not implemented
-        assertThrows(MethodNotImplementedException.class, () -> this.classService.findAll(true));
+//        success
+        when(this.classRepository.findAll()).thenReturn(new ArrayList<>(List.of(classEntity)));
+        var res = this.classService.findAll();
+        var api = getResponse(res);
+        var data = extract(new ArrayList<ClassResponse>(), api);
+        assertTrue(data.isPresent());
+        assertEquals(1, data.get().size());
+        reset(this.classRepository);
+
+//        any exception
+        when(this.classRepository.findAll()).thenThrow(AnyException.class);
+        res = this.classService.findAll();
+        api = getResponse(res);
+        data = extract(new ArrayList<ClassResponse>(), api);
+        assertTrue(data.isEmpty());
+        reset(this.classRepository);
     }
 
     @Test

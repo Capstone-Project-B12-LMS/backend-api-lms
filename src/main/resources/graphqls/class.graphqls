@@ -59,7 +59,7 @@ type ResponseDeleteClass implements ResponseDelete{
 type ClassQuery {
     findAll: [Class!]!
     findAllWithPageable(page: Int!, size: Int!): ClassPagination!
-    findAllDeleted: [Class!]!
+    findAllDeleted(showDeleted: Boolean!): [Class!]!
     findAllDeletedWithPageable(page: Int!, size: Int!): ClassPagination!
     findById(id: ID!): Class
 }

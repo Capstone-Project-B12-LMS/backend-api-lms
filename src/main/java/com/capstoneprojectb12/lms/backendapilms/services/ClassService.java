@@ -13,11 +13,11 @@ import com.capstoneprojectb12.lms.backendapilms.services.mongodb.ActivityHistory
 import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.ClassNotFoundException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.DataNotFoundException;
-import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.MethodNotImplementedException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.UserNotFoundException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Session;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +25,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -44,6 +45,7 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
     private final UserRepository userRepository;
     private final UserService userService;
     private final ActivityHistoryService history;
+    private final EntityManager entityManager;
 
     @Override
     public ResponseEntity<?> update(String entityId, ClassUpdate classUpdate) {
@@ -151,8 +153,17 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 
     @Override
     public ResponseEntity<?> findAll() {
+        return this.findAll(false);
+    }
+
+    @Override
+    public ResponseEntity<?> findAll(boolean showDeleted) {
         try {
+            var session = entityManager.unwrap(Session.class);
+            var filter = session.enableFilter("showDeleted");
+            filter.setParameter("isDeleted", showDeleted);
             var classes = this.classRepository.findAll();
+            session.disableFilter("showDeleted");
             var responses = new ArrayList<ClassResponse>();
             classes.forEach((c) -> responses.add(ClassResponse.parseFromClass(c)));
             return ok(responses);
@@ -160,11 +171,6 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
             log.error(e.getMessage());
             return err(e);
         }
-    }
-
-    @Override
-    public ResponseEntity<?> findAll(boolean showDeleted) {
-        throw new MethodNotImplementedException();
     }
 
     @Override
