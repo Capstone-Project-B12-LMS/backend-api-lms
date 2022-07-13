@@ -139,8 +139,7 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 	@Override
 	public ResponseEntity<?> findById(String id) {
 		try {
-			var value = this.classRepository.findById(id)
-					.orElseThrow(DataNotFoundException :: new);
+			var value = this.classRepository.findById(id).orElseThrow(DataNotFoundException :: new);
 			return ok(ClassResponse.parseFromClass(value));
 		} catch (DataNotFoundException e) {
 			log.warn(FinalVariable.DATA_NOT_FOUND);
