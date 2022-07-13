@@ -27,6 +27,7 @@ public class ClassResponse extends BaseEntity {
 	private ClassStatus status;
 	
 	private List<HashMap<String, Object>> users = new ArrayList<>();
+	private String reportUrl;
 	
 	public static ClassResponse parseFromClass(Class classEntity) {
 		var users = new ArrayList<HashMap<String, Object>>();
@@ -44,6 +45,7 @@ public class ClassResponse extends BaseEntity {
 				.code(classEntity.getCode())
 				.status(classEntity.getStatus())
 				.users(users)
+				.reportUrl(classEntity.getReportUrl())
 				.createdAt(classEntity.getCreatedAt())
 				.createdBy(classEntity.getCreatedBy())
 				.updatedAt(classEntity.getUpdatedAt())

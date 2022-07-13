@@ -61,5 +61,5 @@ type MaterialQuery {
 type MaterialMutation {
     save(request: MaterialNew!): Material
     update(id: ID!, request: MaterialNew!): Material
-    #    deleteById(id: ID!): ResponseDeleteMaterial!
+    deleteById(id: ID!): ResponseDeleteMaterial!
 }

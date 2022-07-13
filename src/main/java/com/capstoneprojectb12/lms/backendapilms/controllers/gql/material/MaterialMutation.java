@@ -11,7 +11,10 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
+import static com.capstoneprojectb12.lms.backendapilms.models.dtos.base.ResponseDelete.deleted;
+import static com.capstoneprojectb12.lms.backendapilms.models.dtos.base.ResponseDelete.notDeleted;
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.extract;
+import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.getResponse;
 
 @Controller
 @RequiredArgsConstructor
@@ -32,8 +35,8 @@ public class MaterialMutation implements BaseMutation<Material, MaterialNew, Mat
 	}
 	
 	@Override
-	public ResponseDelete<Material> deleteById(String id) {
-//		TODO: implement delete material by id
-		return null;
+	public ResponseDelete<Material> deleteById(@Argument(name = "id") String id) {
+		var res = this.materialService.deleteById(id);
+		return extract(deleted(new Material()), res).orElse(notDeleted(getResponse(res).getErrors()));
 	}
 }
