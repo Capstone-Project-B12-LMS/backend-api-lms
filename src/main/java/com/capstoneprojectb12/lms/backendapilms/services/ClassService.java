@@ -249,8 +249,10 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
     public ResponseEntity<?> updateStatus(String classId, ClassStatus status) {
         try {
             var classEntity = this.classRepository.findById(classId).orElseThrow(ClassNotFoundException::new);
+            var oldStatus = classEntity.getStatus();
             classEntity.setStatus(status);
             this.classRepository.save(classEntity);
+            history.save(String.format("You change the status of Class \"%s\" from \"%s\" to \"%s\"", classEntity.getName(), oldStatus.name().replace("_", " "), classEntity.getStatus().name().replace("_", " ")));
             return ok(classEntity);
         } catch (ClassNotFoundException e) {
             log.error(e.getMessage());
