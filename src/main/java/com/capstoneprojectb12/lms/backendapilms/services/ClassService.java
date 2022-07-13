@@ -181,9 +181,19 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
 
     @Override
     public ResponseEntity<?> findAll(int page, int size, Sort sort) {
+        return this.findAll(page, size, sort, false);
+    }
+
+    public ResponseEntity<?> findAll(int page, int size, Sort sort, boolean showDeleted) {
         try {
             Pageable pageable = PageRequest.of(page, size, sort);
+            var session = entityManager.unwrap(Session.class);
+            var filter = session.enableFilter("showDeleted");
+
+            filter.setParameter("isDeleted", showDeleted);
             var classPage = this.classRepository.findAll(pageable);
+            session.disableFilter("showDeleted");
+
             var pageResponse = this.toPaginationResponse(classPage);
             return ok(pageResponse);
         } catch (Exception e) {
