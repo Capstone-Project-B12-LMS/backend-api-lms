@@ -169,6 +169,7 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
             classes.forEach((c) -> responses.add(ClassResponse.parseFromClass(c)));
             return ok(responses);
         } catch (Exception e) {
+            e.printStackTrace();
             log.error(e.getMessage());
             return err(e);
         }

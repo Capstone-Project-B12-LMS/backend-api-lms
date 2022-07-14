@@ -19,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,6 +62,8 @@ public class GuidanceServiceTest {
     private GuidanceRepository guidanceRepository;
     @Autowired
     private GuidanceService guidanceService;
+    @MockBean
+    private EntityManager entityManager;
 
     @Test
     public void testToEntity() {

@@ -26,6 +26,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 
+import javax.persistence.EntityManager;
 import java.util.*;
 
 import static com.capstoneprojectb12.lms.backendapilms.models.dtos.base.ResponseDelete.deleted;
@@ -48,6 +49,7 @@ public class ClassServiceTest {
             .code("wkwkwk")
             .reportUrl("report url here")
             .status(ClassStatus.ACTIVE)
+            .isDeleted(false)
             .users(new ArrayList<>(List.of(user)))
             .build();
     private final Class classEntity2 = Class.builder().id("id").name("ny class").room("my room").code("wkwkwk").reportUrl("report url here").status(ClassStatus.ACTIVE).users(new ArrayList<>()).build();
@@ -65,6 +67,8 @@ public class ClassServiceTest {
 
     @MockBean
     private UserRepository userRepository;
+    @MockBean
+    private EntityManager entityManager;
 
 
     @Test
