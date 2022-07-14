@@ -30,7 +30,6 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -73,8 +72,7 @@ public class UserServiceTest {
     private UserRepository userRepository;
     @Autowired
     private UserService userService;
-    @MockBean
-    private EntityManager entityManager;
+
 
     @Test
     public void testLoadByUsername() {

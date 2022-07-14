@@ -162,9 +162,11 @@ public class ClassService implements BaseService<Class, ClassNew, ClassUpdate> {
         try {
             var session = entityManager.unwrap(Session.class);
             var filter = session.enableFilter("showDeleted");
+
             filter.setParameter("isDeleted", showDeleted);
             var classes = this.classRepository.findAll();
             session.disableFilter("showDeleted");
+
             var responses = new ArrayList<ClassResponse>();
             classes.forEach((c) -> responses.add(ClassResponse.parseFromClass(c)));
             return ok(responses);

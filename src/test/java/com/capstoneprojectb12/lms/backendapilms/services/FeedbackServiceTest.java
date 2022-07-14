@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 
-import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -48,8 +47,7 @@ public class FeedbackServiceTest {
     private UserRepository userRepository;
     @MockBean
     private ClassRepository classRepository;
-    @MockBean
-    private EntityManager entityManager;
+
     @Autowired
     private FeedbackService feedbackService;
     @MockBean

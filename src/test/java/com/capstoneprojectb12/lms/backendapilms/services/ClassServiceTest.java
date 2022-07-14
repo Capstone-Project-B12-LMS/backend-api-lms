@@ -26,7 +26,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 
-import javax.persistence.EntityManager;
 import java.util.*;
 
 import static com.capstoneprojectb12.lms.backendapilms.models.dtos.base.ResponseDelete.deleted;
@@ -67,8 +66,6 @@ public class ClassServiceTest {
 
     @MockBean
     private UserRepository userRepository;
-    @MockBean
-    private EntityManager entityManager;
 
 
     @Test

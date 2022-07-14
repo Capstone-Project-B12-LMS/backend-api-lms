@@ -18,7 +18,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -51,8 +50,7 @@ public class RoleServiceTest {
     private RoleRepository roleRepository;
     @Autowired
     private RoleService roleService;
-    @MockBean
-    private EntityManager entityManager;
+
 
     @Test
     public void testSave() {

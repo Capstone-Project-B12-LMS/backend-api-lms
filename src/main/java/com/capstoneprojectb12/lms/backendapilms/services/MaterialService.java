@@ -125,9 +125,11 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 
             return ok(material);
         } catch (DataNotFoundException e) {
+            e.printStackTrace();
             log.error(e.getMessage());
             return bad(e.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             log.error(e.getMessage());
             return err(e);
         }
