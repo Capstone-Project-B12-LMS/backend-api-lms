@@ -20,23 +20,24 @@ import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.get
 @RequiredArgsConstructor
 @SchemaMapping(typeName = "MaterialMutation")
 public class MaterialMutation implements BaseMutation<Material, MaterialNew, MaterialUpdate> {
-	private final MaterialService materialService;
-	
-	@Override
-	@SchemaMapping(field = "save")
-	public Material save(@Argument(name = "request") MaterialNew request) {
-		return extract(new Material(), this.materialService.save(request)).orElse(null);
-	}
-	
-	@Override
-	@SchemaMapping(field = "update")
-	public Material update(@Argument(name = "id") String id, @Argument(name = "request") MaterialUpdate request) {
-		return extract(new Material(), this.materialService.update(id, request)).orElse(null);
-	}
-	
-	@Override
-	public ResponseDelete<Material> deleteById(@Argument(name = "id") String id) {
-		var res = this.materialService.deleteById(id);
-		return extract(deleted(new Material()), res).orElse(notDeleted(getResponse(res).getErrors()));
-	}
+    private final MaterialService materialService;
+
+    @Override
+    @SchemaMapping(field = "save")
+    public Material save(@Argument(name = "request") MaterialNew request) {
+        return extract(new Material(), this.materialService.save(request)).orElse(null);
+    }
+
+    @Override
+    @SchemaMapping(field = "update")
+    public Material update(@Argument(name = "id") String id, @Argument(name = "request") MaterialUpdate request) {
+        return extract(new Material(), this.materialService.update(id, request)).orElse(null);
+    }
+
+    @Override
+    @SchemaMapping(field = "deleteById")
+    public ResponseDelete<Material> deleteById(@Argument(name = "id") String id) {
+        var res = this.materialService.deleteById(id);
+        return extract(deleted(new Material()), res).orElse(notDeleted(getResponse(res).getErrors()));
+    }
 }
