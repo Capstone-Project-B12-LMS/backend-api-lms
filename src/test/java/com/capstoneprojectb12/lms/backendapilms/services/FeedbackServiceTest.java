@@ -91,6 +91,24 @@ public class FeedbackServiceTest {
 		assertNotNull(data.get().getId());
 		reset(this.feedbackRepository, this.classRepository, this.userRepository);
 
+//		success
+		when(this.classRepository.findById(anyString())).thenReturn(Optional.of(ClassServiceTest.classEntity));
+		when(this.userRepository.findByEmailEqualsIgnoreCase(anyString())).thenReturn(Optional.of(UserServiceTest.user));
+		when(this.feedbackRepository.existsByUserEmailEqualsIgnoreCaseAndClassEntityId(anyString(), anyString())).thenReturn(true);
+		when(this.feedbackRepository.save(any(Feedback.class))).thenReturn(feedback);
+		when(this.userService.getCurrentUser()).thenReturn(UserServiceTest.user.getEmail());
+		res = this.feedbackService.save(feedbackNew);
+		api = getResponse(res);
+		data = extract(feedback, api);
+		assertNotNull(res);
+		assertNotNull(api);
+		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
+		assertNotNull(api.getErrors());
+		assertFalse(api.isStatus());
+		assertNull(api.getData());
+		assertTrue(data.isEmpty());
+		reset(this.feedbackRepository, this.classRepository, this.userRepository);
+
 //		class not found
 		when(this.classRepository.findById(anyString())).thenReturn(Optional.empty());
 		when(this.userRepository.findByEmailEqualsIgnoreCase(anyString())).thenReturn(Optional.of(UserServiceTest.user));

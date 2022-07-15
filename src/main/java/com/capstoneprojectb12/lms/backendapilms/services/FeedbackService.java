@@ -37,7 +37,7 @@ public class FeedbackService implements BaseService<Feedback, FeedbackNew, Feedb
 	@Override
 	public ResponseEntity<?> save(FeedbackNew newEntity) {
 		try {
-			if (this.feedbackRepository.existsByUserEmailEqualsIgnoreCase(this.userService.getCurrentUser())) {
+			if (this.feedbackRepository.existsByUserEmailEqualsIgnoreCaseAndClassEntityId(this.userService.getCurrentUser(), newEntity.getClassId())) {
 				log.error("Already created feedback");
 				return bad("Already created feedback");
 			}
