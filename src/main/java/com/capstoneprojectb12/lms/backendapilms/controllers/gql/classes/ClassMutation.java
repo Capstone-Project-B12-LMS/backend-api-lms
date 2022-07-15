@@ -6,6 +6,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassNew;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassUpdate;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.JoinClass;
 import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
+import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.ClassStatus;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.ClassRepository;
 import com.capstoneprojectb12.lms.backendapilms.services.ClassService;
 import lombok.RequiredArgsConstructor;
@@ -57,4 +58,8 @@ public class ClassMutation implements BaseMutation<Class, ClassNew, ClassUpdate>
         return extract(new Class(), this.classService.deleteUserById(classId, userId)).orElse(null);
     }
 
+    @SchemaMapping(field = "updateStatus")
+    public Class updateStatus(@Argument(name = "classId") String classId, @Argument(name = "status") ClassStatus status) {
+        return extract(new Class(), this.classService.updateStatus(classId, status)).orElse(null);
+    }
 }

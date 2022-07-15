@@ -1,12 +1,14 @@
 package com.capstoneprojectb12.lms.backendapilms.models.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
 
-import lombok.*;
-import lombok.experimental.SuperBuilder;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 
 @Entity(name = "categories")
 @Getter
