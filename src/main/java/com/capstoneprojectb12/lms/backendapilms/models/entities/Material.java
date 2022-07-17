@@ -29,16 +29,16 @@ public class Material extends BaseEntity {
 	@Column(nullable = false)
 	private String title;
 	
-	@Column(length = 1000, nullable = false)
+	@Column(length = 100000, nullable = false)
 	private String content;
 	
 	@ManyToOne
 	private Topic topic;
 	
-	@Column(length = 1000)
+	@Column(length = 1500)
 	private String videoUrl;
 	
-	@Column(length = 1000)
+	@Column(length = 1500)
 	private String fileUrl;
 	
 	private Date deadline;
