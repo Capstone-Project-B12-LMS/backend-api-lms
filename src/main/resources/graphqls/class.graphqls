@@ -62,6 +62,7 @@ type ClassQuery {
     findAllDeleted(showDeleted: Boolean!): [Class!]!
     findAllDeletedWithPageable(page: Int!, size: Int!): ClassPagination!
     findById(id: ID!): Class
+    simpleFindAll(page: Int!, size: Int!, status: ClassStatus!): [Class!]
 }
 
 type ClassMutation {
