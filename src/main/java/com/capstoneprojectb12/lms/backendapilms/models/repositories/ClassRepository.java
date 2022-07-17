@@ -13,6 +13,8 @@ import org.springframework.stereotype.Repository;
 public interface ClassRepository extends JpaRepository<Class, String> {
 	List<Class> findByCreatedByEqualsIgnoreCase(String createdBy);
 	
+	Page<Class> findByIdContainsAndCreatedByEqualsIgnoreCaseOrUsersEmailEqualsIgnoreCaseAndStatus(String id, String createdBy, String email, ClassStatus status, Pageable pageable);
+	
 	Optional<Class> findByCode(String code);
 	
 	Page<Class> findAll(Pageable pageable);
