@@ -20,6 +20,7 @@ input UserNew {
     telepon: String
     password: String!
 }
+
 input UserUpdate {
     fullName: String!
     email: String!
@@ -45,6 +46,11 @@ type ResponseDeleteUser implements ResponseDelete{
     status: Boolean!
 }
 
+type VerifyStatus {
+    status: Boolean!
+    message: String
+}
+
 type UserQuery {
     findAll: [User!]!
     findAllWithPageable(page: Int!, size: Int!): UserPagination!
@@ -52,6 +58,7 @@ type UserQuery {
     #    findAllDeletedWithPageable(page: Int!, size: Int!): UserPagination!
     findById(id: ID!): User
     findByClassByUserId(id: ID!, classStatus: ClassStatus!): [Class!]
+    getVerifyStatusByUserID(userId: ID!): VerifyStatus
 }
 
 type UserMutation {
