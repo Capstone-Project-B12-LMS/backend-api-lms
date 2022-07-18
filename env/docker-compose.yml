@@ -42,6 +42,20 @@ services:
       - SPRINGDOC_SWAGGER_UI_ENABLED=true
       - SPRINGDOC_SWAGGER_UI_PATH=/restapi/v1/docs
 
+      # smtp config
+      - MAIL_MAILO_APP_ID=e1f2b953-c3fa-4756-8e4b-a1e3db34ad33
+      - MAIL_MAILO_SECRET_KEY=ac90349f-1282-4882-a5ee-7875ac57a76f
+      - MAIL_SMTP_HOST=smtp.elasticemail.com
+      - MAIL_SMTP_PORT=2525
+      - MAIL_SMTP_USER=irdhaislakhuafa@gmail.com
+      - MAIL_SMTP_PASSWORD=7917E9710A10EB82793CFACA8EF37EF82E00
+      - MAIL_ME=irdhaislakhuafa@gmail.com
+      - MAIL_MYNAME=Study Space App
+      - URI_LOGIN=https://capstone-study-space.netlify.app/verify
+      - URI_USER_NOT_FOUND=https://capstone-study-space.netlify.app/verify
+      - URI_VERFIVY_INVALID=https://capstone-study-space.netlify.app/verify
+      - URI_UNKNOWN_ERROR=https://capstone-study-space.netlify.app/verify
+
   # backend-api-lms-cc:
   #   image: irdaislakhuafa/backend-api-lms-cc:latest
   #   container_name: backend-api-lms-cc
