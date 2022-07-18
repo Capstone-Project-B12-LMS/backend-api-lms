@@ -89,16 +89,16 @@ public class UserService implements BaseService<User, UserNew, UserUpdate>, User
 			
 			user.setEnable(true);
 			this.userRepository.save(user);
-			return loginUri;
+			return loginUri + String.format("?id=%s&token=%s", userId, token);
 		} catch (UserNotFoundException e) {
 			log.error(e.getMessage());
-			return this.userNotFound;
+			return this.userNotFound + String.format("?id=%s&token=%s", userId, token);
 		} catch (InvalidTokenException e) {
 			log.error(e.getMessage());
-			return this.invalidVerify;
+			return this.invalidVerify + String.format("?id=%s&token=%s", userId, token);
 		} catch (Exception e) {
 			log.error(e.getMessage());
-			return this.unknownError;
+			return this.unknownError + String.format("?id=%s&token=%s", userId, token);
 		}
 	}
 	
