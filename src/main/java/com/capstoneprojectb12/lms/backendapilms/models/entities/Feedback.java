@@ -7,10 +7,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.SQLDelete;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity(name = "comments")
 @Getter
@@ -25,7 +22,7 @@ public class Feedback extends BaseEntity {
 	@JoinColumn(name = "class")
 	private Class classEntity;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private User user;
 	
 	@Column(length = 1000, nullable = false)

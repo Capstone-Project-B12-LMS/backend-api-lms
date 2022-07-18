@@ -1,8 +1,13 @@
 package com.capstoneprojectb12.lms.backendapilms.configurations;
 
+import dev.ditsche.mailo.config.MailoConfig;
+import dev.ditsche.mailo.config.SmtpConfig;
+import dev.ditsche.mailo.provider.MailProvider;
+import dev.ditsche.mailo.provider.SmtpMailProvider;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import org.springdoc.core.GroupedOpenApi;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,6 +19,35 @@ public class BeansConfiguration {
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+	
+	@Value(value = "${mail.mailo.app.id}")
+	private String mailoAppId;
+	@Value(value = "${mail.mailo.secret.key}")
+	private String mailoSecretKey;
+	@Value(value = "${mail.smtp.host}")
+	private String mailSmtpHost;
+	@Value(value = "${mail.smtp.port}")
+	private int mailSmtpPort;
+	@Value(value = "${mail.smtp.user}")
+	private String mailSmtpUser;
+	@Value(value = "${mail.smtp.password}")
+	private String mailSmtpPassword;
+	
+	@Bean
+	public MailProvider mailProvider() {
+		MailoConfig mailoConfig = MailoConfig.get();
+		mailoConfig.setMjmlAppId(this.mailoAppId);
+		mailoConfig.setMjmlAppSecret(this.mailoSecretKey);
+		
+		SmtpConfig smtpConfig = new SmtpConfig();
+		smtpConfig.setHost(mailSmtpHost);
+		smtpConfig.setPort(mailSmtpPort);
+		smtpConfig.setUsername(mailSmtpUser);
+		smtpConfig.setPassword(mailSmtpPassword);
+		smtpConfig.setSsl(false);
+		
+		return new SmtpMailProvider(smtpConfig);
 	}
 
 //	@Bean

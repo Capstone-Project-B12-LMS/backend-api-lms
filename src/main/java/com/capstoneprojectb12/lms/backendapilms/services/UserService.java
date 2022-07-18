@@ -7,14 +7,18 @@ import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.RoleRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
 import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
+import com.capstoneprojectb12.lms.backendapilms.utilities.VerifyStatus;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.DataNotFoundException;
-import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.MethodNotImplementedException;
+import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.InvalidTokenException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.UserNotFoundException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
+import com.capstoneprojectb12.lms.backendapilms.utilities.jwt.JwtUtils;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,6 +32,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.*;
@@ -40,6 +45,17 @@ public class UserService implements BaseService<User, UserNew, UserUpdate>, User
 	private final UserRepository userRepository;
 	private final RoleRepository roleRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final EntityManager entityManager;
+	private final JwtUtils jwtUtils;
+	private final EmailService emailService;
+	@Value(value = "${uri.login}")
+	private String loginUri;
+	@Value(value = "${uri.user.not.found}")
+	private String userNotFound;
+	@Value(value = "${uri.verfivy.invalid}")
+	private String invalidVerify;
+	@Value(value = "${uri.unknown.error}")
+	private String unknownError;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -52,6 +68,7 @@ public class UserService implements BaseService<User, UserNew, UserUpdate>, User
 			newEntity.setPassword(passwordEncoder.encode(newEntity.getPassword()));
 			var user = this.toEntity(newEntity);
 			user = this.userRepository.save(user);
+			this.emailService.sendVerification(user.getEmail(), user.getFullName());
 			return ok(user);
 		} catch (DataIntegrityViolationException e) {
 			log.warn(FinalVariable.ALREADY_EXISTS);
@@ -59,6 +76,51 @@ public class UserService implements BaseService<User, UserNew, UserUpdate>, User
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			return err(e);
+		}
+	}
+	
+	public String verify(String userId, String token) {
+		try {
+			var user = this.userRepository.findById(userId).orElseThrow(UserNotFoundException :: new);
+			
+			if (! this.jwtUtils.isValid(token, user)) {
+				throw new InvalidTokenException();
+			}
+			
+			user.setEnable(true);
+			this.userRepository.save(user);
+			return loginUri + String.format("?id=%s&token=%s", userId, token);
+		} catch (UserNotFoundException e) {
+			log.error(e.getMessage());
+			return this.userNotFound + String.format("?id=%s&token=%s", userId, token);
+		} catch (InvalidTokenException e) {
+			log.error(e.getMessage());
+			return this.invalidVerify + String.format("?id=%s&token=%s", userId, token);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.unknownError + String.format("?id=%s&token=%s", userId, token);
+		}
+	}
+	
+	public ResponseEntity<?> getVerifyStatusByUserId(String userId) {
+		try {
+			var user = this.userRepository.findById(userId).orElseThrow(UserNotFoundException :: new);
+			return ResponseEntity.ok(VerifyStatus.builder()
+					.status(user.isEnable())
+					.message("verified")
+					.build());
+		} catch (UserNotFoundException e) {
+			log.error(e.getMessage());
+			return ResponseEntity.badRequest().body(VerifyStatus.builder()
+					.status(false)
+					.message(e.getMessage())
+					.build());
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return ResponseEntity.badRequest().body(VerifyStatus.builder()
+					.status(false)
+					.message(e.getMessage())
+					.build());
 		}
 	}
 	
@@ -101,8 +163,18 @@ public class UserService implements BaseService<User, UserNew, UserUpdate>, User
 	
 	@Override
 	public ResponseEntity<?> findById(String id) {
+		return this.findById(id, false);
+	}
+	
+	public ResponseEntity<?> findById(String id, boolean showDeleted) {
 		try {
+			var session = entityManager.unwrap(Session.class);
+			var filter = session.enableFilter("showDeleted");
+			
+			filter.setParameter("isDeleted", showDeleted);
 			var user = this.userRepository.findById(id).orElseThrow(DataNotFoundException :: new);
+			session.disableFilter("showDeleted");
+			
 			return ok(user);
 		} catch (DataNotFoundException e) {
 			log.warn(e.getMessage());
@@ -115,18 +187,24 @@ public class UserService implements BaseService<User, UserNew, UserUpdate>, User
 	
 	@Override
 	public ResponseEntity<?> findAll() {
+		return this.findAll(false);
+	}
+	
+	@Override
+	public ResponseEntity<?> findAll(boolean showDeleted) {
 		try {
+			var session = entityManager.unwrap(Session.class);
+			var filter = session.enableFilter("showDeleted");
+			
+			filter.setParameter("isDeleted", showDeleted);
 			var users = this.userRepository.findAll();
+			session.disableFilter("showDeleted");
+			
 			return ok(users);
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			return err(e);
 		}
-	}
-	
-	@Override
-	public ResponseEntity<?> findAll(boolean showDeleted) {
-		throw new MethodNotImplementedException();
 	}
 	
 	@Override
@@ -136,9 +214,20 @@ public class UserService implements BaseService<User, UserNew, UserUpdate>, User
 	
 	@Override
 	public ResponseEntity<?> findAll(int page, int size, Sort sort) {
+		return this.findAll(page, size, sort, false);
+	}
+	
+	public ResponseEntity<?> findAll(int page, int size, Sort sort, boolean showDeleted) {
 		try {
 			Pageable pageable = PageRequest.of(page, size, sort);
+			
+			var session = entityManager.unwrap(Session.class);
+			var filter = session.enableFilter("showDeleted");
+			
+			filter.setParameter("isDeleted", showDeleted);
 			var users = this.userRepository.findAll(pageable);
+			session.disableFilter("showDeleted");
+			
 			var pageResponse = this.toPaginationResponse(users);
 			return ok(pageResponse);
 		} catch (Exception e) {
@@ -174,7 +263,18 @@ public class UserService implements BaseService<User, UserNew, UserUpdate>, User
 	}
 	
 	public Optional<User> findByEmail(String email) {
-		return this.userRepository.findByEmailEqualsIgnoreCase(email);
+		return this.findByEmail(email, false);
+	}
+	
+	public Optional<User> findByEmail(String email, boolean showDeleted) {
+		var session = entityManager.unwrap(Session.class);
+		var filter = session.enableFilter("showDeleted");
+		
+		filter.setParameter("isDeleted", showDeleted);
+		var user = this.userRepository.findByEmailEqualsIgnoreCase(email);
+		session.disableFilter("showDeleted");
+		
+		return user;
 	}
 	
 	public String getCurrentUser() {

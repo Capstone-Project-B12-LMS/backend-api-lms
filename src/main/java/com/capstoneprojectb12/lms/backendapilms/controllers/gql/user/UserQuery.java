@@ -7,6 +7,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.ClassStatu
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
 import com.capstoneprojectb12.lms.backendapilms.services.ClassService;
 import com.capstoneprojectb12.lms.backendapilms.services.UserService;
+import com.capstoneprojectb12.lms.backendapilms.utilities.VerifyStatus;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,11 @@ public class UserQuery implements BaseQuery<User> {
 	}
 	
 	@Override
+	public List<User> findAllDeleted(boolean showDeleted) {
+		return null;
+	}
+	
+	@Override
 	@SchemaMapping(field = "findById")
 	public User findById(@Argument(name = "id") String id) {
 		return extract(new User(), getResponse(this.userService.findById(id))).orElse(null);
@@ -53,17 +59,14 @@ public class UserQuery implements BaseQuery<User> {
 	}
 	
 	@Override
-	@SchemaMapping(field = "findAllDeleted")
-	public List<User> findAllDeleted() {
-		// TODO: implement me
-		return null;
-	}
-	
-	@Override
 	@SchemaMapping(field = "findAllDeletedWithPageable")
 	public PaginationResponse<List<User>> findAllDeletedWithPageable(int page, int size) {
 		// TODO: implement me
 		return null;
 	}
 	
+	@SchemaMapping(field = "getVerifyStatusByUserID")
+	public VerifyStatus getVerifyStatusByUserID(@Argument(name = "userId") String userId) {
+		return (VerifyStatus) this.userService.getVerifyStatusByUserId(userId).getBody();
+	}
 }

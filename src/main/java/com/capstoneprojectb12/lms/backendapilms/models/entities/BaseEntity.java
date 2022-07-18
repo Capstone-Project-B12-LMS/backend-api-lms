@@ -1,17 +1,18 @@
 package com.capstoneprojectb12.lms.backendapilms.models.entities;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
-import javax.annotation.PreDestroy;
-import javax.persistence.*;
-
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.security.core.context.SecurityContextHolder;
-
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.ParamDef;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import javax.annotation.PreDestroy;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @MappedSuperclass
 @Getter
@@ -20,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @SuperBuilder
 @Slf4j
+@FilterDef(name = "showDeleted", parameters = {@ParamDef(name = "isDeleted", type = "boolean")})
+@Filter(name = "showDeleted", condition = "is_deleted = :isDeleted")
 public class BaseEntity implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid")

@@ -2,6 +2,8 @@ package com.capstoneprojectb12.lms.backendapilms.controllers.gql.classes;
 
 import com.capstoneprojectb12.lms.backendapilms.controllers.gql.base.BaseQuery;
 import com.capstoneprojectb12.lms.backendapilms.models.dtos.classes.ClassResponse;
+import com.capstoneprojectb12.lms.backendapilms.models.entities.Class;
+import com.capstoneprojectb12.lms.backendapilms.models.entities.utils.ClassStatus;
 import com.capstoneprojectb12.lms.backendapilms.services.ClassService;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
 import java.util.ArrayList;
@@ -36,9 +38,8 @@ public class ClassQuery implements BaseQuery<ClassResponse> {
 	
 	@Override
 	@SchemaMapping(field = "findAllDeleted")
-	public List<ClassResponse> findAllDeleted() {
-		// TODO: implement find all deleted class
-		return null;
+	public List<ClassResponse> findAllDeleted(@Argument(name = "showDeleted") boolean showDeleted) {
+		return extract(new ArrayList<ClassResponse>(), this.classService.findAll(showDeleted)).orElse(new ArrayList<>());
 	}
 	
 	@Override
@@ -54,4 +55,8 @@ public class ClassQuery implements BaseQuery<ClassResponse> {
 		return extract(new ClassResponse(), this.classService.findById(id)).orElse(null);
 	}
 	
+	@SchemaMapping(field = "simpleFindAll")
+	public List<Class> simpleFindAll(@Argument(name = "page") int page, @Argument(name = "size") int size, @Argument(name = "status") ClassStatus status) {
+		return extract(List.of(new Class()), this.classService.simpleFindAll(page, size, status)).orElse(null);
+	}
 }

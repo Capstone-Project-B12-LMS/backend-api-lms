@@ -12,17 +12,18 @@ import com.capstoneprojectb12.lms.backendapilms.utilities.DateUtils;
 import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.ClassNotFoundException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.DataNotFoundException;
-import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.MethodNotImplementedException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Session;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import static com.capstoneprojectb12.lms.backendapilms.models.dtos.base.ResponseDelete.deleted;
@@ -38,6 +39,7 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 	private final ClassRepository classRepository;
 	private final CategoryRepository categoryRepository;
 	private final ActivityHistoryService history;
+	private final EntityManager entityManager;
 	
 	@Override
 	public ResponseEntity<?> save(MaterialNew newEntity) {
@@ -95,10 +97,11 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 				log.warn(FinalVariable.DATA_NOT_FOUND);
 				return bad(FinalVariable.DATA_NOT_FOUND);
 			}
-			this.classRepository.deleteById(id);
+			this.materialRepository.deleteById(id);
 			log.info(FinalVariable.DELETE_SUCCESS);
+			material.get().setIsDeleted(true);
 			
-			history.save(youAreSuccessfully(String.format("deleted Material \"%s\"", this.materialRepository.findById(id).get().getTitle())));
+			history.save(youAreSuccessfully(String.format("deleted Material \"%s\"", material.get().getTitle())));
 			
 			return ok(deleted(material.get()));
 		} catch (Exception e) {
@@ -109,13 +112,25 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 	
 	@Override
 	public ResponseEntity<?> findById(String id) {
+		return this.findById(id, false);
+	}
+	
+	public ResponseEntity<?> findById(String id, boolean showDeleted) {
 		try {
+			var session = entityManager.unwrap(Session.class);
+			var filter = session.enableFilter("showDeleted");
+			
+			filter.setParameter("isDeleted", showDeleted);
 			var material = this.materialRepository.findById(id).orElseThrow(DataNotFoundException :: new);
+			session.disableFilter("showDeleted");
+			
 			return ok(material);
 		} catch (DataNotFoundException e) {
+			e.printStackTrace();
 			log.error(e.getMessage());
 			return bad(e.getMessage());
 		} catch (Exception e) {
+			e.printStackTrace();
 			log.error(e.getMessage());
 			return err(e);
 		}
@@ -123,18 +138,24 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 	
 	@Override
 	public ResponseEntity<?> findAll() {
+		return this.findAll(false);
+	}
+	
+	@Override
+	public ResponseEntity<?> findAll(boolean showDeleted) {
 		try {
+			var session = entityManager.unwrap(Session.class);
+			var filter = session.enableFilter("showDeleted");
+			
+			filter.setParameter("isDeleted", showDeleted);
 			var materials = this.materialRepository.findAll();
+			session.disableFilter("showDeleted");
+			
 			return ok(materials);
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			return err(e);
 		}
-	}
-	
-	@Override
-	public ResponseEntity<?> findAll(boolean showDeleted) {
-		throw new MethodNotImplementedException();
 	}
 	
 	@Override
@@ -144,9 +165,20 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 	
 	@Override
 	public ResponseEntity<?> findAll(int page, int size, Sort sort) {
+		return this.findAll(page, size, sort, false);
+	}
+	
+	public ResponseEntity<?> findAll(int page, int size, Sort sort, boolean showDeleted) {
 		try {
 			var request = PageRequest.of(page, size, sort);
+			
+			var session = entityManager.unwrap(Session.class);
+			var filter = session.enableFilter("showDeleted");
+			
+			filter.setParameter("isDeleted", showDeleted);
 			var materials = this.materialRepository.findAll(request);
+			session.disableFilter("showDeleted");
+			
 			var responsePage = this.toPaginationResponse(materials);
 			return ok(materials);
 		} catch (Exception e) {
@@ -191,8 +223,16 @@ public class MaterialService implements BaseService<Material, MaterialNew, Mater
 	}
 	
 	public ResponseEntity<?> findAllByClassId(String classId) {
+		return this.findAllByClassId(classId, false);
+	}
+	
+	public ResponseEntity<?> findAllByClassId(String classId, boolean showDeleted) {
 		try {
+			var session = entityManager.unwrap(Session.class);
+			var filter = session.enableFilter("showDeleted");
+			filter.setParameter("isDeleted", showDeleted);
 			var materials = this.materialRepository.findByClassEntityIdOrderByCreatedAtAsc(classId).orElseThrow(ClassNotFoundException :: new);
+			session.disableFilter("showDeleted");
 			return ok(materials);
 		} catch (ClassNotFoundException e) {
 			log.warn(e.getMessage());

@@ -18,6 +18,7 @@ import javax.validation.Valid;
 @CrossOrigin
 @RequestMapping(value = {"/restapi/v1"})
 public class InitRestFullAPI {
+	
 	@GetMapping
 	@ApiResponses(value = {
 			@ApiResponse(description = "This endpoint currently can be accessed by role USER", responseCode = "200")

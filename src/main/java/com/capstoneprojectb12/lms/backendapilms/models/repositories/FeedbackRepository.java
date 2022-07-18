@@ -11,5 +11,7 @@ public interface FeedbackRepository extends JpaRepository<Feedback, String> {
 	
 	List<Feedback> findByUserId(String classId);
 	
-	boolean existsByUserEmailEqualsIgnoreCase(String userEmail);
+	boolean existsByUserEmailEqualsIgnoreCase(String email);
+	
+	boolean existsByUserEmailEqualsIgnoreCaseAndClassEntityId(String email, String classId);
 }
