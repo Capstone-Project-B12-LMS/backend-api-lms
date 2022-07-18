@@ -7,6 +7,7 @@ import com.capstoneprojectb12.lms.backendapilms.models.entities.User;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.RoleRepository;
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
 import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
+import com.capstoneprojectb12.lms.backendapilms.utilities.VerifyStatus;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.DataNotFoundException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.InvalidTokenException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.UserNotFoundException;
@@ -98,6 +99,28 @@ public class UserService implements BaseService<User, UserNew, UserUpdate>, User
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			return this.unknownError;
+		}
+	}
+	
+	public ResponseEntity<?> getVerifyStatusByUserId(String userId) {
+		try {
+			var user = this.userRepository.findById(userId).orElseThrow(UserNotFoundException :: new);
+			return ResponseEntity.ok(VerifyStatus.builder()
+					.status(user.isEnable())
+					.message("verified")
+					.build());
+		} catch (UserNotFoundException e) {
+			log.error(e.getMessage());
+			return ResponseEntity.badRequest().body(VerifyStatus.builder()
+					.status(false)
+					.message(e.getMessage())
+					.build());
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return ResponseEntity.badRequest().body(VerifyStatus.builder()
+					.status(false)
+					.message(e.getMessage())
+					.build());
 		}
 	}
 	
