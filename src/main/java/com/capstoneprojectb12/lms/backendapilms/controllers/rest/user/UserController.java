@@ -50,6 +50,11 @@ public class UserController {
 			if (user.isEmpty()) {
 				throw new UsernameNotFoundException("User not found");
 			}
+			
+			if (! user.get().isEnable()) {
+				return bad("please verify your account!");
+			}
+			
 			var authUser = new UsernamePasswordAuthenticationToken(
 					request.getEmail(),
 					request.getPassword(),
