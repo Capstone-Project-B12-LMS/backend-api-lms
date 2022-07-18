@@ -50,14 +50,14 @@ Use resource bellow to use it.
 
 - `Rest FULL API`
 
-    - API Docs : http://ec2-34-219-136-154.us-west-2.compute.amazonaws.com/restapi/v1/docs
+    - API Docs : http://ec2-52-37-92-72.us-west-2.compute.amazonaws.com/restapi/v1/docs
 
 - `GraphQL API`
 
     - GraphiQL to test graphql in browser with simple
-      documentation : http://ec2-34-219-136-154.us-west-2.compute.amazonaws.com/gql/v1/graphiql?path=/gql/v1/graphql
+      documentation : http://ec2-52-37-92-72.us-west-2.compute.amazonaws.com/gql/v1/graphiql?path=/gql/v1/graphql
 
-    - GraphQL url : http://ec2-34-219-136-154.us-west-2.compute.amazonaws.com/gql/v1/graphql
+    - GraphQL url : http://ec2-52-37-92-72.us-west-2.compute.amazonaws.com/gql/v1/graphql
 
 # Note :
 
