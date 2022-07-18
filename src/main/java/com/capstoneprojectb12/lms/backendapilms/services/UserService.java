@@ -8,11 +8,16 @@ import com.capstoneprojectb12.lms.backendapilms.models.repositories.RoleReposito
 import com.capstoneprojectb12.lms.backendapilms.models.repositories.UserRepository;
 import com.capstoneprojectb12.lms.backendapilms.utilities.FinalVariable;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.DataNotFoundException;
+import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.InvalidTokenException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.exceptions.UserNotFoundException;
 import com.capstoneprojectb12.lms.backendapilms.utilities.gql.PaginationResponse;
+import com.capstoneprojectb12.lms.backendapilms.utilities.jwt.JwtUtils;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,8 +33,6 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
 
 import static com.capstoneprojectb12.lms.backendapilms.utilities.ApiResponse.*;
 
@@ -42,18 +45,29 @@ public class UserService implements BaseService<User, UserNew, UserUpdate>, User
 	private final RoleRepository roleRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final EntityManager entityManager;
-
+	private final JwtUtils jwtUtils;
+	private final EmailService emailService;
+	@Value(value = "${uri.login}")
+	private String loginUri;
+	@Value(value = "${uri.user.not.found}")
+	private String userNotFound;
+	@Value(value = "${uri.verfivy.invalid}")
+	private String invalidVerify;
+	@Value(value = "${uri.unknown.error}")
+	private String unknownError;
+	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		return this.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Username not found"));
 	}
-
+	
 	@Override
 	public ResponseEntity<?> save(UserNew newEntity) {
 		try {
 			newEntity.setPassword(passwordEncoder.encode(newEntity.getPassword()));
 			var user = this.toEntity(newEntity);
 			user = this.userRepository.save(user);
+			this.emailService.sendVerification(user.getEmail(), user.getFullName());
 			return ok(user);
 		} catch (DataIntegrityViolationException e) {
 			log.warn(FinalVariable.ALREADY_EXISTS);
@@ -63,16 +77,39 @@ public class UserService implements BaseService<User, UserNew, UserUpdate>, User
 			return err(e);
 		}
 	}
-
+	
+	public String verify(String userId, String token) {
+		try {
+			var user = this.userRepository.findById(userId).orElseThrow(UserNotFoundException :: new);
+			
+			if (! this.jwtUtils.isValid(token, user)) {
+				throw new InvalidTokenException();
+			}
+			
+			user.setEnable(true);
+			this.userRepository.save(user);
+			return loginUri;
+		} catch (UserNotFoundException e) {
+			log.error(e.getMessage());
+			return this.userNotFound;
+		} catch (InvalidTokenException e) {
+			log.error(e.getMessage());
+			return this.invalidVerify;
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return this.unknownError;
+		}
+	}
+	
 	@Override
 	public ResponseEntity<?> update(String entityId, UserUpdate updateEntity) {
 		try {
-			var user = this.userRepository.findById(entityId).orElseThrow(UserNotFoundException::new);
-
+			var user = this.userRepository.findById(entityId).orElseThrow(UserNotFoundException :: new);
+			
 			user.setFullName(updateEntity.getFullName());
 			user.setEmail(updateEntity.getEmail());
 			user.setTelepon(updateEntity.getTelepon());
-
+			
 			user = this.userRepository.save(user);
 			return ok(user);
 		} catch (UserNotFoundException e) {
@@ -83,12 +120,12 @@ public class UserService implements BaseService<User, UserNew, UserUpdate>, User
 			return err(e);
 		}
 	}
-
+	
 	@Override
 	public ResponseEntity<?> deleteById(String id) {
 		try {
 			var user = this.userRepository.findById(id);
-			if (user.isPresent() && !user.get().getIsDeleted()) {
+			if (user.isPresent() && ! user.get().getIsDeleted()) {
 				this.userRepository.deleteById(id);
 				log.info(FinalVariable.DELETE_SUCCESS);
 				return ok(user.get());
@@ -100,21 +137,21 @@ public class UserService implements BaseService<User, UserNew, UserUpdate>, User
 			return err(e);
 		}
 	}
-
+	
 	@Override
 	public ResponseEntity<?> findById(String id) {
 		return this.findById(id, false);
 	}
-
+	
 	public ResponseEntity<?> findById(String id, boolean showDeleted) {
 		try {
 			var session = entityManager.unwrap(Session.class);
 			var filter = session.enableFilter("showDeleted");
-
+			
 			filter.setParameter("isDeleted", showDeleted);
-			var user = this.userRepository.findById(id).orElseThrow(DataNotFoundException::new);
+			var user = this.userRepository.findById(id).orElseThrow(DataNotFoundException :: new);
 			session.disableFilter("showDeleted");
-
+			
 			return ok(user);
 		} catch (DataNotFoundException e) {
 			log.warn(e.getMessage());
@@ -124,50 +161,50 @@ public class UserService implements BaseService<User, UserNew, UserUpdate>, User
 			return err(e);
 		}
 	}
-
+	
 	@Override
 	public ResponseEntity<?> findAll() {
 		return this.findAll(false);
 	}
-
+	
 	@Override
 	public ResponseEntity<?> findAll(boolean showDeleted) {
 		try {
 			var session = entityManager.unwrap(Session.class);
 			var filter = session.enableFilter("showDeleted");
-
+			
 			filter.setParameter("isDeleted", showDeleted);
 			var users = this.userRepository.findAll();
 			session.disableFilter("showDeleted");
-
+			
 			return ok(users);
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			return err(e);
 		}
 	}
-
+	
 	@Override
 	public ResponseEntity<?> findAll(int page, int size) {
 		return this.findAll(page, size, Sort.unsorted());
 	}
-
+	
 	@Override
 	public ResponseEntity<?> findAll(int page, int size, Sort sort) {
 		return this.findAll(page, size, sort, false);
 	}
-
+	
 	public ResponseEntity<?> findAll(int page, int size, Sort sort, boolean showDeleted) {
 		try {
 			Pageable pageable = PageRequest.of(page, size, sort);
-
+			
 			var session = entityManager.unwrap(Session.class);
 			var filter = session.enableFilter("showDeleted");
-
+			
 			filter.setParameter("isDeleted", showDeleted);
 			var users = this.userRepository.findAll(pageable);
 			session.disableFilter("showDeleted");
-
+			
 			var pageResponse = this.toPaginationResponse(users);
 			return ok(pageResponse);
 		} catch (Exception e) {
@@ -175,7 +212,7 @@ public class UserService implements BaseService<User, UserNew, UserUpdate>, User
 			return err(e);
 		}
 	}
-
+	
 	@Override
 	public PaginationResponse<List<User>> toPaginationResponse(Page<User> page) {
 		return PaginationResponse.<List<User>>builder()
@@ -186,7 +223,7 @@ public class UserService implements BaseService<User, UserNew, UserUpdate>, User
 				.totalSize(page.getTotalElements())
 				.build();
 	}
-
+	
 	@Override
 	public User toEntity(UserNew userNew) {
 		var role = this.roleRepository.findByNameEqualsIgnoreCase("user").orElse(null);
@@ -201,22 +238,22 @@ public class UserService implements BaseService<User, UserNew, UserUpdate>, User
 				.roles(List.of(role))
 				.build();
 	}
-
+	
 	public Optional<User> findByEmail(String email) {
 		return this.findByEmail(email, false);
 	}
-
+	
 	public Optional<User> findByEmail(String email, boolean showDeleted) {
 		var session = entityManager.unwrap(Session.class);
 		var filter = session.enableFilter("showDeleted");
-
+		
 		filter.setParameter("isDeleted", showDeleted);
 		var user = this.userRepository.findByEmailEqualsIgnoreCase(email);
 		session.disableFilter("showDeleted");
-
+		
 		return user;
 	}
-
+	
 	public String getCurrentUser() {
 		try {
 			return SecurityContextHolder.getContext().getAuthentication().getName();

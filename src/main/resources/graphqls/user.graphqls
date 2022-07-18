@@ -5,6 +5,7 @@ type User implements BaseSchema {
     telepon: String!
     password: String!
     roles: [Role!]!
+    enable: Boolean
 
     createdBy: String!
     createdAt: String!
