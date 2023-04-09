@@ -36,9 +36,9 @@ public class EmailService {
 					.from(new MailAddress(myEmail, myName))
 					.to(new MailAddress(to, name))
 					.subject("Email Verification")
-					.param("name", name)
+					.param("name", name.toUpperCase())
 					.param("verify", ServletUriComponentsBuilder.fromContextPath(request).toUriString() + String.format("/restapi/v1/users/verify/%s/%s", user.getId(), this.jwtUtils.generateTokenString(user)))
-					.loadTemplate("email/verify.html")
+					.loadTemplate("verify.html")
 					.build();
 			return mailProvider.send(mail);
 		} catch (Exception e) {
