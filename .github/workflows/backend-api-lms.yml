@@ -45,7 +45,7 @@ jobs:
       #          context: ./env/cc/
       #          tags: irdaislakhuafa/backend-api-lms-cc:latest
       #          push: true
-      
+
       #  - name: Save Maven Cache Dependency
       #    uses: skjolber/maven-cache-github-action@v1.1
       #    with:
@@ -64,7 +64,7 @@ jobs:
         with:
           java-version: "11"
           distribution: "temurin"
-      
+
       #  - name: Restore Maven Cache Dependency
       #    uses: skjolber/maven-cache-github-action@v1.1
       #    with:
@@ -108,25 +108,25 @@ jobs:
           port: ${{ secrets.SERVER_SSH_PORT }}
           script: |
             cd
-            
+
             me="irdaislakhuafa"
             baseDir="Apps/$me"
             appName="backend-api-lms"
-            
+
             appDir="$baseDir/$appName"
             appDirCondition="$(ls $baseDir/  | grep $appName )"
-            
+
             if [ "$appDirCondition" = "" ]; then
                mkdir -pv "$appDir"
             else 
                cd $appDir/env
                docker-compose -f docker-compose.yml down --rmi all
-            
+
               #  dbIsRunning="$(docker ps | grep db)"
               #  if [ "$dbIsRunning" = "" ]; then
               #    docker-compose -f db-compose.yml up -d
               #  fi
-            
+
                rm -rfv * 
                cd
             fi
@@ -140,7 +140,6 @@ jobs:
           port: ${{ secrets.SERVER_SSH_PORT }}
           source: env/*
           target: ${{ secrets.SERVER_APP_TARGET_DIR }}
-
 
   deploy:
     name: Deploy App To AWS Server
@@ -159,7 +158,6 @@ jobs:
             me="irdaislakhuafa"
             baseDir="Apps/$me"
             appName="backend-api-lms"
-            
+
             cd $baseDir/$appName/env
             docker-compose -f docker-compose.yml up -d
-
