@@ -8,7 +8,7 @@ if needed
 
 # Entity Relational Database
 
-- URL : https://dbdiagram.io/d/628e3deff040f104c196a2db
+- URL : <https://dbdiagram.io/d/628e3deff040f104c196a2db>
 
 # How to run it
 
@@ -35,12 +35,12 @@ Here we have 2 mode of API
 
 - `Rest FULL API`
 
-    - On Rest FULL API you can see documentation in `http://localhost:8080/restapi/docs/swagger-ui/index.html#/` after
+  - On Rest FULL API you can see documentation in `http://localhost:8080/restapi/docs/swagger-ui/index.html#/` after
       app running.
 
 - `GraphQL API`
 
-    - On GraphQL API you can access `http://localhost:8080/gql/v1/graphiql?path=/graphql` to use `GraphQL` in browser
+  - On GraphQL API you can access `http://localhost:8080/gql/v1/graphiql?path=/graphql` to use `GraphQL` in browser
       and you can send your `GraphQL Query` in `http://localhost:8080/gql/v1/graphql`
 
 # Using Deployed App
@@ -50,23 +50,33 @@ Use resource bellow to use it.
 
 - `Rest FULL API`
 
-    - API Docs : http://ec2-34-219-136-154.us-west-2.compute.amazonaws.com/restapi/v1/docs
+  - API Docs : <http://ec2-34-223-3-198.us-west-2.compute.amazonaws.com/restapi/v1/docs>
 
 - `GraphQL API`
 
-    - GraphiQL to test graphql in browser with simple
-      documentation : http://ec2-34-219-136-154.us-west-2.compute.amazonaws.com/gql/v1/graphiql?path=/gql/v1/graphql
+  - GraphiQL to test graphql in browser with simple
+      documentation : <http://ec2-34-223-3-198.us-west-2.compute.amazonaws.com/gql/v1/graphiql?path=/gql/v1/graphql>
 
-    - GraphQL url : http://ec2-34-219-136-154.us-west-2.compute.amazonaws.com/gql/v1/graphql
+  - GraphQL url : <http://ec2-34-223-3-198.us-west-2.compute.amazonaws.com/gql/v1/graphql>
 
-# Note :
+# The technology used in this application
+- [`JWT`](https://jwt.io/) (Json Web Token) + [`Spring Security`](https://docs.spring.io/spring-security/reference/index.html)
+- `Rest API` for Mobile Application
+- `GraphQL API` for Web Application
+- `PostgreSQL` (main db) & `MongoDB` (activity_history)
+- `SMTP` (Simple Mail Transfer Protocol) with Elastic Mail
+- `CI/CD` (Continuous Integration, Continuous Delivery/Continuous Deployment) with Github Actions
+- `Java` (Programming Language) & `Spring Boot` (Java Framework)
+- `JUnit` as Java Unit Test
+
+# Note
 
 - Some endpoints may already be protected. So, require `Authorization` and `Authentication` to access endpoints
   with `Jwt Token`. To access endpoint with `Jwt Token` please register first and login with registered account and you
   will have the `Token` as response, you can use it to access all endpoints. Follow format bellow to access protected
   endpoints.
 
-    - Using `Authorization` Header
+  - Using `Authorization` Header
 
   ```json
   {
