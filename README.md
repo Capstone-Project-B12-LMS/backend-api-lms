@@ -67,6 +67,7 @@ Use resource bellow to use it.
 - `SMTP` (Simple Mail Transfer Protocol) with Elastic Mail
 - `CI/CD` (Continuous Integration, Continuous Delivery/Continuous Deployment) with Github Actions
 - `Java` (Programming Language) & `Spring Boot` (Java Framework)
+- `JUnit` as Java Unit Test
 
 # Note
 
