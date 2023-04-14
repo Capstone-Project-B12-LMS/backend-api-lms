@@ -59,6 +59,15 @@ Use resource bellow to use it.
 
   - GraphQL url : <http://ec2-34-223-3-198.us-west-2.compute.amazonaws.com/gql/v1/graphql>
 
+# The technology used in this application
+- [`JWT`](https://jwt.io/) (Json Web Token) + [`Spring Security`](https://docs.spring.io/spring-security/reference/index.html)
+- `Rest API` for Mobile Application
+- `GraphQL API` for Web Application
+- `PostgreSQL` (main db) & `MongoDB` (activity_history)
+- `SMTP` (Simple Mail Transfer Protocol) with Elastic Mail
+- `CI/CD` (Continuous Integration, Continuous Delivery/Continuous Deployment) with Github Actions
+- `Java` (Programming Language) & `Spring Boot` (Java Framework)
+
 # Note
 
 - Some endpoints may already be protected. So, require `Authorization` and `Authentication` to access endpoints
